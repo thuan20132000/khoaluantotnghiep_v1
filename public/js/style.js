@@ -17,6 +17,8 @@ function selectAllCheckbox(name){
 selectAllCheckbox('category');
 selectAllCheckbox('occupation');
 selectAllCheckbox('user');
+selectAllCheckbox('job');
+
 
 
 
@@ -69,6 +71,7 @@ selectAllCheckbox('user');
     deleteAllCheckbox('category');
     deleteAllCheckbox('occupation');
     deleteAllCheckbox('user');
+    deleteAllCheckbox('job');
 
 
 

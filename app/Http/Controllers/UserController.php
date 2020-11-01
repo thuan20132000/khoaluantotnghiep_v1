@@ -273,7 +273,7 @@ class UserController extends Controller
 
 
     /**
-     * remove mass category
+     * remove mass User
      */
     public function destroyMass(Request $request)
     {

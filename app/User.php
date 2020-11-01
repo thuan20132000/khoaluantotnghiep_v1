@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Model\Job;
 use App\Model\Occupation;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -46,10 +47,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Occupation::class);
     }
 
-    // public function roles()
-    // {
-    //     return $this->belongsToMany('App\Role', 'role_user_table', 'user_id', 'role_id');
-    // }
 
     public function roles(){
         return $this->belongsToMany(Role::class);
@@ -69,6 +66,11 @@ class User extends Authenticatable
             return true;
         }
         return false;
+    }
+
+    public function jobs()
+    {
+        return $this->hasMany(Job::class);
     }
 
 }

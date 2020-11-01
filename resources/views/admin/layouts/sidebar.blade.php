@@ -223,14 +223,19 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="./index.html" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Dashboard v1</p>
-                </a>
-              </li>
+                <li class="nav-item">
+                  <a href="{{ route('job.index') }}" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>List</p>
+                  </a>
+                  <a href="{{ route('job.create')}}" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Create</p>
+                  </a>
 
-            </ul>
+                </li>
+
+              </ul>
           </li>
 
         </ul>

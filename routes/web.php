@@ -30,7 +30,8 @@ Route::delete('/admin/occupation','OccupationController@destroyMass')->name('des
 Route::resource('/admin/user', 'UserController');
 Route::delete('/admin/user','UserController@destroyMass')->name('destroyMass');
 
-
+Route::resource('/admin/job', 'JobController');
+Route::delete('/admin/job','JobController@destroyMass')->name('destroyMass');
 
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {

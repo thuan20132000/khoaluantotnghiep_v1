@@ -18,13 +18,13 @@ class CreateJobsTable extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('description')->nullable();
-            $table->string('address')->nullable();
-            $table->decimal('suggestion_price')->nullable();
+            $table->decimal('suggestion_price',18,2)->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('occupation_id');
             $table->foreign('occupation_id')->references('id')->on('occupations')->onDelete('cascade');
             $table->tinyInteger('status')->default(0);
+            $table->unsignedBigInteger('location_id');
             $table->timestamps();
         });
     }
