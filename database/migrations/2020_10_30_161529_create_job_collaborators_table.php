@@ -15,7 +15,8 @@ class CreateJobCollaboratorsTable extends Migration
     {
         Schema::create('job_collaborators', function (Blueprint $table) {
             $table->id();
-            $table->decimal('expected_price')->nullable();
+            $table->decimal('expected_price',18,2)->nullable();
+            $table->text('description')->nullable();
             $table->dateTime('start_at')->nullable();
             $table->dateTime('finish_at')->nullable();
             $table->unsignedBigInteger('job_id');

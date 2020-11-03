@@ -40,7 +40,8 @@ class JobController extends Controller
         $customers  = DB::table('users')
                     ->join('role_user',function($join){
                         $join->on('users.id','=','role_user.user_id')->where('role_user.role_id','=',3);
-                    })->get();
+                    })
+                    ->select('users.*')->get();
 
 
         return view('admin.job.create',[
@@ -158,7 +159,8 @@ class JobController extends Controller
         $customers  = DB::table('users')
                     ->join('role_user',function($join){
                         $join->on('users.id','=','role_user.user_id')->where('role_user.role_id','=',3);
-                    })->get();
+                    })
+                    ->select('users.*')->get();
         $job_images = DB::table('images')->where('job_id',$job->id)->get();
         $job_images_array = $job_images->pluck('image_url')->toArray();
         return view('admin.job.edit',[

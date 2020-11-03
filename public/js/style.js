@@ -18,6 +18,8 @@ selectAllCheckbox('category');
 selectAllCheckbox('occupation');
 selectAllCheckbox('user');
 selectAllCheckbox('job');
+selectAllCheckbox('jobcollaborator');
+
 
 
 
@@ -72,6 +74,8 @@ selectAllCheckbox('job');
     deleteAllCheckbox('occupation');
     deleteAllCheckbox('user');
     deleteAllCheckbox('job');
+    deleteAllCheckbox('jobcollaborator');
+
 
 
 

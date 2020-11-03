@@ -11,7 +11,14 @@
         </div>
     @endif
 
-    <form action="{{ route('job.store') }}" method="POST" enctype="multipart/form-data">
+
+    @if (session('failed'))
+    <div class="alert alert-danger">
+        {{ session('failed') }}
+    </div>
+    @endif
+
+    <form action="{{ route('jobcollaborator.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-md-4">
@@ -25,60 +32,23 @@
                 </div>
                 </div>
                 <div class="card-body">
-                <div class="form-group">
-                    <label for="inputName">Title</label>
-                    <input  type="text" value="{{old('name')}}" id="name" name="name" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="inputName">Slug</label>
-                    <input type="text" value="{{old('slug')}}" id="slug" name="slug" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="inputDescription">Job Description</label>
-                    <textarea id="inputDescription" name="description" class="form-control" rows="4">
-                        {{old('description')}}
-                    </textarea>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                      <!-- select -->
-                      <div class="form-group">
-                        <label>Province / City</label>
-                        <select class="form-control" id="provinces" name="province">
-                            <option value="">-- select province --</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <!-- select -->
-                        <div class="form-group">
-                          <label>District</label>
-                          <select class="form-control" id="districts" name="district">
-                            <option value="">-- select district --</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-sm-4">
-                        <!-- select -->
-                        <div class="form-group">
-                          <label>Sub Disctrict</label>
-                          <select class="form-control" id="subdistricts" name="subdistrict">
-                            <option value=""> -- select subdistrict -- </option>
-                          </select>
-                        </div>
-                      </div>
 
-                </div>
-                <div class="form-group">
-                    <label for="inputName">Address</label>
-                    <input type="text" value="" id="addressTotal" name="address" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="inputDescription">Street</label>
-                    <textarea  name="street" class="form-control" rows="4">
+                    <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th style="width: 10px">ID</th>
+                            <th>NAME</th>
+                            <th>EMAIL</th>
+                            <th>EXPECTED PRICE</th>
+                          </tr>
+                        </thead>
+                        <tbody id="collaborator_wrap">
 
-                    </textarea>
-                </div>
+
+
+
+                        </tbody>
+                      </table>
 
                 </div>
                 <!-- /.card-body -->
@@ -98,40 +68,33 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="occupation-images" class="text-primary">Customer</label>
+                            <label for="occupation-images" class="text-primary">Collaborator</label>
                             <select class="form-control custom-select" name="user">
-                                <option value="" selected>-- Selecting User --</option>
-                                @foreach ($customers as $customer)
-                                    <option value="{{$customer->id}}">{{$customer->name}}</option>
+                                <option value="" selected>-- Selecting Collaborator --</option>
+                                @foreach ($collaborators as $collaborator)
+                                    <option value="{{$collaborator->id}}">{{$collaborator->name}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="occupation-images" class="text-primary">Field</label>
-                            <select class="form-control custom-select" name="occupation">
-                                <option value="0" selected>Selecting Field</option>
-                                @foreach ($occupations as $occupation)
-                                    <option value="{{$occupation->id}}">{{$occupation->name}}</option>
+                            <label for="occupation-images" class="text-primary">Job</label>
+                            <select class="form-control custom-select" name="job" id="job">
+                                <option value="0" selected>Selecting Job</option>
+                                @foreach ($jobs as $job)
+                                    <option value="{{$job->id}}">{{$job->name}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="inputName">Price</label>
+                            <label for="inputName">Expected Price</label>
                             <input type="text" value="{{old('price')}}" id="price" name="price" class="form-control">
                         </div>
-                        <label for="occupation-images" class="text-primary">Some Images of Recent Project</label>
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                            <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                                <i class="fa fa-picture-o"></i> Choose
-                            </a>
-                            </span>
-                            <input id="thumbnail" class="form-control" type="text" name="filepaths">
+                        <div class="form-group">
+                            <label for="inputDescription">Description</label>
+                            <textarea id="inputDescription" name="description" class="form-control" rows="4">
+                                {{old('description')}}
+                            </textarea>
                         </div>
-                        <div id="holder" style="display: flex;flex-direction: row;flex-wrap: wrap;padding:16px">
-
-                        </div>
-
 
                     </div>
                     <!-- /.card-body -->
@@ -178,111 +141,59 @@
     </form>
 <script>
 
- /**
-         * author:thuantruong
-         * created_at:30/10/2020
-         */
 
 
-        var address = {
-            province:'',
-            district:'',
-            subdistrict:'',
-            fullAddress:function(){
-                return this.province + " - "+ this.district+" - "+this.subdistrict;
-            }
-        }
+            var collaboratorRow = {
 
-
-         const fetchProvinces = async () => {
-                let provinceFetch = await fetch(`https://raw.githubusercontent.com/madnh/hanhchinhvn/master/dist/tinh_tp.json`);
-                if(!provinceFetch.ok){
-                    console.log("SOMETHING WENT WRONG!!");
-                    return;
-                }
-                let provinceData = await provinceFetch.json();
-                let provincesArr = await Object.values(provinceData);
-                // let province = provincesArr.for (const iterator of object) {
-
-                // }
-                var x = document.getElementById("provinces");
-                for (const pv of provincesArr) {
-                    // option += `<option>${pv.name}</option>`;
-                    var option = document.createElement("option");
-                    option.text = pv.name;
-                    option.value = pv.code;
-                    x.add(option);
-                }
-
-
-
-
-            }
-            fetchProvinces();
-
-
-            const fetchDistrict = async (code) => {
-                let districtFetch = await fetch(`https://raw.githubusercontent.com/madnh/hanhchinhvn/master/dist/quan-huyen/${code}.json`);
-                if(!districtFetch.ok){
-                    console.log("SOMETHING WENT WRONG!!");
-                    return;
-                }
-                let districtData = await districtFetch.json();
-                let districtArr = await Object.values(districtData);
-
-
-                var x = document.getElementById("districts");
-                x.innerHTML = "";
-                for (const pv of districtArr) {
-                    // option += `<option>${pv.name}</option>`;
-                    var option = document.createElement("option");
-                    option.text = pv.name;
-                    option.value = pv.code;
-                    x.add(option);
+                fullrow:function(id,name,email,expected_price){
+                    return  `<tr>
+                                <td>${id}</td>
+                                <td><span class="badge bg-danger">${name}</span></td>
+                                <td>${email}</td>
+                                <td>${expected_price}</td>
+                             </tr>`;
                 }
             }
 
 
-            const fetchSubDistrict = async (code) => {
-                let subDistrictFetch = await fetch(`https://raw.githubusercontent.com/madnh/hanhchinhvn/master/dist/xa-phuong/${code}.json`)
-                if(!subDistrictFetch.ok){
-                    console.log("SOMETHING WENT WRONG!!");
-                    return;
+
+            const fetchCollaboratorByJob = async (job_id) => {
+                let collaboratorWrap = document.getElementById('collaborator_wrap');
+                collaboratorWrap.innerHTML = "";
+                try {
+                    let fetchData = await fetch(`/admin/ajax/jobcollaborator/${job_id}`,{
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    console.log(fetchData);
+                    if(!fetchData.ok){
+                        console.log("SOMETHING WENT WRONG!!");
+                        return;
+                    }
+                    let resData = await fetchData.json();
+                    console.log(resData);
+                    if(resData.data.length>0){
+
+                        resData.data.forEach(e => {
+                            let newRow = document.getElementById('collaborator_wrap').insertRow(-1);
+
+                            newRow.innerHTML = collaboratorRow.fullrow(e.id,e.name,e.email,e.expected_price);
+                        });
+
+                    }
+
+                    console.log(resData);
+                } catch (error) {
+                    console.log("ERROR ",error);
+                    alert(error);
                 }
-                let subdistrictData = await subDistrictFetch.json();
-                let subdistrictArr = await Object.values(subdistrictData);
 
-                console.log(subdistrictArr);
-                var x = document.getElementById("subdistricts");
-                x.innerHTML = "";
-                for (const pv of subdistrictArr) {
-                    // option += `<option>${pv.name}</option>`;
-                    var option = document.createElement("option");
-                    option.text = pv.name;
-                    option.value = pv.code;
-                    x.add(option);
-                }
             }
 
-
-            document.getElementById('provinces').onchange = function(evt){
-                fetchDistrict(evt.target.value);
-                address.province = evt.target.selectedOptions[0].text;
+            document.getElementById('job').onchange = function(evt){
+                fetchCollaboratorByJob(evt.target.value);
             }
-            document.getElementById('districts').onchange = function(evt){
-               fetchSubDistrict(evt.target.value);
-               address.district = evt.target.selectedOptions[0].text;
-            }
-
-
-            const getAddressTotal = async () => {
-
-                document.getElementById('subdistricts').onchange = function(evt){
-                    address.subdistrict = evt.target.selectedOptions[0].text;
-                    document.getElementById('addressTotal').value = address.fullAddress();
-                }
-            }
-            getAddressTotal();
 
 
 </script>

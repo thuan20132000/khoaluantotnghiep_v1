@@ -21,6 +21,18 @@ Route::get('/', function () {
 
 Route::get('/admin','HomeController@index');
 
+
+
+Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
+    \UniSharp\LaravelFilemanager\Lfm::routes();
+});
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+
+
+
 Route::resource('/admin/category', 'CategoryController');
 Route::delete('/admin/category','CategoryController@destroyMass')->name('destroyMass');
 
@@ -33,11 +45,8 @@ Route::delete('/admin/user','UserController@destroyMass')->name('destroyMass');
 Route::resource('/admin/job', 'JobController');
 Route::delete('/admin/job','JobController@destroyMass')->name('destroyMass');
 
+Route::resource('/admin/jobcollaborator', 'JobCollaboratorController');
+Route::delete('/admin/jobcollaborator','JobCollaboratorController@destroyMass')->name('destroyMass');
 
-Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
-    \UniSharp\LaravelFilemanager\Lfm::routes();
-});
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('admin/ajax/jobcollaborator/{id}','JobCollaboratorController@getAjaxCollaboratorByJob');

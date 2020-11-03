@@ -17,69 +17,30 @@
             <div class="col-md-4">
             <div class="card card-primary">
                 <div class="card-header">
-                <h3 class="card-title">General</h3>
+                    <h3 class="card-title">General</h3>
 
-                <div class="card-tools">
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                    <i class="fas fa-minus"></i></button>
-                </div>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+                        <i class="fas fa-minus"></i></button>
+                    </div>
                 </div>
                 <div class="card-body">
-                <div class="form-group">
-                    <label for="inputName">Title</label>
-                    <input  type="text" value="{{old('name')}}" id="name" name="name" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="inputName">Slug</label>
-                    <input type="text" value="{{old('slug')}}" id="slug" name="slug" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="inputDescription">Job Description</label>
-                    <textarea id="inputDescription" name="description" class="form-control" rows="4">
-                        {{old('description')}}
-                    </textarea>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                      <!-- select -->
-                      <div class="form-group">
-                        <label>Province / City</label>
-                        <select class="form-control" id="provinces" name="province">
-                            <option value="">-- select province --</option>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <!-- select -->
-                        <div class="form-group">
-                          <label>District</label>
-                          <select class="form-control" id="districts" name="district">
-                            <option value="">-- select district --</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-sm-4">
-                        <!-- select -->
-                        <div class="form-group">
-                          <label>Sub Disctrict</label>
-                          <select class="form-control" id="subdistricts" name="subdistrict">
-                            <option value=""> -- select subdistrict -- </option>
-                          </select>
-                        </div>
-                      </div>
+                    <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th style="width: 10px">ID</th>
+                            <th>NAME</th>
+                            <th>EMAIL</th>
+                            <th>EXPECTED PRICE</th>
+                          </tr>
+                        </thead>
+                        <tbody id="collaborator_wrap">
 
-                </div>
-                <div class="form-group">
-                    <label for="inputName">Address</label>
-                    <input type="text" value="" id="addressTotal" name="address" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="inputDescription">Street</label>
-                    <textarea  name="street" class="form-control" rows="4">
 
-                    </textarea>
-                </div>
 
+
+                        </tbody>
+                      </table>
                 </div>
                 <!-- /.card-body -->
             </div>
@@ -98,39 +59,60 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="occupation-images" class="text-primary">Customer</label>
-                            <select class="form-control custom-select" name="user">
-                                <option value="" selected>-- Selecting User --</option>
-                                @foreach ($customers as $customer)
-                                    <option value="{{$customer->id}}">{{$customer->name}}</option>
-                                @endforeach
-                            </select>
+                            <label for="inputName">Title</label>
+                            <input  type="text" value="{{old('name')}}" id="name" name="name" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="occupation-images" class="text-primary">Field</label>
-                            <select class="form-control custom-select" name="occupation">
-                                <option value="0" selected>Selecting Field</option>
-                                @foreach ($occupations as $occupation)
-                                    <option value="{{$occupation->id}}">{{$occupation->name}}</option>
-                                @endforeach
-                            </select>
+                            <label for="inputName">Slug</label>
+                            <input type="text" value="{{old('slug')}}" id="slug" name="slug" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="inputName">Price</label>
-                            <input type="text" value="{{old('price')}}" id="price" name="price" class="form-control">
+                            <label for="inputDescription">Job Description</label>
+                            <textarea id="inputDescription" name="description" class="form-control" rows="4">
+                                {{old('description')}}
+                            </textarea>
                         </div>
-                        <label for="occupation-images" class="text-primary">Some Images of Recent Project</label>
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                            <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                                <i class="fa fa-picture-o"></i> Choose
-                            </a>
-                            </span>
-                            <input id="thumbnail" class="form-control" type="text" name="filepaths">
-                        </div>
-                        <div id="holder" style="display: flex;flex-direction: row;flex-wrap: wrap;padding:16px">
+                        <div class="row">
+                            <div class="col-sm-4">
+                            <!-- select -->
+                            <div class="form-group">
+                                <label>Province / City</label>
+                                <select class="form-control" id="provinces" name="province">
+                                    <option value="">-- select province --</option>
+                                </select>
+                            </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <!-- select -->
+                                <div class="form-group">
+                                <label>District</label>
+                                <select class="form-control" id="districts" name="district">
+                                    <option value="">-- select district --</option>
+                                </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <!-- select -->
+                                <div class="form-group">
+                                <label>Sub Disctrict</label>
+                                <select class="form-control" id="subdistricts" name="subdistrict">
+                                    <option value=""> -- select subdistrict -- </option>
+                                </select>
+                                </div>
+                            </div>
 
-                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">Address</label>
+                        <input type="text" value="" id="addressTotal" name="address" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputDescription">Street</label>
+                        <textarea  name="street" class="form-control" rows="4">
+
+                        </textarea>
+                    </div>
+
 
 
                     </div>
@@ -165,6 +147,40 @@
                             <option value="1" >Draft</option>
                             <option value="2">Pending</option>
                         </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="occupation-images" class="text-primary">Customer</label>
+                        <select class="form-control custom-select" name="user">
+                            <option value="" selected>-- Selecting User --</option>
+                            @foreach ($customers as $customer)
+                                <option value="{{$customer->id}}">{{$customer->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="occupation-images" class="text-primary">Field</label>
+                        <select class="form-control custom-select" name="occupation">
+                            <option value="0" selected>Selecting Field</option>
+                            @foreach ($occupations as $occupation)
+                                <option value="{{$occupation->id}}">{{$occupation->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">Price</label>
+                        <input type="text" value="{{old('price')}}" id="price" name="price" class="form-control">
+                    </div>
+                    <label for="occupation-images" class="text-primary">Some Images of Recent Project</label>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                        <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                            <i class="fa fa-picture-o"></i> Choose
+                        </a>
+                        </span>
+                        <input id="thumbnail" class="form-control" type="text" name="filepaths">
+                    </div>
+                    <div id="holder" style="display: flex;flex-direction: row;flex-wrap: wrap;padding:16px">
+
                     </div>
 
 
@@ -283,6 +299,9 @@
                 }
             }
             getAddressTotal();
+
+
+
 
 
 </script>

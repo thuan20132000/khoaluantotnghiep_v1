@@ -11,9 +11,15 @@
         </div>
     @endif
 
-    <form action="{{ route('job.update',$job->id) }}" method="POST" enctype="multipart/form-data">
+
+    @if (session('failed'))
+    <div class="alert alert-danger">
+        {{ session('failed') }}
+    </div>
+    @endif
+
+    <form action="{{ route('jobcollaborator.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
-        @method('PUT')
         <div class="row">
             <div class="col-md-4">
             <div class="card card-primary">
@@ -26,67 +32,23 @@
                 </div>
                 </div>
                 <div class="card-body">
-                <div class="form-group">
-                    <label for="inputName">Title</label>
-                    <input  type="text" value="{{$job->name}}" id="name" name="name" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="inputName">Slug</label>
-                    <input type="text" value="{{$job->slug}}" id="slug" name="slug" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="inputDescription">Job Description</label>
-                    <textarea id="inputDescription" name="description" class="form-control" rows="4">
-                        {{$job->description}}
-                    </textarea>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                      <!-- select -->
-                      <div class="form-group">
-                        <label>Province / City</label>
-                        <select class="form-control" id="provinces" name="province">
-                            <option value="">-- select province --</option>
-                            <option value="{{$job->location->province}}" hidden id="user_province"></option>
 
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <!-- select -->
-                        <div class="form-group">
-                          <label>District</label>
-                          <select class="form-control" id="districts" name="district">
-                            <option value="">-- select district --</option>
-                            <option value="{{$job->location->district}}" hidden id="user_district"></option>
+                    <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th style="width: 10px">ID</th>
+                            <th>NAME</th>
+                            <th>EMAIL</th>
+                            <th>EXPECTED PRICE</th>
+                          </tr>
+                        </thead>
+                        <tbody id="collaborator_wrap">
 
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-sm-4">
-                        <!-- select -->
-                        <div class="form-group">
-                          <label>Sub Disctrict</label>
-                          <select class="form-control" id="subdistricts" name="subdistrict">
-                            <option value=""> -- select subdistrict -- </option>
-                            <option value="{{$job->location->subdistrict}}" hidden id="user_subdistrict"></option>
 
-                          </select>
-                        </div>
-                      </div>
 
-                </div>
-                <div class="form-group">
-                    <label for="inputName">Address</label>
-                    <input type="text" value="{{$job->location->address}}" id="addressTotal" name="address" class="form-control">
-                </div>
 
-                <div class="form-group">
-                    <label for="inputDescription">Street</label>
-                    <textarea id="inputDescription" name="street" class="form-control" rows="4">
-                        {{$job->location->street}}
-                    </textarea>
-                </div>
+                        </tbody>
+                      </table>
 
                 </div>
                 <!-- /.card-body -->
@@ -106,56 +68,43 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="occupation-images" class="text-primary">Customer</label>
+                            <input type="text" value="{{$job_collaborator->job->id}}" hidden name="jobcollaborator_id" id="jobcollaborator_id">
+                            <label for="occupation-images" class="text-primary">Collaborator</label>
                             <select class="form-control custom-select" name="user">
-                                <option value="" selected>-- Selecting User --</option>
-                                @foreach ($customers as $customer)
-                                    <option value="{{$customer->id}}"
-                                        @if ($customer->id == $job->user->id)
+                                <option value="" selected>-- Selecting Collaborator --</option>
+                                @foreach ($collaborators as $collaborator)
+                                    <option value="{{$collaborator->id}}"
+                                        @if ($collaborator->id == $job_collaborator->user->id)
                                             selected
                                         @endif
-                                    >
-                                        {{$customer->name}}
-                                    </option>
+                                    >{{$collaborator->name}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="occupation-images" class="text-primary">Field</label>
-                            <select class="form-control custom-select" name="occupation">
-                                <option value="0" selected>Selecting Field</option>
-                                @foreach ($occupations as $occupation)
-                                    <option value="{{$occupation->id}}"
-                                        @if ($occupation->id == $job->occupation->id)
+                            <label for="occupation-images" class="text-primary">Job</label>
+                            <select class="form-control custom-select" name="job" id="job">
+                                <option value="0" selected>Selecting Job</option>
+                                @foreach ($jobs as $job)
+                                    <option value="{{$job->id}}"
+                                        @if ($job->id == $job_collaborator->job->id)
                                             selected
                                         @endif
-                                    >
-                                        {{$occupation->name}}
-                                    </option>
+                                    >{{$job->name}}</option>
                                 @endforeach
                             </select>
                         </div>
+                        {{-- {{$job_collaborator->job->id}} --}}
                         <div class="form-group">
-                            <label for="inputName">Price</label>
-                            <input type="text" value="{{$job->suggestion_price}}" id="price" name="price" class="form-control">
+                            <label for="inputName">Expected Price</label>
+                            <input type="text" value="{{$job_collaborator->expected_price}}" id="price" name="price" class="form-control">
                         </div>
-                        <label for="occupation-images" class="text-primary">Some Images of Recent Project</label>
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                            <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                                <i class="fa fa-picture-o"></i> Choose
-                            </a>
-                            </span>
-                            <input id="thumbnail" class="form-control" type="text" name="filepaths">
+                        <div class="form-group">
+                            <label for="inputDescription">Description</label>
+                            <textarea id="inputDescription" name="description" class="form-control" rows="4">
+                                {{$job_collaborator->description}}
+                            </textarea>
                         </div>
-                        <div id="holder" style="display: flex;flex-direction: row;flex-wrap: wrap;padding:16px">
-                            @if (count($job_images_array) > 0)
-                                @foreach ($job_images_array as $key => $value)
-                                    <img src="{{$value}}" style="height: 5rem;">
-                                @endforeach
-                            @endif
-                        </div>
-
 
                     </div>
                     <!-- /.card-body -->
@@ -185,23 +134,9 @@
                     <div class="form-group">
                         <label for="inputStatus">Status</label>
                         <select class="form-control custom-select" name="status">
-                            @for ($i = 0; $i < 3; $i++)
-                            <option
-                                value="{{$i}}"
-                                @if ($job->status == $i)
-                                    selected
-                                @endif
-                            >
-                                @if ($i ==0)
-                                    Published
-                                @elseif($i == 1)
-                                    Draft
-                                @else
-                                    Pending
-                                @endif
-                            </option>
-
-                            @endfor
+                            <option value="0" selected>Published</option>
+                            <option value="1" >Draft</option>
+                            <option value="2">Pending</option>
                         </select>
                     </div>
 
@@ -216,132 +151,62 @@
     </form>
 <script>
 
- /**
-         * author:thuantruong
-         * created_at:30/10/2020
-         */
 
 
-          /**
-         * author:thuantruong
-         * created_at:30/10/2020
-         */
+            var collaboratorRow = {
 
-
-        var address = {
-            province:'',
-            district:'',
-            subdistrict:'',
-            fullAddress:function(){
-                return this.province + " - "+ this.district+" - "+this.subdistrict;
-            }
-        }
-
-         var user_province = document.getElementById('user_province').value;
-            var user_district = document.getElementById('user_district').value;
-            var user_subdistrict = document.getElementById('user_subdistrict').value;
-
-            const fetchProvinces = async () => {
-                let provinceFetch = await fetch(`https://raw.githubusercontent.com/madnh/hanhchinhvn/master/dist/tinh_tp.json`);
-                if(!provinceFetch.ok){
-                    console.log("SOMETHING WENT WRONG!!");
-                    return;
+                fullrow:function(id,name,email,expected_price){
+                    return  `<tr>
+                                <td>${id}</td>
+                                <td><span class="badge bg-danger">${name}</span></td>
+                                <td>${email}</td>
+                                <td>${expected_price}</td>
+                             </tr>`;
                 }
-                let provinceData = await provinceFetch.json();
-                let provincesArr = await Object.values(provinceData);
+            }
 
-                var x = document.getElementById("provinces");
-                for (const pv of provincesArr) {
-                    // option += `<option>${pv.name}</option>`;
-                    var option = document.createElement("option");
-                    option.text = pv.name;
-                    option.value = pv.code;
-                    if(option.value == user_province){
-                        option.selected = true;
-                        fetchDistrict(user_province);
+
+
+            const fetchCollaboratorByJob = async (job_id) => {
+                let collaboratorWrap = document.getElementById('collaborator_wrap');
+                collaboratorWrap.innerHTML = "";
+                try {
+                    let fetchData = await fetch(`/admin/ajax/jobcollaborator/${job_id}`,{
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    });
+                    if(!fetchData.ok){
+                        console.log("SOMETHING WENT WRONG!!");
+                        return;
                     }
-                    x.add(option);
-                }
+                    let resData = await fetchData.json();
+                    if(resData.data.length>0){
 
+                        resData.data.forEach(e => {
+                            let newRow = document.getElementById('collaborator_wrap').insertRow(-1);
 
+                            newRow.innerHTML = collaboratorRow.fullrow(e.id,e.name,e.email,e.expected_price);
+                        });
 
-
-            }
-            fetchProvinces();
-
-
-            const fetchDistrict = async (code) => {
-                let districtFetch = await fetch(`https://raw.githubusercontent.com/madnh/hanhchinhvn/master/dist/quan-huyen/${code}.json`);
-                if(!districtFetch.ok){
-                    console.log("SOMETHING WENT WRONG!!");
-                    return;
-                }
-                let districtData = await districtFetch.json();
-                let districtArr = await Object.values(districtData);
-
-
-                var x = document.getElementById("districts");
-                x.innerHTML = "";
-                for (const pv of districtArr) {
-                    // option += `<option>${pv.name}</option>`;
-                    var option = document.createElement("option");
-                    option.text = pv.name;
-                    option.value = pv.code;
-                    if(option.value == user_district){
-                        option.selected = true;
-                        fetchSubDistrict(user_district)
                     }
 
-                    x.add(option);
+                } catch (error) {
+                    console.log("ERROR ",error);
+                    alert(error);
                 }
+
+            }
+
+            let jobcollaborator_id = document.getElementById('jobcollaborator_id').value;
+            fetchCollaboratorByJob(jobcollaborator_id);
+
+
+            document.getElementById('job').onchange = function(evt){
+                fetchCollaboratorByJob(evt.target.value);
             }
 
 
-            const fetchSubDistrict = async (code) => {
-                let subDistrictFetch = await fetch(`https://raw.githubusercontent.com/madnh/hanhchinhvn/master/dist/xa-phuong/${code}.json`)
-                if(!subDistrictFetch.ok){
-                    console.log("SOMETHING WENT WRONG!!");
-                    return;
-                }
-                let subdistrictData = await subDistrictFetch.json();
-                let subdistrictArr = await Object.values(subdistrictData);
-
-                console.log(subdistrictArr);
-                var x = document.getElementById("subdistricts");
-                x.innerHTML = "";
-                for (const pv of subdistrictArr) {
-                    // option += `<option>${pv.name}</option>`;
-                    var option = document.createElement("option");
-                    option.text = pv.name;
-                    option.value = pv.code;
-                    if(option.value == user_subdistrict){
-                        option.selected = true;
-                    }
-                    x.add(option);
-                }
-            }
-
-
-            document.getElementById('provinces').onchange = function(evt){
-                fetchDistrict(evt.target.value);
-                address.province = evt.target.selectedOptions[0].text;
-                getAddressTotal();
-
-            }
-            document.getElementById('districts').onchange = function(evt){
-               fetchSubDistrict(evt.target.value);
-               address.district = evt.target.selectedOptions[0].text;
-               getAddressTotal();
-            }
-
-            document.getElementById('subdistricts').onchange = function(evt){
-                    address.subdistrict = evt.target.selectedOptions[0].text;
-                    getAddressTotal();
-            }
-
-            const getAddressTotal = async () => {
-                document.getElementById('addressTotal').value = address.fullAddress();
-            }
 
 </script>
 

@@ -26,67 +26,22 @@
                 </div>
                 </div>
                 <div class="card-body">
-                <div class="form-group">
-                    <label for="inputName">Title</label>
-                    <input  type="text" value="{{$job->name}}" id="name" name="name" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="inputName">Slug</label>
-                    <input type="text" value="{{$job->slug}}" id="slug" name="slug" class="form-control">
-                </div>
-                <div class="form-group">
-                    <label for="inputDescription">Job Description</label>
-                    <textarea id="inputDescription" name="description" class="form-control" rows="4">
-                        {{$job->description}}
-                    </textarea>
-                </div>
-                <div class="row">
-                    <div class="col-sm-4">
-                      <!-- select -->
-                      <div class="form-group">
-                        <label>Province / City</label>
-                        <select class="form-control" id="provinces" name="province">
-                            <option value="">-- select province --</option>
-                            <option value="{{$job->location->province}}" hidden id="user_province"></option>
+                    <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th style="width: 10px">ID</th>
+                            <th>NAME</th>
+                            <th>EMAIL</th>
+                            <th>EXPECTED PRICE</th>
+                          </tr>
+                        </thead>
+                        <tbody id="collaborator_wrap">
 
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-sm-4">
-                        <!-- select -->
-                        <div class="form-group">
-                          <label>District</label>
-                          <select class="form-control" id="districts" name="district">
-                            <option value="">-- select district --</option>
-                            <option value="{{$job->location->district}}" hidden id="user_district"></option>
 
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-sm-4">
-                        <!-- select -->
-                        <div class="form-group">
-                          <label>Sub Disctrict</label>
-                          <select class="form-control" id="subdistricts" name="subdistrict">
-                            <option value=""> -- select subdistrict -- </option>
-                            <option value="{{$job->location->subdistrict}}" hidden id="user_subdistrict"></option>
 
-                          </select>
-                        </div>
-                      </div>
 
-                </div>
-                <div class="form-group">
-                    <label for="inputName">Address</label>
-                    <input type="text" value="{{$job->location->address}}" id="addressTotal" name="address" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="inputDescription">Street</label>
-                    <textarea id="inputDescription" name="street" class="form-control" rows="4">
-                        {{$job->location->street}}
-                    </textarea>
-                </div>
+                        </tbody>
+                      </table>
 
                 </div>
                 <!-- /.card-body -->
@@ -105,57 +60,69 @@
                     </div>
                     </div>
                     <div class="card-body">
+
                         <div class="form-group">
-                            <label for="occupation-images" class="text-primary">Customer</label>
-                            <select class="form-control custom-select" name="user">
-                                <option value="" selected>-- Selecting User --</option>
-                                @foreach ($customers as $customer)
-                                    <option value="{{$customer->id}}"
-                                        @if ($customer->id == $job->user->id)
-                                            selected
-                                        @endif
-                                    >
-                                        {{$customer->name}}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <label for="inputName">Title</label>
+                            <input  type="text" value="{{$job->name}}" id="name" name="name" class="form-control">
+                            <input type="text" value="{{$job->id}}" id="job_id" name="job_id" hidden>
                         </div>
                         <div class="form-group">
-                            <label for="occupation-images" class="text-primary">Field</label>
-                            <select class="form-control custom-select" name="occupation">
-                                <option value="0" selected>Selecting Field</option>
-                                @foreach ($occupations as $occupation)
-                                    <option value="{{$occupation->id}}"
-                                        @if ($occupation->id == $job->occupation->id)
-                                            selected
-                                        @endif
-                                    >
-                                        {{$occupation->name}}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <label for="inputName">Slug</label>
+                            <input type="text" value="{{$job->slug}}" id="slug" name="slug" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label for="inputName">Price</label>
-                            <input type="text" value="{{$job->suggestion_price}}" id="price" name="price" class="form-control">
+                            <label for="inputDescription">Job Description</label>
+                            <textarea id="inputDescription" name="description" class="form-control" rows="4">
+                                {{$job->description}}
+                            </textarea>
                         </div>
-                        <label for="occupation-images" class="text-primary">Some Images of Recent Project</label>
-                        <div class="input-group">
-                            <span class="input-group-btn">
-                            <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                                <i class="fa fa-picture-o"></i> Choose
-                            </a>
-                            </span>
-                            <input id="thumbnail" class="form-control" type="text" name="filepaths">
+                        <div class="row">
+                            <div class="col-sm-4">
+                              <!-- select -->
+                              <div class="form-group">
+                                <label>Province / City</label>
+                                <select class="form-control" id="provinces" name="province">
+                                    <option value="">-- select province --</option>
+                                    <option value="{{$job->location->province}}" hidden id="user_province"></option>
+
+                                </select>
+                              </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <!-- select -->
+                                <div class="form-group">
+                                  <label>District</label>
+                                  <select class="form-control" id="districts" name="district">
+                                    <option value="">-- select district --</option>
+                                    <option value="{{$job->location->district}}" hidden id="user_district"></option>
+
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="col-sm-4">
+                                <!-- select -->
+                                <div class="form-group">
+                                  <label>Sub Disctrict</label>
+                                  <select class="form-control" id="subdistricts" name="subdistrict">
+                                    <option value=""> -- select subdistrict -- </option>
+                                    <option value="{{$job->location->subdistrict}}" hidden id="user_subdistrict"></option>
+
+                                  </select>
+                                </div>
+                              </div>
+
                         </div>
-                        <div id="holder" style="display: flex;flex-direction: row;flex-wrap: wrap;padding:16px">
-                            @if (count($job_images_array) > 0)
-                                @foreach ($job_images_array as $key => $value)
-                                    <img src="{{$value}}" style="height: 5rem;">
-                                @endforeach
-                            @endif
+                        <div class="form-group">
+                            <label for="inputName">Address</label>
+                            <input type="text" value="{{$job->location->address}}" id="addressTotal" name="address" class="form-control">
                         </div>
 
+                        <div class="form-group">
+                            <label for="inputDescription">Street</label>
+                            <textarea id="inputDescription" name="street" class="form-control" rows="4">
+                                {{$job->location->street}}
+                            </textarea>
+                        </div>
 
                     </div>
                     <!-- /.card-body -->
@@ -203,6 +170,48 @@
 
                             @endfor
                         </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="occupation-images" class="text-primary">Customer</label>
+                        <select class="form-control custom-select" name="user">
+                            <option disabled value="" selected>{{$job->user->name}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="occupation-images" class="text-primary">Field</label>
+                        <select class="form-control custom-select" name="occupation">
+                            <option value="0" selected>Selecting Field</option>
+                            @foreach ($occupations as $occupation)
+                                <option value="{{$occupation->id}}"
+                                    @if ($occupation->id == $job->occupation->id)
+                                        selected
+                                    @endif
+                                >
+                                    {{$occupation->name}}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName">Price</label>
+                        <input type="text" value="{{$job->suggestion_price}}" id="price" name="price" class="form-control">
+                    </div>
+                    <label for="occupation-images" class="text-primary">Some Images of Recent Project</label>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                        <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                            <i class="fa fa-picture-o"></i> Choose
+                        </a>
+                        </span>
+                        <input id="thumbnail" class="form-control" type="text" name="filepaths">
+                    </div>
+                    <div id="holder" style="display: flex;flex-direction: row;flex-wrap: wrap;padding:16px">
+                        @if (count($job_images_array) > 0)
+                            @foreach ($job_images_array as $key => $value)
+                                <img src="{{$value}}" style="height: 5rem;">
+                            @endforeach
+                        @endif
                     </div>
 
 
@@ -342,6 +351,58 @@
             const getAddressTotal = async () => {
                 document.getElementById('addressTotal').value = address.fullAddress();
             }
+
+
+            var collaboratorRow = {
+
+                fullrow:function(id,name,email,expected_price){
+                    return  `<tr>
+                                <td>${id}</td>
+                                <td><span class="badge bg-danger">${name}</span></td>
+                                <td>${email}</td>
+                                <td>${expected_price}</td>
+                            </tr>`;
+                }
+            }
+
+
+
+            const fetchCollaboratorByJob = async (job_id) => {
+                let collaboratorWrap = document.getElementById('collaborator_wrap');
+                collaboratorWrap.innerHTML = "";
+                try {
+                let fetchData = await fetch(`/admin/ajax/jobcollaborator/${job_id}`,{
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                console.log(fetchData);
+                if(!fetchData.ok){
+                    console.log("SOMETHING WENT WRONG!!");
+                    return;
+                }
+                let resData = await fetchData.json();
+                console.log(resData);
+                if(resData.data.length>0){
+
+                    resData.data.forEach(e => {
+                        let newRow = document.getElementById('collaborator_wrap').insertRow(-1);
+
+                        newRow.innerHTML = collaboratorRow.fullrow(e.id,e.name,e.email,e.expected_price);
+                    });
+
+                }
+
+                console.log(resData);
+                } catch (error) {
+                console.log("ERROR ",error);
+                alert(error);
+                }
+
+            }
+
+            let job_id = document.getElementById('job_id').value;
+            fetchCollaboratorByJob(job_id);
 
 </script>
 

@@ -18,13 +18,13 @@
                     <button type="button" class="btn btn-info">Action</button>
                     <button type="button" class="btn btn-info dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
                       <div class="dropdown-menu" role="menu">
-                        <a class="dropdown-item" href="#" id="job-deleteAllCheckbox">
+                        <a class="dropdown-item" href="#" id="jobcollaborator-deleteAllCheckbox">
                             Delete
                         </a>
 
                       </div>
                     </button>
-                    <a type="button" class="btn btn-info" style="margin:auto 20px" href="{{ route('job.create') }}">Create</a>
+                    <a type="button" class="btn btn-info" style="margin:auto 20px" href="{{ route('jobcollaborator.create') }}">Create</a>
                   </div>
             </div>
             <!-- /.card-header -->
@@ -33,79 +33,59 @@
                 <thead>
                 <tr>
                     <th>
-                        <input type="checkbox" id="job-selectAllCheckbox" >
+                        <input type="checkbox" id="jobcollaborator-selectAllCheckbox" >
                     </th>
                     <th>ID</th>
-                    <th>TITLE</th>
+                    <th>EXPECTED PRICE</th>
                     <th>DESCRIPTION</th>
-                    <th>IMAGES</th>
-                    <th>ADDRESS</th>
-                    <th>PRICE</th>
-                    <th>CUSTOMER</th>
-                    <th>FIELD</th>
+                    <th>COLLABORATOR</th>
+                    <th>JOB</th>
+                    <th>CREATED_AT</th>
                     <th>STATUS</th>
                     <th>OPERATIONS</th>
                 </tr>
                 </thead>
                 <tbody>
 
-                @foreach ($jobs as $job)
+                @foreach ($job_collaborators as $job_collaborator)
                     <tr>
                         <td>
-                        <input type="checkbox" name="job[]" value="{{$job->id}}" >
+                        <input type="checkbox" name="jobcollaborator[]" value="{{$job_collaborator->id}}" >
                         </td>
-                        <td>{{$job->id}}</td>
-                        <td>{{$job->name}}</td>
+                        <td>{{$job_collaborator->id}}</td>
+                        <td>{{$job_collaborator->expected_price}}</td>
                         <td style="max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
-                            {{$job->description}}
+                            {{$job_collaborator->description}}
                         </td>
+                        <td>
+                            <a href="{{ route('user.edit',$job_collaborator->user->id) }}" class="btn btn-block bg-gradient-info btn-xs">{{$job_collaborator->user->name}}</a>
 
-                        <td style="max-width: 220px">
-                            @foreach ($job->images as $image)
-                            <img src="{{ $image->image_url }}" width="50px" height="50px" alt="" srcset="">
-
-                            @endforeach
-                        </td>
-
-                        <td>
-                            <p>{{$job->location->address}}</p>
-                            <p>{{$job->location->street}}</p>
                         </td>
                         <td>
-                            {{$job->suggestion_price}}
+                            <a href="{{ route('job.edit',$job_collaborator->job->id) }}" class="btn btn-block bg-gradient-info btn-xs">{{$job_collaborator->job->name}}</a>
                         </td>
+                        <td>{{$job_collaborator->created_at}}</td>
                         <td>
-                            <a href="{{ route('user.edit',$job->user->id) }}" class="btn btn-block bg-gradient-info btn-xs">{{$job->user->name}}</a>
-                        </td>
-                        <td>
-                            <a href="{{ route('occupation.edit',$job->occupation->id) }}" class="bg-warning color-palette p-1">{{$job->occupation->name}}</a>
-                        </td>
-                        {{-- <td>
-                            @foreach ($job->roles as $role)
-                                <button type="button" class="btn btn-block btn-outline-primary btn-sm">{{$role->name}}</button>
-                            @endforeach
-                        </td> --}}
-                        <td>
-                            @if ($job->status == 0)
+                            @if ($job_collaborator->status == 0)
                                 <button type="button" class="btn btn-block bg-gradient-success btn-xs">Published</button>
                             @endif
 
-                            @if ($job->status == 1)
+                            @if ($job_collaborator->status == 1)
                             <button type="button" class="btn btn-block bg-gradient-secondary btn-xs">Draft</button>
                             @endif
 
-                            @if ($job->status == 2)
+                            @if ($job_collaborator->status == 2)
                             <button type="button" class="btn btn-block bg-gradient-danger btn-xs">Pending</button>
                             @endif
 
                         </td>
                         <td>
-                            <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('job.edit', $job->id) }}">
+                            <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('jobcollaborator.edit', $job_collaborator->id) }}">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
-                            <a class="btn btn-block bg-gradient-danger btn-xs" onclick="document.getElementById(`job-{{$job->id}}`).submit()">
+                            <a class="btn btn-block bg-gradient-danger btn-xs" onclick="document.getElementById(`job_collaborator-{{$job_collaborator->id}}`).submit()">
                                 <i class="fas fa-trash"></i> Delete
-                                <form action="{{ route('job.destroy',$job->id) }}" method="post" hidden id="job-{{$job->id}}">
+                                <form action="{{ route('jobcollaborator.destroy',$job_collaborator->id) }}" method="post" hidden id="job_collaborator-{{$job_collaborator->id}}">
                                     @csrf
                                     @method('DELETE')
                                 </form>
