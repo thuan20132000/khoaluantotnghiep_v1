@@ -11,7 +11,7 @@ class Category extends Model
 
     public function occupations()
     {
-        return $this->hasMany('App\Model\Occupation', 'category_id', 'id');
+        return $this->hasMany(Occupation::class);
     }
 
 }

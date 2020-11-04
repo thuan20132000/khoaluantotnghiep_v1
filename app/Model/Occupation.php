@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Occupation extends Model
 {
@@ -21,4 +22,19 @@ class Occupation extends Model
         return $this->belongsToMany(User::class);
     }
 
+    public function jobs()
+    {
+        return $this->hasMany(Job::class);
+    }
+
+
+    public function collaborators()
+    {
+        $occupation_collaborators = DB::table('users')
+                                    ->join('occupation_user','occupation_user.user_id','=','users.id')
+                                    ->join('occupations','occupations.id','=','occupation_user.occupation_id')
+                                    ->where('occupations.id','=',$this->id)
+                                    ->select('users.*')->get();
+        return $occupation_collaborators;
+    }
 }

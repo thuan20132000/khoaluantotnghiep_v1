@@ -2,9 +2,9 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Resources\Json\JsonResource;
 
-class OccupationCollection extends ResourceCollection
+class OccupationCollection extends JsonResource
 {
     /**
      * Transform the resource collection into an array.
@@ -15,7 +15,20 @@ class OccupationCollection extends ResourceCollection
     public function toArray($request)
     {
         return [
-            'data'=>$this->collection
+            'id'=>$this->id,
+            'attributes'=>[
+                'name'=>$this->name,
+                'slug'=>$this->slug,
+                'image'=>$this->image,
+                'status'=>$this->status
+            ],
+            'relationships'=>[
+                'category'=>$this->category,
+                'collaborators'=>$this->collaborators()
+            ],
+            'include'=>[
+                'jobs'=>$this->jobs
+            ]
         ];
     }
 }

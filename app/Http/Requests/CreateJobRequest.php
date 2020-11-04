@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateCategoryRequest extends FormRequest
+class CreateJobRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class CreateCategoryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,7 +28,6 @@ class CreateCategoryRequest extends FormRequest
             'data'=>'required',
             'data.attributes'=>'required',
             'data.attributes.name'=>'required|string',
-            'data.attributes.slug'=>'required|string',
             'data.attributes.province'=>'required',
             'data.attributes.district'=>'required',
             'data.attributes.subdistrict'=>'required',

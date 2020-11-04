@@ -16,11 +16,19 @@ class OccupationResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'name'=>$this->name,
-            'slug'=>$this->slug,
-            'image'=>$this->image,
-            'status'=>$this->status,
-            'category'=>$this->category
+            'attributes'=>[
+                'name'=>$this->name,
+                'slug'=>$this->slug,
+                'image'=>$this->image,
+                'status'=>$this->status
+            ],
+            'relationships'=>[
+                'category'=>$this->category,
+                'collaborators'=>$this->collaborators()
+            ],
+            'include'=>[
+                'jobs'=>$this->jobs
+            ]
         ];
     }
 }

@@ -18,7 +18,7 @@ class OccupationController extends Controller
     public function index()
     {
         //
-        return new OccupationCollection(Occupation::all());
+        return  OccupationCollection::collection(Occupation::all());
     }
 
     /**
