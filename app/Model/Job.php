@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Job extends Model
 {
@@ -25,5 +26,15 @@ class Job extends Model
 
     public function occupation(){
         return $this->belongsTo(Occupation::class);
+    }
+
+    public function candidates(){
+        $candidates = DB::table('users')
+                        ->join('job_collaborators','users.id','=','job_collaborators.user_id')
+                        ->join('jobs','jobs.id','=','job_collaborators.job_id')
+                        ->where('jobs.id','=',$this->id)
+                        ->select('users.*','job_collaborators.expected_price','job_collaborators.description')
+                        ->get();
+        return $candidates;
     }
 }

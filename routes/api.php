@@ -17,3 +17,11 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::group(['prefix' => 'v1'], function () {
+   Route::resource('category', 'Api\CategoryController');
+   Route::resource('occupation', 'Api\OccupationController');
+   Route::resource('job', 'Api\JobController');
+
+
+});

@@ -13,4 +13,5 @@ class Category extends Model
     {
         return $this->hasMany('App\Model\Occupation', 'category_id', 'id');
     }
+
 }
