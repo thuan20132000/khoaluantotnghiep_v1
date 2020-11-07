@@ -246,9 +246,15 @@ class JobCollaboratorController extends Controller
                 'data'=>$th
                 ],404);
         }
+    }
 
-
-
+    public function addJobCollaborator(Request $request,$job_id){
+        try {
+            //code...
+            dd($job_id);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
 }

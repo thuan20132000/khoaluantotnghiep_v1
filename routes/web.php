@@ -46,6 +46,7 @@ Route::resource('/admin/job', 'JobController');
 Route::delete('/admin/job','JobController@destroyMass')->name('destroyMass');
 
 Route::resource('/admin/jobcollaborator', 'JobCollaboratorController');
+Route::post('/admin/add-jobcollaborator','JobCollaboratorController@addJobCollaborator')->name('jobcollaborator.add');
 Route::delete('/admin/jobcollaborator','JobCollaboratorController@destroyMass')->name('destroyMass');
 
 

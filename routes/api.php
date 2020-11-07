@@ -22,6 +22,7 @@ Route::group(['prefix' => 'v1'], function () {
    Route::resource('category', 'Api\CategoryController');
    Route::resource('occupation', 'Api\OccupationController');
    Route::resource('job', 'Api\JobController');
+   Route::resource('job-collaborator', 'Api\JobCollaborator');
 
 
 });

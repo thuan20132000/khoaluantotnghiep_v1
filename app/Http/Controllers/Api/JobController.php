@@ -25,7 +25,7 @@ class JobController extends Controller
         //
         $per_page = 15;
         if($request->input('per_page')){
-            $per_page = $request->input('per_page');
+            $per_page = (int)$request->input('per_page');
         }
         return  JobCollection::collection(Job::paginate($per_page));
     }
@@ -104,7 +104,15 @@ class JobController extends Controller
     public function show($id)
     {
         //
-        return new JobResource(Job::find($id));
+        $job = Job::where('id',$id)->first();
+        if($job){
+            return new JobResource($job);
+        }else{
+            return response()->json([
+                "data"=>null,
+                "message"=>"Not found any item."
+            ]);
+        }
     }
 
     /**

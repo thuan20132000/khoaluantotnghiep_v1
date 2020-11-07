@@ -163,11 +163,15 @@ class JobController extends Controller
                     ->select('users.*')->get();
         $job_images = DB::table('images')->where('job_id',$job->id)->get();
         $job_images_array = $job_images->pluck('image_url')->toArray();
+
+        $collaborators_all = User::all();
+
         return view('admin.job.edit',[
             'job'=>$job,
             'occupations'=>$occupations,
             'customers'=>$customers,
-            'job_images_array'=>$job_images_array
+            'job_images_array'=>$job_images_array,
+            'collaborators_all'=>$collaborators_all,
         ]);
     }
 
@@ -191,7 +195,6 @@ class JobController extends Controller
             'district'=>'required',
             'subdistrict'=>'required',
             'street'=>'required',
-            'user'=>'required',
             'price'=>'required|numeric'
         ],[
             'name.required'=>'Please enter title!',
@@ -201,7 +204,6 @@ class JobController extends Controller
             'district.required'=>'Please choose district',
             'subdistrict.required'=>'Please choose subdistrict',
             'street.required'=>'Please enter street',
-            'user.required'=>'Please choose customer!',
             'price.required'=>'Please enter suggestion price!'
 
         ]);
@@ -222,7 +224,6 @@ class JobController extends Controller
             $job->slug = $request->slug;
             $job->description = $request->description;
             $job->location_id = $location_id;
-            $job->user_id = $request->user;
             $job->occupation_id = $request->occupation;
             $job->suggestion_price = $request->price;
             $job->status = $request->status;

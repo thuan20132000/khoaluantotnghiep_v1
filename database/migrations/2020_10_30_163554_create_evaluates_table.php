@@ -18,6 +18,8 @@ class CreateEvaluatesTable extends Migration
             $table->integer('range')->nullable();
             $table->text('content')->nullable();
             $table->tinyInteger('status')->default(0);
+            $table->unsignedBigInteger('job_confirm_id');
+            $table->foreign('job_confirm_id')->references('id')->on('job_confirms')->onDelete('cascade');
             $table->timestamps();
         });
     }

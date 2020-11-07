@@ -41,6 +41,7 @@
                     <th>COLLABORATOR</th>
                     <th>JOB</th>
                     <th>CREATED_AT</th>
+                    <th>UPDATED_AT</th>
                     <th>STATUS</th>
                     <th>OPERATIONS</th>
                 </tr>
@@ -65,6 +66,7 @@
                             <a href="{{ route('job.edit',$job_collaborator->job->id) }}" class="btn btn-block bg-gradient-info btn-xs">{{$job_collaborator->job->name}}</a>
                         </td>
                         <td>{{$job_collaborator->created_at}}</td>
+                        <td>{{$job_collaborator->updated_at}}</td>
                         <td>
                             @if ($job_collaborator->status == 0)
                                 <button type="button" class="btn btn-block bg-gradient-success btn-xs">Published</button>
