@@ -50,4 +50,6 @@ Route::post('/admin/add-jobcollaborator','JobCollaboratorController@addJobCollab
 Route::delete('/admin/jobcollaborator','JobCollaboratorController@destroyMass')->name('destroyMass');
 
 
+Route::get('/admin/job-confirm','JobConfirmController@index')->name('jobconfirm.index');
+
 Route::get('admin/ajax/jobcollaborator/{id}','JobCollaboratorController@getAjaxCollaboratorByJob');
