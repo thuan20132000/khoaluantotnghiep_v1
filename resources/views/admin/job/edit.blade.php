@@ -11,137 +11,24 @@
         </div>
     @endif
 
+    @if (session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+    @if (session('failed'))
+        <div class="alert alert-danger">
+            {{ session('failed') }}
+        </div>
+    @endif
+
     <form action="{{ route('job.update', $job->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="row">
-            <div class="col-md-5">
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h3 class="card-title">General</h3>
-
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
-                                title="Collapse">
-                                <i class="fas fa-minus"></i></button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th style="width: 10px">ID</th>
-                                    <th>NAME</th>
-                                    <th>EMAIL</th>
-                                    <th>EXPECTED PRICE</th>
-                                    <th>OPERATION</th>
-                                </tr>
-                            </thead>
-                            <tbody id="collaborator_wrap">
-
-                                <tr>
-                                    <td>dscds</td>
-                                    <td>dsv</td>
-                                    <td>dsvsd</td>
-                                    <td>dvdfv</td>
-                                    <td>
-                                        <a class="btn btn-app">
-                                            <i class="fas fa-trash"></i> Edit
-                                        </a>
-                                    </td>
-                                </tr>
 
 
-
-                            </tbody>
-                        </table>
-
-                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-xl">
-                            ADD MORE
-                        </button>
-                        <div class="modal fade" id="modal-xl" aria-modal="true">
-                            <div class="modal-dialog modal-xl" style="max-width: 1420px">
-                                <div class="modal-content">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h3 class="card-title">DataTable with default features</h3>
-                                        </div>
-                                        <!-- /.card-header -->
-                                        <div class="card-body">
-                                            <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
-
-                                                <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <table id="example2"
-                                                            class="table table-bordered table-striped dataTable dtr-inline"
-                                                            role="grid" aria-describedby="example1_info">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>ID</th>
-                                                                    <th>NAME</th>
-                                                                    <th>IMAGE</th>
-                                                                    <th>OCCUPATIONS</th>
-                                                                    <th>EMAIL</th>
-                                                                    <th>IDC</th>
-                                                                    <th>ADDRESS</th>
-                                                                    <th>PHONE</th>
-                                                                    <th>OPERATIONS</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @foreach ($collaborators_all as $collaborator)
-                                                                    @if ($collaborator->hasRole('isCollaborator'))
-                                                                    <tr role="row" class="odd">
-                                                                        <td>{{$collaborator->id}}</td>
-                                                                        <td>{{$collaborator->name}}</td>
-                                                                        <td>{{$collaborator->profile_image}}</td>
-                                                                        <td style="display: flex;flex-direction: row;flex-wrap: wrap">
-                                                                            @foreach ($collaborator->occupations as $occupation)
-                                                                            <button type="button" class="btn btn-block btn-info btn-xs">
-                                                                                {{$occupation->name}}
-                                                                            </button>
-                                                                            @endforeach
-                                                                        </td>
-                                                                        <td>{{$collaborator->email}}</td>
-                                                                        <td>{{$collaborator->idcard}}</td>
-                                                                        <td>{{$collaborator->address}}</td>
-                                                                        <td>{{$collaborator->phonenumber}}</td>
-
-                                                                        <td>
-                                                                            <a href="{{ route('add.jobcollaborator') }}" >Add</a>
-                                                                            <form id="add-jobcollaborator-{{$job->id}}" action="{{ route('add.jobcollaborator') }}" method="post" hidden>
-                                                                                <input hidden type="text" value="{{$job->id}}">
-                                                                            </form>
-                                                                        </td>
-
-                                                                    </tr>
-                                                                    @endif
-
-                                                                @endforeach
-                                                            </tbody>
-
-                                                        </table>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <!-- /.card-body -->
-                                    </div>
-                                </div>
-                                <!-- /.modal-content -->
-                            </div>
-                            <!-- /.modal-dialog -->
-                        </div>
-
-                    </div>
-
-                    <!-- /.card-body -->
-                </div>
-                <!-- /.card -->
-            </div>
-
-            <div class="col-md-4">
+            <div class="col-md-8">
                 <div class="card card-primary">
                     <div class="card-header">
                         <h3 class="card-title">Occupation Experiences</h3>
@@ -224,7 +111,7 @@
                 </div>
                 <!-- /.card -->
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card card-secondary">
                     <div class="card-header">
                         <h3 class="card-title">Publish</h3>
@@ -251,7 +138,7 @@
                                     Published
                                 @elseif($i == 1)
                                     Draft
-                                @else
+                                @elseif($i == 2)
                                     Pending
                                 @endif
                                 </option>
@@ -311,6 +198,192 @@
             </div>
         </div>
     </form>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Candidates Collaborators
+                        <button type="button" class="btn btn-default p-2" style="margin-left: 12px" data-toggle="modal"
+                            data-target="#modal-xl">
+                            ADD CANDIDATE
+                        </button>
+                    </h3>
+
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
+                            title="Collapse">
+                            <i class="fas fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">ID</th>
+                                <th>NAME</th>
+                                <th>EMAIL</th>
+                                <th>PHONE</th>
+                                <th>ADDRESS</th>
+                                <th>EXPECTED PRICE</th>
+                                <th>DESCRIPTION</th>
+                                <th>STATUS</th>
+                                <th>OPERATION</th>
+                            </tr>
+                        </thead>
+                        <tbody id="collaborator_wrap">
+                            @foreach ($candidates as $candidate)
+                                <tr>
+                                    <td>{{ $candidate->id }}</td>
+                                    <td>
+                                        <a href="{{ route('user.edit', $candidate->id) }}">{{ $candidate->name }}</a>
+                                    </td>
+                                    <td>{{ $candidate->email }}</td>
+                                    <td>{{ $candidate->phonenumber }}</td>
+                                    <td>{{ $candidate->address }}</td>
+                                    <td>{{ $candidate->expected_price }}</td>
+                                    <td>{{ $candidate->job_collaborator_description }}</td>
+                                    <td>
+                                        @if ($candidate->job_collaborator_status == 0)
+                                            <button type="button"
+                                                class="btn btn-block bg-gradient-success btn-xs">Published</button>
+                                        @endif
+
+                                        @if ($candidate->job_collaborator_status == 1)
+                                            <button type="button"
+                                                class="btn btn-block bg-gradient-secondary btn-xs">Draft</button>
+                                        @endif
+
+                                        @if ($candidate->job_collaborator_status == 2)
+                                            <button type="button"
+                                                class="btn btn-block bg-gradient-danger btn-xs">Pending</button>
+                                        @endif
+
+                                    </td>
+                                    <td>
+                                        {{-- <a href="" class="btn btn-danger">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </a> --}}
+                                        <a href="{{ route('jobcollaborator.edit', $candidate->job_collaborator_id) }}"
+                                            class="btn btn-block bg-gradient-info btn-xs">Edit</a>
+                                        <a class="btn btn-block bg-gradient-danger btn-xs"
+                                            onclick="document.getElementById(`candidate-{{ $candidate->id }}`).submit()">
+                                            <i class="fas fa-trash"></i> Delete
+                                            <form
+                                                action="{{ route('jobcollaborator.destroy', $candidate->job_collaborator_id) }}"
+                                                method="post" hidden id="candidate-{{ $candidate->id }}">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                        </a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                    {{-- Momal collaborator list --}}
+                    <div class="modal fade" id="modal-xl" aria-modal="true">
+                        <div class="modal-dialog modal-xl" style="max-width: 1420px">
+                            <div class="modal-content">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">DataTable with default features</h3>
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body">
+                                        <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
+
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <table id="example2"
+                                                        class="table table-bordered table-striped dataTable dtr-inline"
+                                                        role="grid" aria-describedby="example1_info">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>ID</th>
+                                                                <th>NAME</th>
+                                                                <th>IMAGE</th>
+                                                                <th>OCCUPATIONS</th>
+                                                                <th>EMAIL</th>
+                                                                <th>IDC</th>
+                                                                <th>ADDRESS</th>
+                                                                <th>PHONE</th>
+                                                                <th>OPERATIONS</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach ($collaborators_all as $collaborator)
+                                                                @if ($collaborator->hasRole('isCollaborator'))
+                                                                    <tr role="row" class="odd">
+                                                                        <td>{{ $collaborator->id }}</td>
+                                                                        <td>{{ $collaborator->name }}</td>
+                                                                        <td>{{ $collaborator->profile_image }}</td>
+                                                                        <td
+                                                                            style="display: flex;flex-direction: row;flex-wrap: wrap">
+                                                                            @foreach ($collaborator->occupations as $occupation)
+                                                                                <button type="button"
+                                                                                    class="btn btn-block btn-info btn-xs">
+                                                                                    {{ $occupation->name }}
+                                                                                </button>
+                                                                            @endforeach
+                                                                        </td>
+                                                                        <td>{{ $collaborator->email }}</td>
+                                                                        <td>{{ $collaborator->idcard }}</td>
+                                                                        <td>{{ $collaborator->address }}</td>
+                                                                        <td>{{ $collaborator->phonenumber }}</td>
+                                                                        <td>
+                                                                            <form
+                                                                                id="add-jobcollaborator-{{ $collaborator->id }}"
+                                                                                action="{{ route('jobcollaborator.add') }}"
+                                                                                method="post">
+                                                                                <input type="text" name="expected_price"
+                                                                                    id="" class="form-control m-1"
+                                                                                    placeholder="expected price">
+
+                                                                                <a class="btn btn-block bg-gradient-info btn-xs"
+                                                                                    onclick="document.getElementById(`add-jobcollaborator-{{ $collaborator->id }}`).submit()">
+                                                                                    Add
+
+                                                                                    @csrf
+                                                                                    <input hidden type="text"
+                                                                                        value="{{ $job->id }}"
+                                                                                        name="job_id">
+                                                                                    <input hidden type="text"
+                                                                                        value="{{ $collaborator->id }}"
+                                                                                        name="user_id">
+                                                                                </a>
+                                                                            </form>
+
+                                                                        </td>
+
+                                                                    </tr>
+                                                                @endif
+
+                                                            @endforeach
+                                                        </tbody>
+
+                                                    </table>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+
+                </div>
+
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
     <script>
         /**
          * author:thuantruong
@@ -447,11 +520,11 @@
 
             fullrow: function(id, name, email, expected_price) {
                 return `<tr>
-                                            <td>${id}</td>
-                                            <td><span class="badge bg-danger">${name}</span></td>
-                                            <td>${email}</td>
-                                            <td>${expected_price}</td>
-                                        </tr>`;
+                                                        <td>${id}</td>
+                                                        <td><span class="badge bg-danger">${name}</span></td>
+                                                        <td>${email}</td>
+                                                        <td>${expected_price}</td>
+                                                    </tr>`;
             }
         }
 

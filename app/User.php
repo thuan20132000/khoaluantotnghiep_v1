@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Model\Job;
+use App\Model\JobCollaborator;
 use App\Model\Occupation;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;

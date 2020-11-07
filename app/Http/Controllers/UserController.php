@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\Occupation;
 use App\Role;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,7 @@ class UserController extends Controller
     public function index()
     {
         //
-        $users = User::orderBy('created_at','desc')->get();
+        $users = User::orderBy('updated_at','desc')->get();
         return view('admin.users.index',['users'=>$users]);
     }
 
@@ -205,6 +206,7 @@ class UserController extends Controller
             $user->subdistrict = $request->subdistrict;
             $user->address = $request->address;
             $user->status = $request->status;
+            $user->updated_at =  Carbon::now();
             $user->update();
 
             $roless = $user->roles->pluck('id')->all();
@@ -234,15 +236,15 @@ class UserController extends Controller
             }
 
 
-
-
-            $occupations = $request->occupations;
-            if($occupations && count($occupations) > 0){
-                $user->occupations()->attach($occupations);
+            $user_occupation_collect = collect($user->occupations);
+            $update_occupation = $request->occupations;
+            $user->occupations()->detach($user_occupation_collect->pluck('id'));
+            if($update_occupation && count($update_occupation) > 0){
+                $user->occupations()->attach($update_occupation);
             }
 
             DB::commit();
-            return redirect()->route('user.index')->with('success','Update Successfully');
+            return redirect()->back()->with('success','Update Successfully.');
         } catch (\Throwable $th) {
             DB::rollBack();
             throw $th;

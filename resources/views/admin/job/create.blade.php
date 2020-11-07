@@ -14,40 +14,8 @@
     <form action="{{ route('job.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="row">
-            <div class="col-md-4">
-            <div class="card card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">General</h3>
 
-                    <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                        <i class="fas fa-minus"></i></button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead>
-                          <tr>
-                            <th style="width: 10px">ID</th>
-                            <th>NAME</th>
-                            <th>EMAIL</th>
-                            <th>EXPECTED PRICE</th>
-                          </tr>
-                        </thead>
-                        <tbody id="collaborator_wrap">
-
-
-
-
-                        </tbody>
-                      </table>
-                </div>
-                <!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-            </div>
-
-            <div class="col-md-4">
+            <div class="col-md-8">
                 <div class="card card-primary">
                     <div class="card-header">
                     <h3 class="card-title">Occupation Experiences</h3>
@@ -150,17 +118,20 @@
                     </div>
                     <div class="form-group">
                         <label for="occupation-images" class="text-primary">Customer</label>
-                        <select class="form-control custom-select" name="user">
-                            <option value="" selected>-- Selecting User --</option>
-                            @foreach ($customers as $customer)
-                                <option value="{{$customer->id}}">{{$customer->name}}</option>
-                            @endforeach
-                        </select>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modal-xl">Select Customer</button>
+                            </div>
+                            <!-- /btn-group -->
+                            <input type="text" class="form-control" id="job_customer_name">
+                            <input hidden type="text" id="job_customer_id" name="user" hidden >
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="occupation-images" class="text-primary">Field</label>
                         <select class="form-control custom-select" name="occupation">
-                            <option value="0" selected>Selecting Field</option>
+                            <option value="" selected>Selecting Field</option>
                             @foreach ($occupations as $occupation)
                                 <option value="{{$occupation->id}}">{{$occupation->name}}</option>
                             @endforeach
@@ -192,6 +163,71 @@
             </div>
         </div>
     </form>
+    {{-- Momal collaborator list --}}
+    <div class="modal fade" id="modal-xl" aria-modal="true">
+        <div class="modal-dialog modal-xl" style="max-width: 1420px">
+            <div class="modal-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">DataTable with default features</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div id="example1_wrapper" class="dataTables_wrapper dt-bootstrap4">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table id="example2"
+                                        class="table table-bordered table-striped dataTable dtr-inline"
+                                        role="grid" aria-describedby="example1_info">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>NAME</th>
+                                                <th>IMAGE</th>
+                                                <th>EMAIL</th>
+                                                <th>IDC</th>
+                                                <th>ADDRESS</th>
+                                                <th>PHONE</th>
+                                                <th>OPERATIONS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($customers as $customer)
+                                                    <tr role="row" class="odd">
+                                                        <td>{{ $customer->id }}</td>
+                                                        <td>{{ $customer->name }}</td>
+                                                        <td>
+                                                            <img src="{{ $customer->profile_image }}" width="100px" height="100px" alt="" srcset="">
+                                                        </td>
+                                                        <td>{{ $customer->email }}</td>
+                                                        <td>{{ $customer->idcard }}</td>
+                                                        <td>{{ $customer->address }}</td>
+                                                        <td>{{ $customer->phonenumber }}</td>
+                                                        <td>
+                                                        <a class="btn btn-block bg-gradient-info btn-xs" data-dismiss="modal" id="" href="#" onclick="selectJobCustomer('{{$customer->id}}','{{$customer->name}}')">
+                                                                <i class="fas fa-edit"></i> Select
+                                                            </a>
+                                                        </td>
+
+
+                                                    </tr>
+
+                                            @endforeach
+                                        </tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
 <script>
 
  /**
@@ -301,7 +337,11 @@
             getAddressTotal();
 
 
-
+            const selectJobCustomer = (id,name) => {
+                console.log(name);
+               document.getElementById('job_customer_name').value = name;
+               document.getElementById('job_customer_id').value = id;
+            }
 
 
 </script>

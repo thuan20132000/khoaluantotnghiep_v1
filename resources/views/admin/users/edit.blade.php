@@ -17,6 +17,12 @@
         </div>
     @endif
 
+    @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+    @endif
+
 
     <form action="{{ route('user.update',$user->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -174,7 +180,7 @@
                 </div>
                 <div class="card-body">
                     <div class="form-group">
-                        <button type="submit" class="btn btn-block btn-success">Save</button>
+                        <button type="submit" class="btn btn-block btn-success">Update</button>
 
                     </div>
                     <div class="form-group">

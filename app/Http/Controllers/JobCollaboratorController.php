@@ -145,12 +145,8 @@ class JobCollaboratorController extends Controller
         //
         $validated = $request->validate([
             'price'=>'required',
-            'user'=>'required',
-            'job'=>'required',
         ],[
             'price'=>'Please enter expected price!',
-            'user.required'=>'Please choose collaborator!',
-            'job.required'=>'Please choose job!',
         ]);
 
         try {
@@ -158,22 +154,20 @@ class JobCollaboratorController extends Controller
             $job_id = $request->job;
             $collaborator_id = $request->user;
 
-            $check_duplicate = JobCollaborator::where('job_id',$job_id)
-                                ->where('user_id',$collaborator_id)->count();
-            if($check_duplicate > 0){
-                return redirect()->back()->with('failed','Collaborator was exists in this job!');
-            }
+            // $check_duplicate = JobCollaborator::where('job_id',$job_id)
+            //                     ->where('user_id',$collaborator_id)->count();
+            // if($check_duplicate > 0){
+            //     return redirect()->back()->with('failed','Collaborator was exists in this job!');
+            // }
 
 
-            $job_colaborator = JobCollaborator::find($id)->first();
+            $job_colaborator = JobCollaborator::where('id',$id)->first();
             $job_colaborator->description = $request->description;
-            $job_colaborator->user_id = $request->user;
             $job_colaborator->expected_price = $request->price;
-            $job_colaborator->job_id = $request->job;
             $job_colaborator->status = $request->status;
             $job_colaborator->update();
 
-            return redirect()->route('jobcollaborator.index')->with('success','Updated Successfully');
+            return redirect()->back()->with('success','Updated Successfully');
         } catch (\Throwable $th) {
             throw $th;
             return redirect()->back()->with('failed','Updated failed!');
@@ -190,15 +184,18 @@ class JobCollaboratorController extends Controller
     public function destroy($id)
     {
         //
+        // dd($id);
         try {
             //code...
 
-            $user = JobCollaborator::find($id)->first();
+            $user = JobCollaborator::where('id',$id)->first();
             // dd($user);
             $user->delete();
             return redirect()->back()->with('success','Delete successfully');
         } catch (\Throwable $th) {
             throw $th;
+            return redirect()->back()->with('failed','Delete failed');
+
         }
     }
 
@@ -248,10 +245,44 @@ class JobCollaboratorController extends Controller
         }
     }
 
-    public function addJobCollaborator(Request $request,$job_id){
+    public function addJobCollaborator(Request $request){
         try {
             //code...
-            dd($job_id);
+            $validated = $request->validate([
+
+                'user_id'=>'required',
+                'job_id'=>'required',
+            ],[
+                'user.required'=>'Please choose collaborator!',
+                'job.required'=>'Please choose job!',
+            ]);
+
+            try {
+                //code...
+                $job_id = $request->job_id;
+                $collaborator_id = $request->user_id;
+
+                $check_duplicate = JobCollaborator::where('job_id',$job_id)
+                                    ->where('user_id',$collaborator_id)->count();
+                if($check_duplicate > 0){
+                    return redirect()->back()->with('failed','Collaborator was exists in this job!');
+                }
+
+                $job_colaborator = new JobCollaborator();
+                $job_colaborator->description = $request->description;
+                $job_colaborator->user_id = $collaborator_id;
+                $job_colaborator->expected_price = $request->expected_price;
+                $job_colaborator->job_id = $job_id;
+                $job_colaborator->status = 2;
+                $job_colaborator->save();
+
+                return redirect()->back()->with('success','Added Collaborator Successfully');
+            } catch (\Throwable $th) {
+                throw $th;
+                return redirect()->back()->with('failed','Added Collaborator failed!');
+
+            }
+
         } catch (\Throwable $th) {
             throw $th;
         }

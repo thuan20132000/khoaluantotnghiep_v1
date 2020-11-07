@@ -78,7 +78,7 @@
                             <a href="{{ route('user.edit',$job->user->id) }}" class="btn btn-block bg-gradient-info btn-xs">{{$job->user->name}}</a>
                         </td>
                         <td>
-                            <a href="{{ route('occupation.edit',$job->occupation->id) }}" class="bg-warning color-palette p-1">{{$job->occupation->name}}</a>
+                            <a href="{{ route('occupation.edit',$job->occupation->id) }}" class="btn btn-block bg-gradient-info btn-sm">{{$job->occupation->name}}</a>
                         </td>
                         {{-- <td>
                             @foreach ($job->roles as $role)

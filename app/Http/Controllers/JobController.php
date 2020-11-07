@@ -70,7 +70,8 @@ class JobController extends Controller
             'subdistrict'=>'required',
             'street'=>'required',
             'user'=>'required',
-            'price'=>'required|numeric'
+            'price'=>'required|numeric',
+            'occupation'=>'required'
         ],[
             'name.required'=>'Please enter title!',
             'description.required'=>'Please enter description!',
@@ -80,7 +81,8 @@ class JobController extends Controller
             'subdistrict.required'=>'Please choose subdistrict',
             'street.required'=>'Please enter street',
             'user.required'=>'Please choose customer!',
-            'price.required'=>'Please enter suggestion price!'
+            'price.required'=>'Please enter suggestion price!',
+            'occupation.required'=>'Please choose occupation!',
 
         ]);
         try {
@@ -97,7 +99,6 @@ class JobController extends Controller
             );
 
 
-
             $job = new Job();
             $job->name = $request->name;
             $job->slug = $request->slug;
@@ -111,7 +112,7 @@ class JobController extends Controller
 
 
             $images_thumbnail_array = Str::of($request->filepaths)->explode(',');
-            if($images_thumbnail_array && count($images_thumbnail_array) > 1){
+            if($images_thumbnail_array && count($images_thumbnail_array) > 0){
                 foreach ($images_thumbnail_array as $key => $value) {
                     # code...
                     if($value){
@@ -165,6 +166,7 @@ class JobController extends Controller
         $job_images_array = $job_images->pluck('image_url')->toArray();
 
         $collaborators_all = User::all();
+        $candidates = $job->candidates();
 
         return view('admin.job.edit',[
             'job'=>$job,
@@ -172,6 +174,7 @@ class JobController extends Controller
             'customers'=>$customers,
             'job_images_array'=>$job_images_array,
             'collaborators_all'=>$collaborators_all,
+            'candidates'=>$candidates,
         ]);
     }
 
@@ -231,7 +234,8 @@ class JobController extends Controller
 
 
             $images_thumbnail_array = Str::of($request->filepaths)->explode(',');
-            if($images_thumbnail_array && count($images_thumbnail_array) > 1){
+            if($images_thumbnail_array && count($images_thumbnail_array) > 0){
+                DB::table('images')->where('job_id',$job->id)->delete();
                 foreach ($images_thumbnail_array as $key => $value) {
                     # code...
                     if($value){
