@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Job;
+use App\Model\JobCollaborator;
 use App\Model\Occupation;
 use App\Role;
 use App\User;
@@ -149,6 +151,15 @@ class UserController extends Controller
             $user = User::where('id',$id)->first();
             $roles = Role::all();
 
+            $job_collaborators = null;
+            if($user->hasRole('isCollaborator')){
+                $job_collaborators = JobCollaborator::where('user_id',$user->id)->get();
+            }
+            $customer_jobs = null;
+            if($user->hasRole('isCustomer')){
+                $customer_jobs = Job::where('user_id',$user->id)->get();
+            }
+
             $user_occupation_array = $user->occupations->pluck('id')->toArray();
             $user_images = DB::table('images')->where('user_id',$id)->get();
             $user_images_array = $user_images->pluck('image_url')->toArray();
@@ -158,6 +169,8 @@ class UserController extends Controller
                 'occupations'=>$occupations,
                 'user_occupation_array'=>$user_occupation_array,
                 'user_image_array'=>$user_images_array,
+                'job_collaborators'=>$job_collaborators,
+                'customer_jobs'=>$customer_jobs,
             ]);
 
         } catch (\Throwable $th) {

@@ -148,7 +148,15 @@
                             </select>
                         </div>
 
-
+                        @if ($job_collaborator->status != 3)
+                            <button type="button" onclick="document.getElementById(`job_collaborator_confirm`).submit()"  class="btn btn-block bg-gradient-info btn-lg">
+                                CONFIRM
+                            </button>
+                        @else
+                        <button type="button" disabled   class="btn btn-block bg-gradient-success btn-sm">
+                            CONFIRMED
+                        </button>
+                        @endif
 
                     </div>
                     <!-- /.card-body -->
@@ -156,6 +164,13 @@
                 <!-- /.card -->
             </div>
         </div>
+    </form>
+    <form action="{{ route('jobconfirm.post') }}" method="post" id="job_collaborator_confirm">
+        @csrf
+        <input type="hidden" name="job_collaborator_id" value="{{$job_collaborator->id}}" id="job_collaborator_id" >
+        <input type="hidden" name="confirmed_price" value="{{$job_collaborator->expected_price}}" id="job_collaborator_price" >
+        <input type="hidden" name="job_id" value="{{$job_collaborator->job->id}}" id="job_collaborator_price" >
+
     </form>
     <script>
         var collaboratorRow = {
@@ -207,9 +222,15 @@
         fetchCollaboratorByJob(jobcollaborator_id);
 
 
-        document.getElementById('job').onchange = function(evt) {
-            fetchCollaboratorByJob(evt.target.value);
+
+
+        document.getElementById('price').onkeyup = function(evt){
+            let priceValue = evt.target.value;
+            document.getElementById('job_collaborator_price').value = priceValue;
+
         }
+
+
 
     </script>
 

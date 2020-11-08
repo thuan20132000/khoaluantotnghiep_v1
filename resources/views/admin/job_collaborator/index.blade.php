@@ -7,6 +7,11 @@
     {{ session('success') }}
 </div>
 @endif
+@if (session('failed'))
+<div class="alert alert-danger">
+    {{ session('failed') }}
+</div>
+@endif
 
 <section class="content">
     <div class="container-fluid">
@@ -69,7 +74,7 @@
                         <td>{{$job_collaborator->updated_at}}</td>
                         <td>
                             @if ($job_collaborator->status == 0)
-                                <button type="button" class="btn btn-block bg-gradient-success btn-xs">Published</button>
+                                <button type="button" class="btn btn-block bg-gradient-info btn-xs">Published</button>
                             @endif
 
                             @if ($job_collaborator->status == 1)
@@ -79,6 +84,11 @@
                             @if ($job_collaborator->status == 2)
                             <button type="button" class="btn btn-block bg-gradient-danger btn-xs">Pending</button>
                             @endif
+
+                            @if ($job_collaborator->status == 3)
+                            <button type="button" class="btn btn-block bg-gradient-success btn-xs">Confirm</button>
+                            @endif
+
 
                         </td>
                         <td>

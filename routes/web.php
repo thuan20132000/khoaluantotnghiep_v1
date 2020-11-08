@@ -51,5 +51,7 @@ Route::delete('/admin/jobcollaborator','JobCollaboratorController@destroyMass')-
 
 
 Route::get('/admin/job-confirm','JobConfirmController@index')->name('jobconfirm.index');
+Route::post('/admin/job-confirm','JobConfirmController@confirmJobCollaborator')->name('jobconfirm.post');
+Route::delete('/admin/job-confirm/{id}','JobConfirmController@destroy')->name('jobconfirm.destroy');
 
 Route::get('admin/ajax/jobcollaborator/{id}','JobCollaboratorController@getAjaxCollaboratorByJob');

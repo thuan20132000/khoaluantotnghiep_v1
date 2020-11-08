@@ -134,12 +134,13 @@
                                         selected
                                 @endif
                                 >
-                                @if ($i == 0)
-                                    Published
-                                @elseif($i == 1)
+
+                                @if($i == 1)
                                     Draft
                                 @elseif($i == 2)
                                     Pending
+                                @else
+                                    Published
                                 @endif
                                 </option>
 
@@ -246,7 +247,7 @@
                                     <td>
                                         @if ($candidate->job_collaborator_status == 0)
                                             <button type="button"
-                                                class="btn btn-block bg-gradient-success btn-xs">Published</button>
+                                                class="btn btn-block bg-gradient-info btn-xs">Published</button>
                                         @endif
 
                                         @if ($candidate->job_collaborator_status == 1)
@@ -257,6 +258,11 @@
                                         @if ($candidate->job_collaborator_status == 2)
                                             <button type="button"
                                                 class="btn btn-block bg-gradient-danger btn-xs">Pending</button>
+                                        @endif
+
+                                        @if ($candidate->job_collaborator_status == 3)
+                                            <button type="button"
+                                                class="btn btn-block bg-gradient-success btn-xs">Confirm</button>
                                         @endif
 
                                     </td>
@@ -520,11 +526,11 @@
 
             fullrow: function(id, name, email, expected_price) {
                 return `<tr>
-                                                        <td>${id}</td>
-                                                        <td><span class="badge bg-danger">${name}</span></td>
-                                                        <td>${email}</td>
-                                                        <td>${expected_price}</td>
-                                                    </tr>`;
+                                                            <td>${id}</td>
+                                                            <td><span class="badge bg-danger">${name}</span></td>
+                                                            <td>${email}</td>
+                                                            <td>${expected_price}</td>
+                                                        </tr>`;
             }
         }
 

@@ -24,5 +24,6 @@ Route::group(['prefix' => 'v1'], function () {
    Route::resource('job', 'Api\JobController');
    Route::resource('job-collaborator', 'Api\JobCollaborator');
 
+   Route::resource('user', 'Api\UserController');
 
 });

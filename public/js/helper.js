@@ -48,12 +48,15 @@ function ChangeToSlug(title)
 function changeNameToSlug(name,slug){
     let txtName = document.getElementById(name);
     let txtSlug = document.getElementById(slug);
-    txtName.onkeyup = (e) => {
-        console.warn(e.currentTarget.value);
-        let currentVal = e.currentTarget.value;
-        let slugVal =  ChangeToSlug(currentVal);
-        txtSlug.value = slugVal;
+    if(txtName){
+        txtName.onkeyup = (e) => {
+            console.warn(e.currentTarget.value);
+            let currentVal = e.currentTarget.value;
+            let slugVal =  ChangeToSlug(currentVal);
+            txtSlug.value = slugVal;
+        }
     }
+
 }
 changeNameToSlug('name','slug');
 

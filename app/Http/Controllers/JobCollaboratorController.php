@@ -189,9 +189,12 @@ class JobCollaboratorController extends Controller
             //code...
 
             $user = JobCollaborator::where('id',$id)->first();
+            if($user->status <3){
+                $user->delete();
+                return redirect()->back()->with('success','Delete successfully');
+            }
+            return redirect()->back()->with('failed','Please Choose another Collaborator or remove collaborator confirm!');
             // dd($user);
-            $user->delete();
-            return redirect()->back()->with('success','Delete successfully');
         } catch (\Throwable $th) {
             throw $th;
             return redirect()->back()->with('failed','Delete failed');
