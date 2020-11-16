@@ -151,11 +151,11 @@ class UserController extends Controller
             $user = User::where('id',$id)->first();
             $roles = Role::all();
 
-            $job_collaborators = null;
+            $job_collaborators = array();
             if($user->hasRole('isCollaborator')){
                 $job_collaborators = JobCollaborator::where('user_id',$user->id)->get();
             }
-            $customer_jobs = null;
+            $customer_jobs = array();
             if($user->hasRole('isCustomer')){
                 $customer_jobs = Job::where('user_id',$user->id)->get();
             }
