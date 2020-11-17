@@ -19,7 +19,8 @@ class JobCollection extends JsonResource
             'attributes'=>[
                 'name'=>$this->name,
                 'slug'=>$this->slug,
-                'description'=>$this->description
+                'description'=>$this->description,
+                'suggestion_price'=>$this->suggestion_price
             ],
             'relationships'=>[
                 'author'=>$this->user,
