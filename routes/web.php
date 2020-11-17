@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 
 
-Route::get('/admin','HomeController@index');
+Route::get('/admin', 'HomeController@index');
 
 
 
@@ -29,34 +29,31 @@ Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
 
 
+Route::group(['prefix' => '', 'middleware' => ['web', 'auth']], function () {
+    Route::get('/home', 'HomeController@index')->name('home');
 
-Route::resource('/admin/category', 'CategoryController');
-Route::delete('/admin/category','CategoryController@destroyMass')->name('destroyMass');
+    Route::resource('/admin/category', 'CategoryController');
+    Route::delete('/admin/category', 'CategoryController@destroyMass')->name('destroyMass');
 
-Route::resource('/admin/occupation', 'OccupationController');
-Route::delete('/admin/occupation','OccupationController@destroyMass')->name('destroyMass');
+    Route::resource('/admin/occupation', 'OccupationController');
+    Route::delete('/admin/occupation', 'OccupationController@destroyMass')->name('destroyMass');
 
-Route::resource('/admin/user', 'UserController');
-Route::delete('/admin/user','UserController@destroyMass')->name('destroyMass');
+    Route::resource('/admin/user', 'UserController');
+    Route::delete('/admin/user', 'UserController@destroyMass')->name('destroyMass');
 
-Route::resource('/admin/job', 'JobController');
-Route::delete('/admin/job','JobController@destroyMass')->name('destroyMass');
+    Route::resource('/admin/job', 'JobController');
+    Route::delete('/admin/job', 'JobController@destroyMass')->name('destroyMass');
 
-Route::resource('/admin/jobcollaborator', 'JobCollaboratorController');
-Route::post('/admin/add-jobcollaborator','JobCollaboratorController@addJobCollaborator')->name('jobcollaborator.add');
-Route::delete('/admin/jobcollaborator','JobCollaboratorController@destroyMass')->name('destroyMass');
-
-
-Route::get('/admin/job-confirm','JobConfirmController@index')->name('jobconfirm.index');
-Route::post('/admin/job-confirm','JobConfirmController@confirmJobCollaborator')->name('jobconfirm.post');
-Route::delete('/admin/job-confirm/{id}','JobConfirmController@destroy')->name('jobconfirm.destroy');
-
-Route::get('admin/ajax/jobcollaborator/{id}','JobCollaboratorController@getAjaxCollaboratorByJob');
+    Route::resource('/admin/jobcollaborator', 'JobCollaboratorController');
+    Route::post('/admin/add-jobcollaborator', 'JobCollaboratorController@addJobCollaborator')->name('jobcollaborator.add');
+    Route::delete('/admin/jobcollaborator', 'JobCollaboratorController@destroyMass')->name('destroyMass');
 
 
+    Route::get('/admin/job-confirm', 'JobConfirmController@index')->name('jobconfirm.index');
+    Route::post('/admin/job-confirm', 'JobConfirmController@confirmJobCollaborator')->name('jobconfirm.post');
+    Route::delete('/admin/job-confirm/{id}', 'JobConfirmController@destroy')->name('jobconfirm.destroy');
 
-
-
+    Route::get('admin/ajax/jobcollaborator/{id}', 'JobCollaboratorController@getAjaxCollaboratorByJob');
+});
