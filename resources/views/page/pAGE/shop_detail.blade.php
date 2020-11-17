@@ -345,11 +345,11 @@
       <div class="col-md-12">
         <div class="full">
           <ul class="brand_list">
-            <li><img src="images/it_service/brand_icon1.png" alt="#" /></li>
-            <li><img src="images/it_service/brand_icon2.png" alt="#" /></li>
-            <li><img src="images/it_service/brand_icon3.png" alt="#" /></li>
-            <li><img src="images/it_service/brand_icon4.png" alt="#" /></li>
-            <li><img src="images/it_service/brand_icon5.png" alt="#" /></li>
+            <li><img src="{{asset('assets/images/it_service/brand_icon1.png')}}" alt="#" /></li>
+            <li><img src="{{asset('assets/images/it_service/brand_icon2.png')}}" alt="#" /></li>
+            <li><img src="{{asset('assets/images/it_service/brand_icon3.png')}}" alt="#" /></li>
+            <li><img src="{{asset('assets/images/it_service/brand_icon4.png')}}" alt="#" /></li>
+            <li><img src="{{asset('assets/images/it_service/brand_icon5.png')}}" alt="#" /></li>
           </ul>
         </div>
       </div>
