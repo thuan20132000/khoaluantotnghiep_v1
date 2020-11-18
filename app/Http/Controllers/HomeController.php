@@ -25,4 +25,23 @@ class HomeController extends Controller
     {
         return view('admin.index');
     }
+
+    public function checkout()
+    {
+        return view('page.pages.checkout');
+    }
+    public function shoppingcart()
+    {
+        return view('page.pages.shoppingcart');
+    }
+    public function shop_detail()
+    {
+        return view('page.pages.shop_detail');
+    }
+    public function shoplist()
+    {
+        return view('page.pages.shoplist');
+    }
+
+
 }

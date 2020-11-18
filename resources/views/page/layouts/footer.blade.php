@@ -1,10 +1,5 @@
 <!-- footer -->
 <footer class="footer_style_2">
-  <div class="container-fuild">
-    <div class="row">
-      <div class="map_section">
-        <div id="map"></div>
-      </div>
       <div class="footer_blog">
         <div class="row">
           <div class="col-md-6">
@@ -63,7 +58,7 @@
         </div>
       </div>
       <div class="cprt">
-        <p>ItNext © Copyrights 2019 Design by html.design</p>
+        <p>ItNext © Copyrights 2020 Design by html.design</p>
       </div>
     </div>
   </div>

@@ -20,6 +20,10 @@ Route::get('/', function () {
 
 
 Route::get('/admin', 'HomeController@index');
+Route::get('checkout','HomeController@checkout');
+Route::get('shoppingcart','HomeController@shoppingcart');
+Route::get('shoplist','HomeController@shoplist');
+Route::get('shop_detail','HomeController@shop_detail');
 
 
 
@@ -56,4 +60,7 @@ Route::group(['prefix' => '', 'middleware' => ['web', 'auth']], function () {
     Route::delete('/admin/job-confirm/{id}', 'JobConfirmController@destroy')->name('jobconfirm.destroy');
 
     Route::get('admin/ajax/jobcollaborator/{id}', 'JobCollaboratorController@getAjaxCollaboratorByJob');
+
+    
 });
+    
