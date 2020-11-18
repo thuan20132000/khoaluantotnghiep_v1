@@ -28,19 +28,19 @@ class HomeController extends Controller
 
     public function checkout()
     {
-        return view('page.PAGE.checkout');
+        return view('page.pages.checkout');
     }
     public function shoppingcart()
     {
-        return view('page.PAGE.shoppingcart');
+        return view('page.pages.shoppingcart');
     }
     public function shop_detail()
     {
-        return view('page.PAGE.shop_detail');
+        return view('page.pages.shop_detail');
     }
     public function shoplist()
     {
-        return view('page.PAGE.shoplist');
+        return view('page.pages.shoplist');
     }
 
 
