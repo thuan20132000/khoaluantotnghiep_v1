@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('page.PAGE.index');
+    return view('page.pages.index');
 });
 
 
