@@ -147,12 +147,21 @@ class UserController extends Controller
             $user = User::where('email', $request->email)->first();
             if ($user) {
                 if (Hash::check($request->password, $user->password)) {
-                    $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                    $response = [
-                        'token' => $token,
-                        'data' => $user
-                    ];
-                    return response($response, 200);
+
+                    if($user->email_verified_at){
+                        $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+                        $response = [
+                            'token' => $token,
+                            'data' => $user
+                        ];
+                        return response($response, 200);
+                    }else{
+                        return response([
+                            'message'=>"Email was not verified, Please verify your email!",
+
+                        ],401);
+                    }
+
                 } else {
                     $response = ["message" => "Password mismatch"];
                     return response($response, 401);
