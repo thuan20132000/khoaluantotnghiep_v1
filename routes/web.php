@@ -61,6 +61,7 @@ Route::group(['prefix' => '', 'middleware' => ['web', 'auth']], function () {
 
     Route::get('admin/ajax/jobcollaborator/{id}', 'JobCollaboratorController@getAjaxCollaboratorByJob');
 
-    
+
 });
-    
+
+Route::get('verify/{remember_token}','UserController@verifyUser')->name('user.verify');

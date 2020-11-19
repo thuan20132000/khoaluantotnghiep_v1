@@ -306,4 +306,24 @@ class UserController extends Controller
             return response(['status'=>false],404);
         }
     }
+
+
+
+
+    public function verifyUser($remember_token)
+    {
+        try {
+            //code...
+            $user = User::where('remember_token',$remember_token)->first();
+            $user->status = 0;
+            $user->email_verified_at = now();
+            $user->update();
+
+            return redirect('/');
+
+        } catch (\Throwable $th) {
+            throw $th;
+
+        }
+    }
 }
