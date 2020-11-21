@@ -146,14 +146,11 @@ class UserController extends Controller
 
             $user = User::where('email', $request->email)->first();
 
-
-
-
             if ($user) {
 
-
+                // Check verify email
                 if(!$user->email_verify_at || $user->email_verify_at == ""){
-                   return response(["Please verify your email!"],401);
+                   return response(["message"=>"Please verify your email!"],401);
                 }
 
                 if (Hash::check($request->password, $user->password)) {
