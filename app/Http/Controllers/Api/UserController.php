@@ -149,8 +149,8 @@ class UserController extends Controller
             if ($user) {
 
                 // Check verify email
-                if(!$user->email_verify_at || $user->email_verify_at == ""){
-                   return response(["message"=>"Please verify your email!"],401);
+                if(!$user->email_verified_at || $user->email_verified_at == ""){
+                   return response(["message"=>"Please verify your email!"],200);
                 }
 
                 if (Hash::check($request->password, $user->password)) {
