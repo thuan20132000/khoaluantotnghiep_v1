@@ -148,10 +148,6 @@ class UserController extends Controller
 
             if ($user) {
 
-                // Check verify email
-                if(!$user->email_verified_at || $user->email_verified_at == ""){
-                   return response(["message"=>"Please verify your email!"],200);
-                }
 
                 if (Hash::check($request->password, $user->password)) {
 
@@ -165,20 +161,30 @@ class UserController extends Controller
                     }else{
                         return response([
                             'message'=>"Email was not verified, Please verify your email!",
+                            "data"=>null
 
                         ],200);
                     }
 
                 } else {
-                    $response = ["message" => "Password mismatch"];
+                    $response =[
+                        "message" => "Password mismatch",
+                        "data"=>null,
+                    ];
                     return response($response, 200);
                 }
             } else {
-                $response = ["message" => 'User does not exist'];
+                $response = [
+                    "message" => 'User does not exist',
+                    "data"=>null
+                ];
                 return response($response, 200);
             }
         } catch (\Throwable $th) {
-            return response(['message' => $th], 401);
+            return response([
+                'message' => $th,
+                'data'=>null
+            ], 401);
         }
     }
 
