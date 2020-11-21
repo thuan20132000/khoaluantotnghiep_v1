@@ -199,8 +199,8 @@ class UserController extends Controller
         try {
             //code...
             $validator = Validator::make($request->all(), [
-                'email' => 'required',
-                'password' => 'required|unique:users',
+                'email' => 'required|unique:users',
+                'password' => 'required',
                 'name' => 'required',
                 'phonenumber' => 'required',
                 'idcard' => 'required',
@@ -214,12 +214,12 @@ class UserController extends Controller
                 'email.unique' => 'Email was exists',
                 'phonenumber.required' => 'Please enter phone number',
                 'idcard.required' => 'Please enter id card',
-                'address' => 'Please enter yout address'
+                'address.required' => 'Please enter your address'
             ]);
 
             if ($validator->fails()) {
                 return response([
-                    "message" =>"Valudation ERROR : ".$validator->errors(),
+                    "message" =>$validator->errors(),
                     "data" => null
                 ], 200);
             }
