@@ -140,7 +140,7 @@ class UserController extends Controller
                 return response([
                     "message" => $validator->errors(),
                     "data" => null
-                ], 401);
+                ], 200);
             }
 
 
@@ -166,16 +166,16 @@ class UserController extends Controller
                         return response([
                             'message'=>"Email was not verified, Please verify your email!",
 
-                        ],401);
+                        ],200);
                     }
 
                 } else {
                     $response = ["message" => "Password mismatch"];
-                    return response($response, 401);
+                    return response($response, 200);
                 }
             } else {
                 $response = ["message" => 'User does not exist'];
-                return response($response, 401);
+                return response($response, 200);
             }
         } catch (\Throwable $th) {
             return response(['message' => $th], 401);
@@ -215,7 +215,7 @@ class UserController extends Controller
                 return response([
                     "message" =>"Valudation ERROR : ".$validator->errors(),
                     "data" => null
-                ], 401);
+                ], 200);
             }
 
             DB::beginTransaction();
