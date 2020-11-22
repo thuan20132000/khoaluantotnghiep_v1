@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateJobRequest;
 use App\Http\Resources\JobCollection;
 use App\Http\Resources\JobResource;
+use App\Model\Category;
 use App\Model\Job;
 use App\Model\Location;
 use Illuminate\Support\Facades\Validator;
@@ -24,10 +25,19 @@ class JobController extends Controller
     {
         //
         $per_page = 15;
+        $jobs = Job::all();
         if ($request->input('per_page')) {
             $per_page = (int)$request->input('per_page');
+            $jobs = $jobs->take($per_page);
         }
-        return  JobCollection::collection(Job::paginate($per_page));
+
+        if($request->input('category')){
+            $category_id = $request->input('category');
+            $jobs =  Category::find($category_id)->jobs->take($per_page);
+        }
+
+
+        return  JobCollection::collection($jobs);
     }
 
     /**

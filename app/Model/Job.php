@@ -28,6 +28,8 @@ class Job extends Model
         return $this->belongsTo(Occupation::class);
     }
 
+
+
     public function candidates(){
         $candidates = DB::table('users')
                         ->join('job_collaborators','users.id','=','job_collaborators.user_id')
