@@ -30,4 +30,6 @@ Route::group(['prefix' => 'v1'], function () {
     Route::put('user/{id}', 'Api\UserController@update');
     Route::post('login', 'Api\UserController@login');
     Route::post('register', 'Api\UserController@register');
+
+    Route::get('job-collaborator-applying','Api\JobCollaborator@getCollaboratorJobApplying');
 });

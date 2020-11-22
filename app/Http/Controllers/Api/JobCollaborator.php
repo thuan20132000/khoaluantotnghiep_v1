@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\ModelJobController;
+use App\Http\Resources\CollaboratorJobApplyingCollection;
 use App\Http\Resources\JobCollaboratorCollection;
 use App\Http\Resources\JobCollaboratorResource;
+use App\Model\Job;
 use App\Model\JobCollaborator as ModelJobCollaborator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,6 +15,11 @@ use Illuminate\Support\Facades\Validator;
 
 class JobCollaborator extends Controller
 {
+
+    const CONFIRM_STATUS = 3;
+    const PENDING_STATUS = 2;
+
+
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +29,7 @@ class JobCollaborator extends Controller
     {
         //
         $per_page = 15;
-        if($request->input('per_page')){
+        if ($request->input('per_page')) {
             $per_page = (int)$request->input('per_page');
         }
         return JobCollaboratorCollection::collection(ModelJobCollaborator::paginate($per_page));
@@ -39,16 +47,16 @@ class JobCollaborator extends Controller
         try {
             DB::beginTransaction();
 
-            $validator = Validator::make($request->all(),[
-                'expected_price'=>'required',
-                'description'=>'required',
-                'job_id'=>'required',
-                'user_id'=>'required',
+            $validator = Validator::make($request->all(), [
+                'expected_price' => 'required',
+                'description' => 'required',
+                'job_id' => 'required',
+                'user_id' => 'required',
             ]);
 
-            if($validator->fails()){
+            if ($validator->fails()) {
                 return response()->json([
-                    'status'=>$validator->errors()
+                    'status' => $validator->errors()
                 ]);
             }
 
@@ -56,13 +64,13 @@ class JobCollaborator extends Controller
             $job_id  = $request->job_id;
             $collaborator_id = $request->user_id;
 
-            $check_duplicate = ModelJobCollaborator::where('job_id',$job_id)
-            ->where('user_id',$collaborator_id)->count();
+            $check_duplicate = ModelJobCollaborator::where('job_id', $job_id)
+                ->where('user_id', $collaborator_id)->count();
 
-            if($check_duplicate > 0){
+            if ($check_duplicate > 0) {
                 return response()->json([
-                    'status'=>false,
-                    'message'=>'Collaborator was exists!!!'
+                    'status' => false,
+                    'message' => 'Collaborator was exists!!!'
                 ]);
             }
 
@@ -79,20 +87,14 @@ class JobCollaborator extends Controller
             DB::commit();
 
             return new JobCollaboratorResource($job_collaborator);
-
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
             return response()->json([
-                'status'=>204,
-                'message'=>$th
+                'status' => 204,
+                'message' => $th
             ]);
         }
-
-
-
-
-
     }
 
     /**
@@ -104,13 +106,13 @@ class JobCollaborator extends Controller
     public function show($id)
     {
         //
-        $job_collaborator = ModelJobCollaborator::where('id',$id)->first();
-        if($job_collaborator){
+        $job_collaborator = ModelJobCollaborator::where('id', $id)->first();
+        if ($job_collaborator) {
             return new JobCollaboratorResource($job_collaborator);
-        }else{
+        } else {
             return response()->json([
-                "data"=>null,
-                "message"=>"not found any item."
+                "data" => null,
+                "message" => "not found any item."
             ]);
         }
     }
@@ -128,21 +130,21 @@ class JobCollaborator extends Controller
         try {
             DB::beginTransaction();
 
-            $validator = Validator::make($request->all(),[
-                'expected_price'=>'required',
-                'description'=>'required',
+            $validator = Validator::make($request->all(), [
+                'expected_price' => 'required',
+                'description' => 'required',
 
             ]);
 
-            if($validator->fails()){
+            if ($validator->fails()) {
                 return response()->json([
-                    'status'=>$validator->errors()
+                    'status' => $validator->errors()
                 ]);
             }
 
             //code...
 
-            $job_collaborator = ModelJobCollaborator::where('id',$id)->first();
+            $job_collaborator = ModelJobCollaborator::where('id', $id)->first();
             $job_collaborator->expected_price = $request->expected_price;
             $job_collaborator->description = $request->description;
             $job_collaborator->start_at = $request->start_at;
@@ -152,13 +154,12 @@ class JobCollaborator extends Controller
             DB::commit();
 
             return new JobCollaboratorResource($job_collaborator);
-
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollBack();
             return response()->json([
-                'status'=>204,
-                'message'=>$th
+                'status' => 204,
+                'message' => $th
             ]);
         }
     }
@@ -174,18 +175,70 @@ class JobCollaborator extends Controller
         //
         try {
             //code...
-            $job_collaborator = ModelJobCollaborator::where('id',$id)->first();
+            $job_collaborator = ModelJobCollaborator::where('id', $id)->first();
             $job_collaborator->delete();
 
             return response()->json([
-                'status'=>204,
-                'message'=>'Delete successfully.'
+                'status' => 204,
+                'message' => 'Delete successfully.'
             ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
-                'status'=>404,
-                'message'=>$th
+                'status' => 404,
+                'message' => $th
+            ]);
+        }
+    }
+
+
+    public function getCollaboratorJobApplying(Request $request)
+    {
+        try {
+            //code...
+            $per_page = 15;
+            if ($request->input('per_page')) {
+                $per_page = (int)$request->input('per_page');
+            }
+            $collaborator_id = $request->input('user_id');
+            $collaborator_job_status = $request->input('status');
+
+            if ($collaborator_id && $collaborator_job_status == JobCollaborator::PENDING_STATUS) {
+                $job_collaborator = ModelJobCollaborator::where('user_id', $collaborator_id)
+                    ->where("status", $collaborator_job_status)
+                    ->orderBy('created_at', 'desc')
+                    ->limit($per_page)
+                    ->get();
+
+                return response()->json([
+                    "status" => true,
+                    "data" => CollaboratorJobApplyingCollection::collection($job_collaborator)
+                ]);
+            } else if ($collaborator_id && $collaborator_job_status == JobCollaborator::CONFIRM_STATUS) {
+                $job_collaborator = ModelJobCollaborator::where('user_id', $collaborator_id)
+                    ->where("status", $collaborator_job_status)
+                    ->orderBy('created_at', 'desc')
+                    ->limit($per_page)
+                    ->get();
+
+                return response()->json([
+                    "status" => true,
+                    "data" => CollaboratorJobApplyingCollection::collection($job_collaborator)
+                ]);
+            }
+
+
+
+
+            return response()->json([
+                "status" => false,
+                "data" => []
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                "status" => false,
+                "data" => []
             ]);
         }
     }
