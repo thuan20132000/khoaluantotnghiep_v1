@@ -24,7 +24,7 @@ class JobController extends Controller
     {
         //
         $per_page = 15;
-        if($request->input('per_page')){
+        if ($request->input('per_page')) {
             $per_page = (int)$request->input('per_page');
         }
         return  JobCollection::collection(Job::paginate($per_page));
@@ -46,23 +46,24 @@ class JobController extends Controller
             DB::beginTransaction();
 
             $validator = Validator::make($request->all(), [
-                'name'=>'required|string',
-                'province'=>'required',
-                'district'=>'required',
-                'subdistrict'=>'required',
-                'street'=>'required',
-                'suggestion_price'=>'required',
-                'author'=>'required',
+                'name' => 'required|string',
+                'province' => 'required',
+                'district' => 'required',
+                'subdistrict' => 'required',
+                'street' => 'required',
+                'suggestion_price' => 'required',
+                'author' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status'=>$validator->errors()
+                    'status' => false,
+                    'message' => $validator->errors()
                 ]);
             }
 
             $location = new Location();
-            $location->province= $request->province;
+            $location->province = $request->province;
             $location->district = $request->district;
             $location->subdistrict = $request->subdistrict;
             $location->street = $request->street;
@@ -70,7 +71,7 @@ class JobController extends Controller
 
             $job = new Job();
             $job->name = $request->name;
-            $job->slug = Str::slug($request->name,'-');
+            $job->slug = Str::slug($request->name, '-');
             $job->description = $request->description;
             $job->status = 3;
             $job->suggestion_price = $request->suggestion_price;
@@ -78,21 +79,37 @@ class JobController extends Controller
             $job->occupation_id = $request->occupation_id;
             $job->user_id = $request->author;
             $job->save();
+
+
+            $images_thumbnail_array = $request->images;
+
+            if(is_array($images_thumbnail_array)){
+                foreach ($images_thumbnail_array as $key => $value) {
+                    # code...
+                    if ($value) {
+                        DB::table('images')->insert(
+                            ['image_url' => $value, 'job_id' => $job->id]
+                        );
+                    }
+                }
+            }
+
+
+
             DB::commit();
 
-            return new JobResource($job);
-
-
+            return response()->json([
+                'status' => true,
+                'data' => new JobResource($job)
+            ]);
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollback();
             return response()->json([
-                'status'=>204,
-                'message'=>$th
+                'status' => false,
+                'message' => $th
             ]);
         }
-
-
     }
 
     /**
@@ -104,13 +121,13 @@ class JobController extends Controller
     public function show($id)
     {
         //
-        $job = Job::where('id',$id)->first();
-        if($job){
+        $job = Job::where('id', $id)->first();
+        if ($job) {
             return new JobResource($job);
-        }else{
+        } else {
             return response()->json([
-                "data"=>null,
-                "message"=>"Not found any item."
+                "data" => null,
+                "message" => "Not found any item."
             ]);
         }
     }
@@ -131,18 +148,19 @@ class JobController extends Controller
             DB::beginTransaction();
 
             $validator = Validator::make($request->all(), [
-                'name'=>'required|string',
-                'province'=>'required',
-                'district'=>'required',
-                'subdistrict'=>'required',
-                'street'=>'required',
-                'suggestion_price'=>'required',
-                'author'=>'required',
+                'name' => 'required|string',
+                'province' => 'required',
+                'district' => 'required',
+                'subdistrict' => 'required',
+                'street' => 'required',
+                'suggestion_price' => 'required',
+                'author' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status'=>$validator->errors()
+                    'status' => false,
+                    'message' => $validator->errors()
                 ]);
             }
 
@@ -152,10 +170,10 @@ class JobController extends Controller
             // $location->street = $request->street;
             // $location->save();
 
-            $job = Job::where('id',$id)->first();
+            $job = Job::where('id', $id)->first();
 
             $job->name = $request->name;
-            $job->slug = Str::slug($request->name,'-');
+            $job->slug = Str::slug($request->name, '-');
             $job->description = $request->description;
             $job->status = 3;
             $job->suggestion_price = $request->suggestion_price;
@@ -163,8 +181,22 @@ class JobController extends Controller
             $job->user_id = $request->author;
             $job->update();
 
-            $location = Location::where('id',$job->location_id)->first();
-            $location->province= $request->province;
+
+            $images_thumbnail_array = $request->images;
+
+            if(is_array($images_thumbnail_array)){
+                foreach ($images_thumbnail_array as $key => $value) {
+                    # code...
+                    if ($value) {
+                        DB::table('images')->insert(
+                            ['image_url' => $value, 'job_id' => $job->id]
+                        );
+                    }
+                }
+            }
+
+            $location = Location::where('id', $job->location_id)->first();
+            $location->province = $request->province;
             $location->district = $request->district;
             $location->subdistrict = $request->subdistrict;
             $location->street = $request->street;
@@ -172,15 +204,17 @@ class JobController extends Controller
 
             DB::commit();
 
-            return new JobResource($job);
 
-
+            return response()->json([
+                'status' => true,
+                'data' => new JobResource($job)
+            ]);
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollback();
             return response()->json([
-                'status'=>204,
-                'message'=>$th
+                'status' => false,
+                'message' => $th
             ]);
         }
     }
@@ -196,20 +230,19 @@ class JobController extends Controller
         //
         try {
             //code...
-            $job = Job::where('id',$id)->first();
-            Location::where('id',$job->location_id)->delete();
+            $job = Job::where('id', $id)->first();
+            Location::where('id', $job->location_id)->delete();
             $job->delete();
 
             return response()->json([
-                'status'=>204,
+                'status' => 204,
             ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
-                'status'=>404,
-                'message'=>$th
+                'status' => 404,
+                'message' => $th
             ]);
         }
-
     }
 }
