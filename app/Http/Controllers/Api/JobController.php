@@ -26,18 +26,24 @@ class JobController extends Controller
         //
         $per_page = 15;
         $jobs = Job::all();
-        if ($request->input('per_page')) {
-            $per_page = (int)$request->input('per_page');
-            $jobs = $jobs->take($per_page);
+        try {
+            //code...
+            if ($request->input('per_page')) {
+                $per_page = (int)$request->input('per_page');
+                $jobs = $jobs->take($per_page);
+            }
+
+            if ($request->input('category')) {
+                $category_id = $request->input('category');
+                $jobs =  Category::find($category_id)->jobs->take($per_page);
+            }
+
+
+            return  JobCollection::collection($jobs);
+        } catch (\Throwable $th) {
+            // throw $th;
+            return  JobCollection::collection($jobs);
         }
-
-        if($request->input('category')){
-            $category_id = $request->input('category');
-            $jobs =  Category::find($category_id)->jobs->take($per_page);
-        }
-
-
-        return  JobCollection::collection($jobs);
     }
 
     /**
@@ -93,7 +99,7 @@ class JobController extends Controller
 
             $images_thumbnail_array = $request->images;
 
-            if(is_array($images_thumbnail_array)){
+            if (is_array($images_thumbnail_array)) {
                 foreach ($images_thumbnail_array as $key => $value) {
                     # code...
                     if ($value) {
@@ -194,7 +200,7 @@ class JobController extends Controller
 
             $images_thumbnail_array = $request->images;
 
-            if(is_array($images_thumbnail_array)){
+            if (is_array($images_thumbnail_array)) {
                 foreach ($images_thumbnail_array as $key => $value) {
                     # code...
                     if ($value) {
