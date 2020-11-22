@@ -14,4 +14,9 @@ class Category extends Model
         return $this->hasMany(Occupation::class);
     }
 
+    public function jobs()
+    {
+        return $this->hasManyThrough(Job::class, Occupation::class);
+    }
+
 }
