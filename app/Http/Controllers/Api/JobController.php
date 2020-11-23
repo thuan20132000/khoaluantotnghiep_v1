@@ -261,4 +261,107 @@ class JobController extends Controller
             ]);
         }
     }
+
+
+    /**
+     * author:thuantruong
+     * description:Sort Job by district and price
+     * created_at:23/11/2020
+     */
+    public function sortJob(Request $request)
+    {
+        try {
+            //code...
+            $price_sort = 'desc';
+            $district_id = $request->input('district');
+            $number = 12;
+
+            if($request->input('price')){
+                $price_sort = $request->input('price');
+            }
+
+            if($request->input('limit')){
+                $number= $request->input('limit');
+            }
+
+            $data =  DB::table('jobs')
+                    ->join('location', 'location.id', '=', 'jobs.location_id')
+                    ->orderBy('jobs.suggestion_price', $price_sort)
+                    ->limit($number)
+                    ->select('jobs.*')
+                    ->get();
+
+
+            if ($district_id) {
+
+                $data =  DB::table('jobs')
+                    ->join('location', 'location.id', '=', 'jobs.location_id')
+                    ->where('location.district', $district_id)
+                    ->orderBy('jobs.suggestion_price', $price_sort)
+                    ->limit($number)
+                    ->select('jobs.*')
+                    ->get();
+
+
+            }
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+
+
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'data' => []
+            ]);
+
+        }
+    }
+
+
+
+    /**
+     * author:thuantruong
+     * desction:Search job by name,occupation,author
+     * created_at:23/11/2020
+     */
+    public function searchJob(Request $request)
+    {
+        try {
+            //code...
+            $limit = 8;
+            $query = $request->input('query');
+            if($request->input('limit')){
+                $limit = $request->input('limit');
+            }
+
+            $filter = DB::table('jobs')
+                        ->join('occupations','occupations.id','=','jobs.occupation_id')
+                        ->join('users','users.id','=','jobs.user_id')
+                        ->orWhere('jobs.name','LIKE','%'.$query.'%')
+                        ->orWhere('users.name','LIKE','%'.$query.'%')
+                        ->orWhere('occupations.name','LIKE','%'.$query.'%')
+                        ->limit($limit)
+                        ->select('users.name as author','occupations.name as occupation_name','jobs.*')
+                        ->get();
+
+
+            return response()->json([
+                'status'=>true,
+                'data'=>$filter
+            ]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status'=>false,
+                'data'=>[]
+            ]);
+        }
+    }
+
+
 }
