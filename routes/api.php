@@ -32,4 +32,6 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('register', 'Api\UserController@register');
 
     Route::get('job-collaborator-applying','Api\JobCollaborator@getCollaboratorJobApplying');
+
+    Route::get('job-sort','Api\JobController@sortJob');
 });

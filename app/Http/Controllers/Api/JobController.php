@@ -261,4 +261,52 @@ class JobController extends Controller
             ]);
         }
     }
+
+
+
+    public function sortJob(Request $request)
+    {
+        try {
+            //code...
+            $price_sort = 'desc';
+            $district_id = $request->input('district');
+            if($request->input('price')){
+                $price_sort = $request->input('price');
+            }
+
+            $data =  DB::table('jobs')
+                    ->join('location', 'location.id', '=', 'jobs.location_id')
+                    ->orderBy('jobs.suggestion_price', $price_sort)
+                    ->select('jobs.*')
+                    ->get();
+
+
+            if ($district_id) {
+
+                $data =  DB::table('jobs')
+                    ->join('location', 'location.id', '=', 'jobs.location_id')
+                    ->where('location.district', $district_id)
+                    ->orderBy('jobs.suggestion_price', $price_sort)
+                    ->select('jobs.*')
+                    ->get();
+
+
+            }
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+
+
+
+
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => true,
+                'data' => []
+            ]);
+
+        }
+    }
 }
