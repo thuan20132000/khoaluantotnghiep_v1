@@ -273,23 +273,28 @@ class JobController extends Controller
         try {
             //code...
             $price_sort = 'desc';
+            $category = '';
             $district_id = $request->input('district');
             $number = 12;
 
-            if($request->input('price')){
+            if ($request->input('price')) {
                 $price_sort = $request->input('price');
             }
 
-            if($request->input('limit')){
-                $number= $request->input('limit');
+            if ($request->input('limit')) {
+                $number = $request->input('limit');
+            }
+
+            if ($request->input('category')) {
+                $category = $request->input('category');
             }
 
             $data =  DB::table('jobs')
-                    ->join('location', 'location.id', '=', 'jobs.location_id')
-                    ->orderBy('jobs.suggestion_price', $price_sort)
-                    ->limit($number)
-                    ->select('jobs.*')
-                    ->get();
+                ->join('location', 'location.id', '=', 'jobs.location_id')
+                ->orderBy('jobs.suggestion_price', $price_sort)
+                ->limit($number)
+                ->select('jobs.*')
+                ->get();
 
 
             if ($district_id) {
@@ -301,23 +306,16 @@ class JobController extends Controller
                     ->limit($number)
                     ->select('jobs.*')
                     ->get();
-
-
             }
             return response()->json([
                 'status' => true,
                 'data' => $data
             ]);
-
-
-
-
         } catch (\Throwable $th) {
             return response()->json([
                 'status' => false,
                 'data' => []
             ]);
-
         }
     }
 
@@ -333,35 +331,71 @@ class JobController extends Controller
         try {
             //code...
             $limit = 8;
+            $district = null;
+            $orderByPrice = 'desc';
             $query = $request->input('query');
-            if($request->input('limit')){
-                $limit = $request->input('limit');
+            if ($request->input('limit')) {
+                $limit = (int)$request->input('limit');
+            }
+            if ($request->input('district')) {
+                $district = (int)$request->input('district');
+            }
+            if($request->input('order_by')){
+                $orderByPrice = $request->input('order_by');
             }
 
-            $filter = DB::table('jobs')
-                        ->join('occupations','occupations.id','=','jobs.occupation_id')
-                        ->join('users','users.id','=','jobs.user_id')
-                        ->orWhere('jobs.name','LIKE','%'.$query.'%')
-                        ->orWhere('users.name','LIKE','%'.$query.'%')
-                        ->orWhere('occupations.name','LIKE','%'.$query.'%')
-                        ->limit($limit)
-                        ->select('users.name as author','occupations.name as occupation_name','jobs.*')
-                        ->get();
+            if ($district && $query) {
+                $filter = DB::table('jobs')
+                    ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
+                    ->join('users', 'users.id', '=', 'jobs.user_id')
+                    ->join('location', 'location.id', '=', 'jobs.location_id')
+                    ->orWhere('jobs.name', 'LIKE', '%' . $query . '%')
+                    ->orWhere('users.name', 'LIKE', '%' . $query . '%')
+                    ->orWhere('occupations.name', 'LIKE', '%' . $query . '%')
+                    ->where('location.district', $district)
+                    ->orderBy('jobs.suggestion_price', $orderByPrice)
+                    ->limit($limit)
+                    ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
+                    ->get();
+            }else if($query) {
+                $filter = DB::table('jobs')
+                    ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
+                    ->join('users', 'users.id', '=', 'jobs.user_id')
+                    ->orWhere('jobs.name', 'LIKE', '%' . $query . '%')
+                    ->orWhere('users.name', 'LIKE', '%' . $query . '%')
+                    ->orWhere('occupations.name', 'LIKE', '%' . $query . '%')
+                    ->orderBy('jobs.suggestion_price', $orderByPrice)
+                    ->limit($limit)
+                    ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
+                    ->get();
+            }else if($district){
+                $filter = DB::table('jobs')
+                    ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
+                    ->join('users', 'users.id', '=', 'jobs.user_id')
+                    ->join('location', 'location.id', '=', 'jobs.location_id')
+                    ->where('location.district', $district)
+                    ->orderBy('jobs.suggestion_price', $orderByPrice)
+                    ->limit($limit)
+                    ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
+                    ->get();
+            }else{
+                return response()->json([
+                    'status' => true,
+                    'data' => [],
+                ]);
+            }
 
 
             return response()->json([
-                'status'=>true,
-                'data'=>$filter
+                'status' => true,
+                'data' => $filter,
             ]);
-
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
-                'status'=>false,
-                'data'=>[]
+                'status' => false,
+                'data' => []
             ]);
         }
     }
-
-
 }
