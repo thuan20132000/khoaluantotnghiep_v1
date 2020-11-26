@@ -36,4 +36,6 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('job-sort','Api\JobController@sortJob');
 
     Route::get('job-search','Api\JobController@searchJob');
+
+    Route::resource('collaborators','Api\CollaboratorController');
 });
