@@ -73,7 +73,6 @@ class User extends Authenticatable
                 'users.address',
                 'users.profile_image',
                 'roles.name as role_name',
-                // 'occupations.name as occupation_name'
             )
         ->get();
 
