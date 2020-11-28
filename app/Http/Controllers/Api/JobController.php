@@ -27,6 +27,7 @@ class JobController extends Controller
         //
         $per_page = 15;
         $jobs = Job::all();
+        $sortBy = 'desc';
 
 
         try {
@@ -35,6 +36,10 @@ class JobController extends Controller
                 $per_page = (int)$request->input('per_page');
                 $jobs = $jobs->take($per_page);
             }
+            if($request->input('sort_by')){
+                $sortBy = $request->input('sort_by');
+            }
+
 
             if ($request->input('category')) {
                 $category_id = $request->input('category');
@@ -42,10 +47,16 @@ class JobController extends Controller
             }
 
 
+
             if($request->input('user_id')){
-                $jobs = User::find($request->input('user_id'))->jobs;
 
 
+                $jobs_id_array = User::find($request->input('user_id'))->jobs->pluck('id');
+
+                $jobs = Job::whereIn('id',$jobs_id_array)
+                        ->orderBy('created_at',$sortBy)
+                        ->limit($per_page)
+                        ->get();
 
             }
 
