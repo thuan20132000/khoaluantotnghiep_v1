@@ -24,7 +24,10 @@ class UserResource extends JsonResource
                 'address'=>$this->address,
                 'profile_image'=>$this->profile_image
             ],
-            'role'=>$this->roles
+            'role'=>$this->roles,
+            'relationships'=>[
+                'occupations'=>$this->occupations
+            ]
         ];
     }
 }
