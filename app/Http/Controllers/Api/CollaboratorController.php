@@ -9,6 +9,8 @@ use App\Model\Category;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class CollaboratorController extends Controller
 {
@@ -52,9 +54,9 @@ class CollaboratorController extends Controller
                     'status' => true,
                     'data' => UserCollection::collection($collaborator_by_category)
                 ]);
-            }else{
+            } else {
                 $collaborators_id = User::getCollaborators()->pluck('id');
-                $collaborator_by_category = User::whereIn('id',$collaborators_id)->limit($limit)->get();
+                $collaborator_by_category = User::whereIn('id', $collaborators_id)->limit($limit)->get();
                 return response()->json([
                     'status' => false,
                     'data' => UserCollection::collection($collaborator_by_category)
@@ -65,7 +67,6 @@ class CollaboratorController extends Controller
                 'status' => true,
                 'data' => []
             ]);
-
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
@@ -95,6 +96,23 @@ class CollaboratorController extends Controller
     public function show($id)
     {
         //
+
+        try {
+            //code...
+            $collaborator = User::where('id', $id)->first();
+
+
+            return response()->json([
+                'status' => true,
+                'data' => new UserResource($collaborator)
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => false,
+                'data' => []
+            ]);
+        }
     }
 
     /**
@@ -107,6 +125,57 @@ class CollaboratorController extends Controller
     public function update(Request $request, $id)
     {
         //
+
+        $validatedData = $request->validate([
+            'name' => 'required',
+            'phonenumber' => 'required',
+            'idcard' => 'required',
+            'address' => 'required',
+
+        ], [
+            'name.required' => 'Please enter name',
+            'idcard.required' => 'Please enter id card',
+            'phonenumber' => 'Please enter phone number'
+        ]);
+
+        $images_thumbnail_array = Str::of($request->filepaths)->explode(',');
+        try {
+            //code...
+            DB::beginTransaction();
+
+            $user =  User::where('id', $id)->first();
+            $user->name = $request->name;
+            $user->phonenumber = $request->phonenumber;
+            $user->idcard = $request->idcard;
+            $user->address = $request->address;
+            $user->updated_at =  Carbon::now();
+            $user->profile_image  = $request->profile_image || $user->profile_image;
+
+            $user->update();
+
+
+
+            $user_occupation_collect = collect($user->occupations);
+            $update_occupation = $request->occupations;
+            $user->occupations()->detach($user_occupation_collect->pluck('id'));
+            if ($update_occupation && count($update_occupation) > 0) {
+                $user->occupations()->attach($update_occupation);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status'=>true,
+                'data'=>new UserResource($user)
+            ]);
+
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'status'=>false,
+                'data'=>[]
+            ]);
+        }
     }
 
     /**
