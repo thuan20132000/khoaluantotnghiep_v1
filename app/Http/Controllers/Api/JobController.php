@@ -9,6 +9,7 @@ use App\Http\Resources\JobResource;
 use App\Model\Category;
 use App\Model\Job;
 use App\Model\Location;
+use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +27,8 @@ class JobController extends Controller
         //
         $per_page = 15;
         $jobs = Job::all();
+
+
         try {
             //code...
             if ($request->input('per_page')) {
@@ -39,10 +42,22 @@ class JobController extends Controller
             }
 
 
+            if($request->input('user_id')){
+                $jobs = User::find($request->input('user_id'))->jobs;
+
+
+
+            }
+
             return  JobCollection::collection($jobs);
+
+
         } catch (\Throwable $th) {
             // throw $th;
-            return  JobCollection::collection($jobs);
+            return  response()->json([
+                "status"=>false,
+                "data"=>[]
+            ]);
         }
     }
 

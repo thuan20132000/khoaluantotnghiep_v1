@@ -36,7 +36,7 @@ class Job extends Model
                         ->join('jobs','jobs.id','=','job_collaborators.job_id')
                         ->where('jobs.id','=',$this->id)
                         ->select(
-                            'users.*',
+                            'users.name','users.phonenumber','users.address','users.id','users.email',
                             'job_collaborators.expected_price',
                             'job_collaborators.description as job_collaborator_description',
                             'job_collaborators.id as job_collaborator_id',
