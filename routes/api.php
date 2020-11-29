@@ -26,6 +26,8 @@ Route::group(['prefix' => 'v1'], function () {
     Route::resource('occupation', 'Api\OccupationController');
     Route::resource('job', 'Api\JobController');
     Route::resource('job-collaborator', 'Api\JobCollaborator');
+    Route::post('job/select-candidate','Api\JobCollaborator@selectCandidate');
+
 
     Route::put('user/{id}', 'Api\UserController@update');
     Route::post('login', 'Api\UserController@login');
