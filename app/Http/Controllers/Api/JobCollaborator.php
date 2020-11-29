@@ -73,7 +73,6 @@ class JobCollaborator extends Controller
             $collaborator_id = $request->user_id;
 
             $check_full_candidates = ModelJobCollaborator::checkIsFullCandidates($job_id);
-
             if($check_full_candidates){
                 return response()->json([
                     'status' => false,
