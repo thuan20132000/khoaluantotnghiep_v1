@@ -47,6 +47,10 @@ class JobCollaborator extends Controller
         try {
             DB::beginTransaction();
 
+
+
+
+
             $validator = Validator::make($request->all(), [
                 'expected_price' => 'required',
                 'description' => 'required',
@@ -54,15 +58,28 @@ class JobCollaborator extends Controller
                 'user_id' => 'required',
             ]);
 
+
+
             if ($validator->fails()) {
                 return response()->json([
                     'status' => $validator->errors()
                 ]);
             }
 
+
+
             //code...
             $job_id  = $request->job_id;
             $collaborator_id = $request->user_id;
+
+            $check_full_candidates = ModelJobCollaborator::checkIsFullCandidates($job_id);
+
+            if($check_full_candidates){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Collaborator is full!!!'
+                ]);
+            }
 
             $check_duplicate = ModelJobCollaborator::where('job_id', $job_id)
                 ->where('user_id', $collaborator_id)->count();
@@ -239,6 +256,67 @@ class JobCollaborator extends Controller
             return response()->json([
                 "status" => false,
                 "data" => []
+            ]);
+        }
+    }
+
+
+
+    public function selectCandidate(Request $request)
+    {
+
+        $validated = Validator::make($request->all(), [
+            'job_id' => 'required',
+            'job_collaborator_id' => 'required',
+        ]);
+
+        if ($validated->fails()) {
+            return response()->json([
+                "status" => false,
+                "data" => $validated->errors(),
+            ]);
+        }
+        try {
+
+
+            DB::beginTransaction();
+            $job_collaborators_cancel = ModelJobCollaborator::where('job_id', $request->job_id)
+                ->where('id', '!=', $request->job_collaborator_id)
+                ->get();
+
+
+            foreach ($job_collaborators_cancel as $job_collaborator) {
+                # code...
+
+                $job_collaborator->status = ModelJobCollaborator::CANCEL;
+                $job_collaborator->update();
+            }
+
+
+            $job_collaborator_approve = ModelJobCollaborator::where('id', $request->job_collaborator_id)
+                ->first();
+            $job_collaborator_approve->status = ModelJobCollaborator::APPROVED;
+            $job_collaborator_approve->update();
+
+            DB::commit();
+
+            return response()->json([
+                "status" => true,
+                "data" => [
+                    "id"=>$job_collaborator_approve->user->id,
+                    "name"=>$job_collaborator_approve->user->name,
+                    "email"=>$job_collaborator_approve->user->email,
+                    "phonenumber"=>$job_collaborator_approve->phonenumber,
+                    "address"=>$job_collaborator_approve->address
+                ],
+                "message"=>"Approved Candidate Successfully"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                "status" => false,
+                "data" => [],
+                "message" => $th
             ]);
         }
     }
