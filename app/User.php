@@ -81,10 +81,10 @@ class User extends Authenticatable
 
     public function getOccupationByUserId(){
          $collaborator_occupations = DB::table('users')
-                                    ->join('occupation_user','occupation_user.id','=','users.id')
-                                    ->join('occupations','occupations.id','occupation_user.occupation_id')
+                                    ->join('occupation_user','occupation_user.user_id','=','users.id')
+                                    ->join('occupations','occupations.id','=','occupation_user.occupation_id')
                                     ->where('users.id',$this->id)
-                                    ->select('occupations')
+                                    ->select('occupations.id','occupations.name','occupations.slug','occupations.status','occupations.image')
                                     ->get();
         return $collaborator_occupations;
 

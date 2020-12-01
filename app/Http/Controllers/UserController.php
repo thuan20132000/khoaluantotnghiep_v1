@@ -134,6 +134,26 @@ class UserController extends Controller
     public function show($id)
     {
         //
+        $user_occupations = [];
+        $user = User::where('id',$id)->first();
+        $roles = Role::all();
+
+        $user_is_collaborator = $user->hasRole('isCollaborator');
+        if($user_is_collaborator){
+            $user_occupations = $user->getOccupationByUserId();
+        }
+
+        $user_images = DB::table('images')->where('user_id',$id)->get();
+        $user_images_array = $user_images->pluck('image_url')->toArray();
+        // dd($user_role);
+        // dd($user->getOccupationByUserId());
+        return view('admin.users.show',[
+            'user'=>$user,
+            'user_occupations'=>$user_occupations,
+            'user_image_array'=>$user_images_array,
+            'roles'=>$roles
+
+        ]);
     }
 
     /**

@@ -165,7 +165,7 @@
                     <a href="#" class="nav-link active">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
-                            Category
+                            Danh Mục
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -173,11 +173,11 @@
                         <li class="nav-item">
                             <a href="{{ route('category.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>List</p>
+                                <p>Danh Sách</p>
                             </a>
                             <a href="{{ route('category.create') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Create</p>
+                                <p>Tạo Mới</p>
                             </a>
 
                         </li>
@@ -188,7 +188,7 @@
                     <a href="#" class="nav-link active">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
-                            Occupation
+                            Lĩnh vực hoạt động
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -196,11 +196,11 @@
                         <li class="nav-item">
                             <a href="{{ route('occupation.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>List</p>
+                                <p>Danh Sách</p>
                             </a>
                             <a href="{{ route('occupation.create') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Create</p>
+                                <p>Tạo Mới</p>
                             </a>
 
                         </li>
@@ -211,7 +211,7 @@
                     <a href="#" class="nav-link active">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
-                            User
+                            Người Dùng
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -219,11 +219,11 @@
                         <li class="nav-item">
                             <a href="{{ route('user.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>List</p>
+                                <p>Danh Sách</p>
                             </a>
                             <a href="{{ route('user.create') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Create</p>
+                                <p>Tạo Mới</p>
                             </a>
 
                         </li>
@@ -234,7 +234,7 @@
                     <a href="#" class="nav-link active">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>
-                            Job
+                            Quản Lý Việc Làm
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
@@ -242,22 +242,35 @@
                         <li class="nav-item">
                             <a href="{{ route('job.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Job List</p>
+                                <p>Danh Sách Việc Làm</p>
                             </a>
                             <a href="{{ route('job.create') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Create</p>
-                            </a>
-                            <a href="{{ route('jobcollaborator.index') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Job Collaborator List</p>
-                            </a>
-                            <a href="{{ route('jobconfirm.index') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Job Comfirm List</p>
+                                <p>Thêm Mới Việc Làm</p>
                             </a>
 
+
                         </li>
+
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview menu-close">
+                    <a href="#" class="nav-link active">
+                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <p>
+                            Kết Nối Việc Làm
+                            <i class="right fas fa-angle-left"></i>
+                        </p>
+                    </a>
+                    <ul class="nav nav-treeview">
+                        <a href="{{ route('jobcollaborator.index') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Danh Sách Đăng Ký Việc Làm</p>
+                        </a>
+                        <a href="{{ route('jobconfirm.index') }}" class="nav-link">
+                            <i class="far fa-circle nav-icon"></i>
+                            <p>Job Comfirm List</p>
+                        </a>
 
                     </ul>
                 </li>

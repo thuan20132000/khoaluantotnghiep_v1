@@ -72,6 +72,9 @@
 
                         </td>
                         <td>
+                            <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('category.show', $category->id) }}">
+                                <i class="fas fa-eye"></i> Show
+                            </a>
                             <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('category.edit', $category->id) }}">
                                 <i class="fas fa-edit"></i> Edit
                             </a>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Model\JobConfirm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -39,9 +40,28 @@ class JobConfirmController extends Controller
             //throw $th;
         }
 
+    }
 
 
+    public function getUserConfirmJob($author_id,Request $request)
+    {
+        try {
+            //code...
+            $user_job_confirm = JobConfirm::getUserConfirmedJob($author_id);
 
+            return response()->json([
+                'status'=>true,
+                'data'=>$user_job_confirm
+
+            ]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status'=>false,
+                'data'=>$th
+            ]);
+        }
     }
 
 }

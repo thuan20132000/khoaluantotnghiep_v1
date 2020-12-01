@@ -25,19 +25,26 @@ Route::group(['prefix' => 'v1'], function () {
     Route::resource('category', 'Api\CategoryController');
     Route::resource('occupation', 'Api\OccupationController');
     Route::resource('job', 'Api\JobController');
+    Route::get('job/{author_id}/approved','Api\JobController@getJobsApproved');
+
     Route::resource('job-collaborator', 'Api\JobCollaborator');
     Route::post('job/select-candidate','Api\JobCollaborator@selectCandidate');
+    Route::get('job-collaborator-applying','Api\JobCollaborator@getCollaboratorJobApplying');
 
 
     Route::put('user/{id}', 'Api\UserController@update');
     Route::post('login', 'Api\UserController@login');
     Route::post('register', 'Api\UserController@register');
 
-    Route::get('job-collaborator-applying','Api\JobCollaborator@getCollaboratorJobApplying');
+    Route::get('jobconfirm/{user_id}','Api\JobConfirmController@getUserConfirmJob');
+
 
     Route::get('job-sort','Api\JobController@sortJob');
 
     Route::get('job-search','Api\JobController@searchJob');
 
     Route::resource('collaborators','Api\CollaboratorController');
+
+
+
 });
