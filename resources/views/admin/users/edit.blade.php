@@ -1,6 +1,19 @@
 @extends('admin.layouts.master')
 
 @section('content')
+<div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-6">
+            <a href="{{ route('user.index') }}"> << Danh sách người dùng</a>
+        </div>
+        <div class="col-6">
+
+        </div>
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
 
 <div class="m-2">
 
@@ -34,7 +47,7 @@
             <div class="col-md-5">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">General</h3>
+                        <h3 class="card-title">Thông tin người dùng</h3>
 
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
@@ -124,8 +137,6 @@
 
                     <div class="card-body">
                         @if ($user->hasRole('isCollaborator'))
-
-                        <label for="occupation-images" class="text-primary">Major Fields</label>
                         <div class="form-group">
                             <div class="form-group clearfix"
                                 style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: space-around">
@@ -176,7 +187,7 @@
             <div class="col-md-3">
                 <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">Publish</h3>
+                        <h3 class="card-title">Thiết lập</h3>
                         <div class="card-tools">
                             <button class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                                 <i class="fas fa-minus"></i>
@@ -226,13 +237,13 @@
                                 >
                                 @switch($role->name)
                                     @case('isCustomer')
-                                        {{'Tôi là người tuyển dụng'}}
+                                        {{'Người tuyển dụng'}}
                                         @break
                                     @case('isCollaborator')
-                                        {{'Tôi là người tìm việc'}}
+                                        {{'Người tìm việc'}}
                                         @break
                                     @case('isAdmin')
-                                        {{'Tôi là quản trị viên'}}
+                                        {{'Quản trị viên'}}
                                     @default
 
                                 @endswitch
@@ -260,7 +271,7 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-info">Action</button>
+                            {{-- <button type="button" class="btn btn-info">Action</button>
                             <button type="button" class="btn btn-info dropdown-toggle dropdown-hover dropdown-icon"
                                 data-toggle="dropdown">
                                 <div class="dropdown-menu" role="menu">
@@ -269,9 +280,9 @@
                                     </a>
 
                                 </div>
-                            </button>
-                            <a type="button" class="btn btn-info" style="margin:auto 20px"
-                                href="{{ route('jobcollaborator.create') }}">Create</a>
+                            </button> --}}
+                            {{-- <a type="button" class="btn btn-info" style="margin:auto 20px"
+                                href="{{ route('jobcollaborator.create') }}">Create</a> --}}
                         </div>
                     </div>
                     <!-- /.card-header -->
@@ -326,7 +337,7 @@
 
                                             @if ($job_collaborator->status == 1)
                                                 <button type="button"
-                                                    class="btn btn-block bg-gradient-secondary btn-xs">Draft</button>
+                                                    class="btn btn-block bg-gradient-secondary btn-xs">CANCEL</button>
                                             @endif
 
                                             @if ($job_collaborator->status == 2)
@@ -336,7 +347,7 @@
 
                                             @if ($job_collaborator->status == 3)
                                                 <button type="button"
-                                                    class="btn btn-block bg-gradient-success btn-xs">Confirm</button>
+                                                    class="btn btn-block bg-gradient-success btn-xs">APPROVED</button>
                                             @endif
 
 
@@ -382,7 +393,7 @@
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <div class="btn-group">
+                        {{-- <div class="btn-group">
                             <button type="button" class="btn btn-info">Action</button>
                             <button type="button" class="btn btn-info dropdown-toggle dropdown-hover dropdown-icon"
                                 data-toggle="dropdown">
@@ -392,9 +403,9 @@
                                     </a>
 
                                 </div>
-                            </button>
+                            </button> --}}
                             <a type="button" class="btn btn-info" style="margin:auto 20px"
-                                href="{{ route('job.create') }}">Create</a>
+                                href="{{ route('job.create') }}">Thêm công việc</a>
                         </div>
                     </div>
                     <!-- /.card-header -->
@@ -411,7 +422,6 @@
                                     <th>IMAGES</th>
                                     <th>ADDRESS</th>
                                     <th>PRICE</th>
-                                    <th>CUSTOMER</th>
                                     <th>FIELD</th>
                                     <th>STATUS</th>
                                     <th>OPERATIONS</th>
@@ -446,10 +456,7 @@
                                         <td>
                                             {{ $job->suggestion_price }}
                                         </td>
-                                        <td>
-                                            <a href="{{ route('user.edit', $job->user->id) }}"
-                                                class="btn btn-block bg-gradient-info btn-xs">{{ $job->user->name }}</a>
-                                        </td>
+
                                         <td>
                                             <a href="{{ route('occupation.edit', $job->occupation->id) }}"
                                                 class="btn btn-block bg-gradient-info btn-sm">{{ $job->occupation->name }}</a>

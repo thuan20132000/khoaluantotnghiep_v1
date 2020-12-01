@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\DB;
 class Job extends Model
 {
     //
-
+    const CONFIRMED = 0;
+    const PUBLISHED = 1;
+    const PENDING = 2;
+    const DRAFT = 3;
 
     public function images()
     {

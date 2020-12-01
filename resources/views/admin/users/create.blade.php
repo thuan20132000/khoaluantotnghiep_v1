@@ -1,6 +1,20 @@
 @extends('admin.layouts.master')
 
 @section('content')
+<div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-6">
+            <a href="{{ route('user.index') }}"> << Danh sách người dùng</a>
+        </div>
+        <div class="col-6">
+
+        </div>
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+<div style="margin: 6px">
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -17,7 +31,7 @@
             <div class="col-md-4">
             <div class="card card-primary">
                 <div class="card-header">
-                <h3 class="card-title">General</h3>
+                <h3 class="card-title">Thông tin người dùng</h3>
 
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -89,7 +103,6 @@
             <div class="col-md-4">
                 <div class="card card-primary">
                     <div class="card-header">
-                    <h3 class="card-title">Occupation Experiences</h3>
 
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -97,8 +110,9 @@
                     </div>
                     </div>
                     <div class="card-body">
-                        <label for="occupation-images" class="text-primary">Major Fields</label>
-                        <div class="form-group">
+                        <div class="form-group" id="occupation_wrap" style="display: none">
+                            <label for="occupation-images" class="text-primary">Lĩnh vực hoạt động</label>
+
                             <div class="form-group clearfix" style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: space-around">
 
                                 @foreach ($occupations as $occupation)
@@ -110,7 +124,7 @@
 
                             </div>
                         </div>
-                        <label for="occupation-images" class="text-primary">Some Images of Recent Project</label>
+                        <label for="occupation-images" class="text-primary">Hình ảnh</label>
                         <div class="input-group">
                             <span class="input-group-btn">
                             <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
@@ -132,7 +146,7 @@
             <div class="col-md-4">
             <div class="card card-secondary">
                 <div class="card-header">
-                <h3 class="card-title">Publish</h3>
+                <h3 class="card-title">Thiết lập</h3>
                 <div class="card-tools">
                     <button
                         class="btn btn-tool"
@@ -160,14 +174,26 @@
 
                     <div class="form-group">
                         <label for="inputStatus">Role</label>
-                        <select class="form-control custom-select" name="role">
+                        <select class="form-control custom-select" name="role" onchange="onChangeUserRole(this)">
                             @foreach ($roles as $role)
                             <option value="{{$role->id}}"
                                 @if ($role->name == 'isCustomer')
                                     selected
                                 @endif
                             >
-                                {{$role->name}}
+                                @switch($role->name)
+                                    @case('isCustomer')
+                                        Người tuyển dụng
+                                        @break
+                                    @case('isCollaborator')
+                                        Người tìm việc
+                                        @break
+                                    @case('isAdmin')
+                                        Quản trị viên
+                                        @break
+                                    @default
+
+                                @endswitch
                             </option>
                             @endforeach
 
@@ -182,6 +208,8 @@
             </div>
         </div>
     </form>
+</div>
+
 <script>
 
 
@@ -268,6 +296,20 @@
             document.getElementById('districts').onchange = function(evt){
                fetchSubDistrict(evt.target.value);
             }
+
+
+            const onChangeUserRole = (e) => {
+                // alert('dsds');
+                let occupation_fields = document.getElementById('occupation_wrap');
+
+                if(e.value != 2){
+                    occupation_fields.style.display = 'none'
+                }else{
+                    occupation_fields.style.display = 'block'
+
+                }
+            }
+
 
 </script>
 

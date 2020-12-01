@@ -1,6 +1,10 @@
 @extends('admin.layouts.master')
 
 @section('content')
+
+    <div style="margin:6px">
+
+
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -31,7 +35,7 @@
             <div class="col-md-8">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Occupation Experiences</h3>
+                        <h3 class="card-title">Thông Tin Công Việc</h3>
 
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
@@ -114,7 +118,7 @@
             <div class="col-md-4">
                 <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">Publish</h3>
+                        <h3 class="card-title">Thiết lập</h3>
                         <div class="card-tools">
                             <button class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                                 <i class="fas fa-minus"></i>
@@ -149,13 +153,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="occupation-images" class="text-primary">Customer</label>
+                            <label for="occupation-images" class="text-primary">Người tuyển dụng</label>
                             <select class="form-control custom-select" name="user">
                                 <option disabled value="" selected>{{ $job->user->name }}</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="occupation-images" class="text-primary">Field</label>
+                            <label for="occupation-images" class="text-primary">Lĩnh vực</label>
                             <select class="form-control custom-select" name="occupation">
                                 <option value="0" selected>Selecting Field</option>
                                 @foreach ($occupations as $occupation)
@@ -169,11 +173,11 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="inputName">Price</label>
+                            <label for="inputName">Giá</label>
                             <input type="text" value="{{ $job->suggestion_price }}" id="price" name="price"
                                 class="form-control">
                         </div>
-                        <label for="occupation-images" class="text-primary">Some Images of Recent Project</label>
+                        <label for="occupation-images" class="text-primary">Hình ảnh</label>
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
@@ -204,10 +208,10 @@
             <div class="card card-primary">
                 <div class="card-header">
                     <h3 class="card-title">
-                        Candidates Collaborators
+                        Danh Sách Ưng Viên
                         <button type="button" class="btn btn-default p-2" style="margin-left: 12px" data-toggle="modal"
                             data-target="#modal-xl">
-                            ADD CANDIDATE
+                            Thêm Ứng Viên
                         </button>
                     </h3>
 
@@ -229,7 +233,7 @@
                                 <th>EXPECTED PRICE</th>
                                 <th>DESCRIPTION</th>
                                 <th>STATUS</th>
-                                <th>OPERATION</th>
+                                {{-- <th>OPERATION</th> --}}
                             </tr>
                         </thead>
                         <tbody id="collaborator_wrap">
@@ -245,31 +249,123 @@
                                     <td>{{ $candidate->expected_price }}</td>
                                     <td>{{ $candidate->job_collaborator_description }}</td>
                                     <td>
-                                        @if ($candidate->job_collaborator_status == 0)
-                                            <button type="button"
-                                                class="btn btn-block bg-gradient-info btn-xs">Published</button>
-                                        @endif
+                                        <div class="form-group">
+                                            <div class="dropdown">
+                                                <button
+                                                    class="btn
+                                                        @switch($candidate->job_collaborator_status)
+                                                            @case(1)
+                                                                btn-danger
+                                                                @break
+                                                            @case(2)
+                                                                btn-warning
+                                                                @break
+                                                            @case(3)
+                                                                btn-primary
+                                                                @break
+                                                            @default
 
-                                        @if ($candidate->job_collaborator_status == 1)
-                                            <button type="button"
-                                                class="btn btn-block bg-gradient-secondary btn-xs">Draft</button>
-                                        @endif
+                                                        @endswitch
+                                                    dropdown-toggle"
+                                                    type="button" id="dropdownMenuButton"
+                                                    data-toggle="dropdown"
+                                                    aria-haspopup="true"
+                                                    aria-expanded="false"
+                                                >
+                                                    @switch($candidate->job_collaborator_status)
+                                                    @case(1)
+                                                        Cancel
+                                                        @break
+                                                    @case(2)
+                                                        Pending
+                                                        @break
+                                                    @case(3)
+                                                        Approved
+                                                        @break
+                                                    @default
 
-                                        @if ($candidate->job_collaborator_status == 2)
-                                            <button type="button"
-                                                class="btn btn-block bg-gradient-danger btn-xs">Pending</button>
-                                        @endif
+                                                @endswitch
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    @for ($i = 1; $i <= 3; $i++)
+                                                        @if ($i != $candidate->job_collaborator_status)
+                                                            <a class="dropdown-item"
 
-                                        @if ($candidate->job_collaborator_status == 3)
-                                            <button type="button"
-                                                class="btn btn-block bg-gradient-success btn-xs">Confirm</button>
-                                        @endif
+                                                                href="{{ route('jobcollaborator.updatestatus', ['id'=>$candidate->job_collaborator_id,'status'=>$i]) }}"
+                                                            >
+                                                                @switch($i)
+                                                                    @case(1)
+                                                                        Cancel
+                                                                        @break
+                                                                    @case(2)
+                                                                        Pending
+                                                                        @break
+                                                                    @case(3)
+                                                                        Approved
+                                                                        @break
+                                                                    @default
+                                                                @endswitch
+                                                            </a>
+                                                        @endif
+                                                    @endfor
+                                                </div>
+                                              </div>
+{{--
+                                            <select
+                                                class="form-control custom-select"
+                                                id="job_collaborator_status"
+                                                onchange="changeJobCollaboratorStatus({{$candidate->job_collaborator_id,$candidate->job_collaborator_id}})"
+                                            >
+
+                                                @for ($i = 1; $i <= 3; $i++)
+
+                                                 <option value={{$i}}
+                                                    @if ($candidate->job_collaborator_status == $i)
+                                                        selected
+                                                    @endif
+                                                 >
+                                                        @switch($i)
+                                                            @case(1)
+                                                                Cancel
+                                                                @break
+                                                            @case(2)
+                                                                Pending
+                                                                @break
+                                                            @case(3)
+                                                                Approved
+                                                                @break
+                                                            @default
+
+                                                        @endswitch
+                                                 </option>
+                                                @endfor --}}
+                                                {{-- @foreach ($ as $occupation)
+                                                    <option value="{{ $occupation->id }}" @if ($occupation->id == $job->occupation->id)
+                                                        selected
+                                                @endif
+                                                >
+                                                {{ $occupation->name }}
+                                                </option>
+                                                @endforeach --}}
+                                            {{-- </select> --}}
+                                        </div>
+                                        <script>
+
+                                                const changeJobCollaboratorStatus = (jobcollaborator_id,this) => {
+                                                //    let x =  e.getAttribute('data_id';
+                                                alert(this);
+                                                    //window.location.href = `/admin/jobcollaborator/${jobcollaborator_id}/status/${status}`;
+
+                                                }
+
+                                        </script>
+
 
                                     </td>
-                                    <td>
-                                        {{-- <a href="" class="btn btn-danger">
+                                    {{-- <td>
+                                        <a href="" class="btn btn-danger">
                                             <i class="fas fa-trash-alt"></i>
-                                        </a> --}}
+                                        </a>
                                         <a href="{{ route('jobcollaborator.edit', $candidate->job_collaborator_id) }}"
                                             class="btn btn-block bg-gradient-info btn-xs">Edit</a>
                                         <a class="btn btn-block bg-gradient-danger btn-xs"
@@ -282,7 +378,7 @@
                                                 @method('DELETE')
                                             </form>
                                         </a>
-                                    </td>
+                                    </td> --}}
                                 </tr>
                             @endforeach
                         </tbody>
@@ -390,6 +486,7 @@
             <!-- /.card -->
         </div>
     </div>
+</div>
     <script>
         /**
          * author:thuantruong
@@ -570,8 +667,6 @@
 
         }
 
-        let job_id = document.getElementById('job_id').value;
-        // fetchCollaboratorByJob(job_id);
 
     </script>
 

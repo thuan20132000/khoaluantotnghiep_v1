@@ -135,7 +135,7 @@
 <!-- /.navbar -->
 
 <!-- Main Sidebar Container -->
-<aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar sidebar-dark-scendary elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
         <img src="{{ asset('theme/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
@@ -152,7 +152,7 @@
                     alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Alexander Pierce</a>
+                <a href="#" class="d-block"></a>
             </div>
         </div>
 
@@ -163,7 +163,7 @@
                with font-awesome or any other icon font library -->
                 <li class="nav-item has-treeview menu-close">
                     <a href="#" class="nav-link active">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <i class="nav-icon fas fa-calendar"></i>
                         <p>
                             Danh Mục
                             <i class="right fas fa-angle-left"></i>
@@ -209,7 +209,7 @@
                 </li>
                 <li class="nav-item has-treeview menu-close">
                     <a href="#" class="nav-link active">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <i class="nav-icon fas fa-users"></i>
                         <p>
                             Người Dùng
                             <i class="right fas fa-angle-left"></i>
@@ -232,7 +232,7 @@
                 </li>
                 <li class="nav-item has-treeview menu-close">
                     <a href="#" class="nav-link active">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <i class="nav-icon fas fa-tasks"></i>
                         <p>
                             Quản Lý Việc Làm
                             <i class="right fas fa-angle-left"></i>
@@ -256,22 +256,23 @@
                 </li>
                 <li class="nav-item has-treeview menu-close">
                     <a href="#" class="nav-link active">
-                        <i class="nav-icon fas fa-tachometer-alt"></i>
+                        <i class="nav-icon fas fa-project-diagram"></i>
                         <p>
                             Kết Nối Việc Làm
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <a href="{{ route('jobcollaborator.index') }}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Danh Sách Đăng Ký Việc Làm</p>
-                        </a>
-                        <a href="{{ route('jobconfirm.index') }}" class="nav-link">
-                            <i class="far fa-circle nav-icon"></i>
-                            <p>Job Comfirm List</p>
-                        </a>
-
+                        <li class="nav-item">
+                            <a href="{{ route('jobcollaborator.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Danh sách đăng ký</p>
+                            </a>
+                            <a href="{{ route('jobconfirm.index') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Danh sách xác nhận</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

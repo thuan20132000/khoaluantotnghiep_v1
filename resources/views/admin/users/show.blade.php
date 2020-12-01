@@ -118,7 +118,6 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <label for="occupation-images" class="text-primary">Major Fields</label>
                         <div class="form-group">
                             <div class="form-group clearfix"
                                 style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: space-around">

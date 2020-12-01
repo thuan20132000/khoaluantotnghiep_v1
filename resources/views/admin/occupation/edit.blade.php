@@ -1,6 +1,18 @@
 @extends('admin.layouts.master')
 
 @section('content')
+<div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-6">
+            <a href="{{ route('occupation.index') }}"> << Danh sách lĩnh vực</a>
+        </div>
+        <div class="col-6">
+
+        </div>
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>

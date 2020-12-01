@@ -452,15 +452,6 @@ class JobController extends Controller
     }
 
 
-    public function getJobsConfirmed($author_id,Request $request)
-    {
-        try {
-            //code...
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-    }
-
 
 
 }

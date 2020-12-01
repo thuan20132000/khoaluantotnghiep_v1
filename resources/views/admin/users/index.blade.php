@@ -69,13 +69,13 @@
                                 <button type="button" class="btn btn-block btn-outline-primary btn-sm">
                                     @switch($role->name)
                                         @case('isCustomer')
-                                            Tôi là người tuyển dụng
+                                            Người tuyển dụng
                                             @break
                                         @case('isCollaborator')
-                                            Tôi là người tìm việc
+                                           Người tìm việc
                                             @break
                                         @case('isAdmin')
-                                            Tôi là quản trị viên
+                                            Quản trị viên
                                             @break
                                         @default
 
