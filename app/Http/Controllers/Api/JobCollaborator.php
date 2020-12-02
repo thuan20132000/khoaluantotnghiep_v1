@@ -90,6 +90,8 @@ class JobCollaborator extends Controller
                 ]);
             }
 
+
+
             $job_collaborator = new ModelJobCollaborator();
             $job_collaborator->expected_price = $request->expected_price;
             $job_collaborator->description = $request->description;
@@ -97,7 +99,7 @@ class JobCollaborator extends Controller
             $job_collaborator->finish_at = $request->finish_at;
             $job_collaborator->user_id = $request->user_id;
             $job_collaborator->job_id = $request->job_id;
-            $job_collaborator->status = 0;
+            $job_collaborator->status = ModelJobCollaborator::PENDING;
             $job_collaborator->save();
 
             DB::commit();
@@ -208,7 +210,7 @@ class JobCollaborator extends Controller
     }
 
 
-    public function getCollaboratorJobApplying(Request $request)
+    public function getJobCollaboratorApplying(Request $request)
     {
         try {
             //code...
@@ -230,18 +232,19 @@ class JobCollaborator extends Controller
                     "status" => true,
                     "data" => CollaboratorJobApplyingCollection::collection($job_collaborator)
                 ]);
-            } else if ($collaborator_id && $collaborator_job_status == JobCollaborator::CONFIRM_STATUS) {
-                $job_collaborator = ModelJobCollaborator::where('user_id', $collaborator_id)
-                    ->where("status", $collaborator_job_status)
-                    ->orderBy('created_at', 'desc')
-                    ->limit($per_page)
-                    ->get();
-
-                return response()->json([
-                    "status" => true,
-                    "data" => CollaboratorJobApplyingCollection::collection($job_collaborator)
-                ]);
             }
+            // else if ($collaborator_id && $collaborator_job_status == JobCollaborator::CONFIRM_STATUS) {
+            //     $job_collaborator = ModelJobCollaborator::where('user_id', $collaborator_id)
+            //         ->where("status", $collaborator_job_status)
+            //         ->orderBy('created_at', 'desc')
+            //         ->limit($per_page)
+            //         ->get();
+
+            //     return response()->json([
+            //         "status" => true,
+            //         "data" => CollaboratorJobApplyingCollection::collection($job_collaborator)
+            //     ]);
+            // }
 
 
 
@@ -319,6 +322,9 @@ class JobCollaborator extends Controller
             ]);
         }
     }
+
+
+
 
 
 

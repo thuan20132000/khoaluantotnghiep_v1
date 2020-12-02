@@ -27,9 +27,21 @@ Route::group(['prefix' => 'v1'], function () {
     Route::resource('job', 'Api\JobController');
     Route::get('job/{author_id}/approved','Api\JobController@getJobsApproved');
 
+    /**
+     *
+     */
+    Route::get('job/{author_id}/status/pending','Api\JobController@getPendingJobsByAuthor');
+    Route::get('job/{author_id}/status/approved','Api\JobController@getApprovedJobsByAuthor');
+    Route::get('job/{author_id}/status/confirmed','Api\JobController@getConfirmedJobsByAuthor');
+
+
+
+
+
     Route::resource('job-collaborator', 'Api\JobCollaborator');
     Route::post('job/select-candidate','Api\JobCollaborator@selectCandidate');
-    Route::get('job-collaborator-applying','Api\JobCollaborator@getCollaboratorJobApplying');
+    Route::get('job-collaborator-applying','Api\JobCollaborator@getJobCollaboratorApplying');
+    // Route::get('job-collaborator/{author_id}/status/{status}','Api\JobCollaborator@getJobCollaboratorStatusByAuthor');
 
 
     Route::put('user/{id}', 'Api\UserController@update');

@@ -8,6 +8,7 @@ use App\Http\Resources\JobCollection;
 use App\Http\Resources\JobResource;
 use App\Model\Category;
 use App\Model\Job;
+use App\Model\JobCollaborator;
 use App\Model\Location;
 use App\User;
 use Illuminate\Support\Facades\Validator;
@@ -449,6 +450,92 @@ class JobController extends Controller
         }
 
 
+    }
+
+
+   /**
+     * author:thuantruon
+     * created_at:02/12/2020
+     * description: Get jobs by job's author pending
+     */
+    public function getPendingJobsByAuthor($author_id,Request $request)
+    {
+        try {
+            //code...
+
+            $user_jobs = Job::where('user_id',$author_id)->get();
+
+
+
+
+
+            $user_pending_jobs = array();
+            foreach ($user_jobs as $job) {
+                # code...
+
+                $is_full = JobCollaborator::checkIsFullCandidates($job->id);
+                if(!$is_full){
+                    $pending_job = new JobResource($job);
+                    array_push($user_pending_jobs,$pending_job);
+                }
+
+            }
+
+
+            return response()->json([
+                'status'=>true,
+                'data'=>$user_pending_jobs,
+                'message'=>"Get pending'jobs is successfull"
+            ]);
+
+
+        } catch (\Throwable $th) {
+           // throw $th;
+            return response()->json([
+                'status'=>false,
+                'data'=>[],
+                'message'=>$th
+            ]);
+        }
+    }
+
+
+
+
+    public function getApprovedJobsByAuthor($author_id,Request $request)
+    {
+        try {
+            //code...
+            $user_jobs = Job::where('user_id',$author_id)->get();
+
+            $user_approved_jobs = array();
+            foreach ($user_jobs as $job) {
+                # code...
+
+                $is_full = JobCollaborator::checkIsFullCandidates($job->id);
+                if($is_full){
+                    $approved_job = new JobResource($job);
+                    array_push($user_approved_jobs,$approved_job);
+                }
+
+            }
+
+
+            return response()->json([
+                'status'=>true,
+                'data'=>$user_approved_jobs,
+                'message'=>"Get approved'jobs is successfull"
+            ]);
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status'=>false,
+                'data'=>[],
+                'message'=>$th
+            ]);
+        }
     }
 
 
