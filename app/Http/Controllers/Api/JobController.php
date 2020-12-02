@@ -407,7 +407,7 @@ class JobController extends Controller
             }else{
                 return response()->json([
                     'status' => true,
-                    'data' => [],
+                    'data' => []
                 ]);
             }
 
@@ -424,4 +424,34 @@ class JobController extends Controller
             ]);
         }
     }
+
+
+
+    public function getJobsApproved($author_id,Request $request)
+    {
+
+        try {
+            //code...
+
+            $author = Job::getJobsApproved($author_id);
+
+            return response()->json([
+                'status'=>true,
+                'data'=>$author
+            ]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status'=>false,
+                'message'=>$th
+            ]);
+        }
+
+
+    }
+
+
+
+
 }

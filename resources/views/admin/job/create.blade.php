@@ -1,6 +1,9 @@
 @extends('admin.layouts.master')
 
 @section('content')
+
+<div style="margin:6px">
+
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -18,7 +21,7 @@
             <div class="col-md-8">
                 <div class="card card-primary">
                     <div class="card-header">
-                    <h3 class="card-title">Occupation Experiences</h3>
+                    <h3 class="card-title">Thông Tin Công Việc</h3>
 
                     <div class="card-tools">
                         <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -91,7 +94,7 @@
             <div class="col-md-4">
             <div class="card card-secondary">
                 <div class="card-header">
-                <h3 class="card-title">Publish</h3>
+                <h3 class="card-title">Thiết Lập</h3>
                 <div class="card-tools">
                     <button
                         class="btn btn-tool"
@@ -117,7 +120,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="occupation-images" class="text-primary">Customer</label>
+                        <label for="occupation-images" class="text-primary">Chọn người tuyển dụng</label>
 
                         <div class="input-group mb-3">
                             <div class="input-group-prepend">
@@ -129,7 +132,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="occupation-images" class="text-primary">Field</label>
+                        <label for="occupation-images" class="text-primary">Chọn lĩnh vực công việc</label>
                         <select class="form-control custom-select" name="occupation">
                             <option value="" selected>Selecting Field</option>
                             @foreach ($occupations as $occupation)
@@ -138,14 +141,14 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="inputName">Price</label>
-                        <input type="text" value="{{old('price')}}" id="price" name="price" class="form-control">
+                        <label for="inputName">Giá đưa ra</label>
+                        <input type="text" value="0" id="price" name="price" class="form-control">
                     </div>
-                    <label for="occupation-images" class="text-primary">Some Images of Recent Project</label>
+                    <label for="occupation-images" class="text-primary">Hình ảnh</label>
                     <div class="input-group">
                         <span class="input-group-btn">
                         <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
-                            <i class="fa fa-picture-o"></i> Choose
+                            <i class="fa fa-picture-o"></i> Chọn
                         </a>
                         </span>
                         <input id="thumbnail" class="form-control" type="text" name="filepaths">
@@ -228,6 +231,9 @@
             <!-- /.modal-content -->
         </div>
         <!-- /.modal-dialog -->
+
+</div>
+
 <script>
 
  /**

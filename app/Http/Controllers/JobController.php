@@ -70,7 +70,7 @@ class JobController extends Controller
             'subdistrict'=>'required',
             'street'=>'required',
             'user'=>'required',
-            'price'=>'required|numeric',
+            'price'=>'numeric',
             'occupation'=>'required'
         ],[
             'name.required'=>'Please enter title!',
@@ -81,7 +81,7 @@ class JobController extends Controller
             'subdistrict.required'=>'Please choose subdistrict',
             'street.required'=>'Please enter street',
             'user.required'=>'Please choose customer!',
-            'price.required'=>'Please enter suggestion price!',
+            'price.number'=>'Suggestion price must be numeric!',
             'occupation.required'=>'Please choose occupation!',
 
         ]);
@@ -143,6 +143,17 @@ class JobController extends Controller
     public function show(Job $job)
     {
         //
+        $job_images = DB::table('images')->where('job_id',$job->id)->get();
+        $job_images_array = $job_images->pluck('image_url')->toArray();
+        $candidates = $job->candidates();
+
+        return view('admin.job.show',[
+            'job'=>$job,
+            'job_images_array'=>$job_images_array,
+            'candidates'=>$candidates,
+
+        ]);
+
     }
 
     /**
@@ -167,7 +178,6 @@ class JobController extends Controller
 
         $collaborators_all = User::all();
         $candidates = $job->candidates();
-
         return view('admin.job.edit',[
             'job'=>$job,
             'occupations'=>$occupations,

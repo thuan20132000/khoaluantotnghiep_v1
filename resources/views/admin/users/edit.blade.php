@@ -1,6 +1,22 @@
 @extends('admin.layouts.master')
 
 @section('content')
+<div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-6">
+            <a href="{{ route('user.index') }}"> << Danh sách người dùng</a>
+        </div>
+        <div class="col-6">
+
+        </div>
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+
+
+<div class="m-2">
+
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -28,10 +44,10 @@
         @csrf
         @method('PUT')
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">General</h3>
+                        <h3 class="card-title">Thông tin người dùng</h3>
 
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
@@ -108,11 +124,9 @@
                 </div>
                 <!-- /.card -->
             </div>
-
             <div class="col-md-4">
                 <div class="card card-primary">
                     <div class="card-header">
-                        <h3 class="card-title">Occupation Experiences</h3>
 
                         <div class="card-tools">
                             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip"
@@ -120,8 +134,9 @@
                                 <i class="fas fa-minus"></i></button>
                         </div>
                     </div>
+
                     <div class="card-body">
-                        <label for="occupation-images" class="text-primary">Major Fields</label>
+                        @if ($user->hasRole('isCollaborator'))
                         <div class="form-group">
                             <div class="form-group clearfix"
                                 style="display: flex;flex-direction: row;flex-wrap: wrap;justify-content: space-around">
@@ -143,7 +158,9 @@
 
                             </div>
                         </div>
-                        <label for="occupation-images" class="text-primary">Some Images of Recent Project</label>
+                        @endif
+
+                        <label for="occupation-images" class="text-primary">Images</label>
                         <div class="input-group">
                             <span class="input-group-btn">
                                 <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
@@ -166,10 +183,11 @@
                 </div>
                 <!-- /.card -->
             </div>
-            <div class="col-md-4">
+
+            <div class="col-md-3">
                 <div class="card card-secondary">
                     <div class="card-header">
-                        <h3 class="card-title">Publish</h3>
+                        <h3 class="card-title">Thiết lập</h3>
                         <div class="card-tools">
                             <button class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
                                 <i class="fas fa-minus"></i>
@@ -207,7 +225,7 @@
 
                         <div class="form-group">
                             <label for="inputStatus">Role</label>
-                            <select class="form-control custom-select" name="role">
+                            <select class="form-control custom-select" name="role" disabled>
 
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->id }}" @if (count($user->roles) > 0)
@@ -217,8 +235,18 @@
                                 @endif
 
                                 >
-                                {{ $role->name }}
+                                @switch($role->name)
+                                    @case('isCustomer')
+                                        {{'Người tuyển dụng'}}
+                                        @break
+                                    @case('isCollaborator')
+                                        {{'Người tìm việc'}}
+                                        @break
+                                    @case('isAdmin')
+                                        {{'Quản trị viên'}}
+                                    @default
 
+                                @endswitch
                                 </option>
                                 @endforeach
                             </select>
@@ -235,12 +263,15 @@
 
     @if ($user->hasRole('isCollaborator'))
 
-        <div class="row">
+        <div class="row" style="margin-top:50px">
             <div class="col-12">
+                <div>
+                    <h3>Công việc đang ứng tuyển</h3>
+                </div>
                 <div class="card">
                     <div class="card-header">
                         <div class="btn-group">
-                            <button type="button" class="btn btn-info">Action</button>
+                            {{-- <button type="button" class="btn btn-info">Action</button>
                             <button type="button" class="btn btn-info dropdown-toggle dropdown-hover dropdown-icon"
                                 data-toggle="dropdown">
                                 <div class="dropdown-menu" role="menu">
@@ -249,9 +280,9 @@
                                     </a>
 
                                 </div>
-                            </button>
-                            <a type="button" class="btn btn-info" style="margin:auto 20px"
-                                href="{{ route('jobcollaborator.create') }}">Create</a>
+                            </button> --}}
+                            {{-- <a type="button" class="btn btn-info" style="margin:auto 20px"
+                                href="{{ route('jobcollaborator.create') }}">Create</a> --}}
                         </div>
                     </div>
                     <!-- /.card-header -->
@@ -306,7 +337,7 @@
 
                                             @if ($job_collaborator->status == 1)
                                                 <button type="button"
-                                                    class="btn btn-block bg-gradient-secondary btn-xs">Draft</button>
+                                                    class="btn btn-block bg-gradient-secondary btn-xs">CANCEL</button>
                                             @endif
 
                                             @if ($job_collaborator->status == 2)
@@ -316,7 +347,7 @@
 
                                             @if ($job_collaborator->status == 3)
                                                 <button type="button"
-                                                    class="btn btn-block bg-gradient-success btn-xs">Confirm</button>
+                                                    class="btn btn-block bg-gradient-success btn-xs">APPROVED</button>
                                             @endif
 
 
@@ -355,11 +386,14 @@
         </div>
         <!-- /.row -->
     @else
-        <div class="row">
+        <div class="row" style="margin-top: 50px">
             <div class="col-12">
+                <div>
+                    <h3>Danh sách tin đăng</h3>
+                </div>
                 <div class="card">
                     <div class="card-header">
-                        <div class="btn-group">
+                        {{-- <div class="btn-group">
                             <button type="button" class="btn btn-info">Action</button>
                             <button type="button" class="btn btn-info dropdown-toggle dropdown-hover dropdown-icon"
                                 data-toggle="dropdown">
@@ -369,9 +403,9 @@
                                     </a>
 
                                 </div>
-                            </button>
+                            </button> --}}
                             <a type="button" class="btn btn-info" style="margin:auto 20px"
-                                href="{{ route('job.create') }}">Create</a>
+                                href="{{ route('job.create') }}">Thêm công việc</a>
                         </div>
                     </div>
                     <!-- /.card-header -->
@@ -388,7 +422,6 @@
                                     <th>IMAGES</th>
                                     <th>ADDRESS</th>
                                     <th>PRICE</th>
-                                    <th>CUSTOMER</th>
                                     <th>FIELD</th>
                                     <th>STATUS</th>
                                     <th>OPERATIONS</th>
@@ -423,10 +456,7 @@
                                         <td>
                                             {{ $job->suggestion_price }}
                                         </td>
-                                        <td>
-                                            <a href="{{ route('user.edit', $job->user->id) }}"
-                                                class="btn btn-block bg-gradient-info btn-xs">{{ $job->user->name }}</a>
-                                        </td>
+
                                         <td>
                                             <a href="{{ route('occupation.edit', $job->occupation->id) }}"
                                                 class="btn btn-block bg-gradient-info btn-sm">{{ $job->occupation->name }}</a>
@@ -488,6 +518,8 @@
         </div>
         <!-- /.row -->
     @endif
+
+</div>
 
     <script>
         /**

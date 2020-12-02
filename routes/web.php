@@ -53,6 +53,8 @@ Route::group(['prefix' => '', 'middleware' => ['web', 'auth']], function () {
     Route::resource('/admin/jobcollaborator', 'JobCollaboratorController');
     Route::post('/admin/add-jobcollaborator', 'JobCollaboratorController@addJobCollaborator')->name('jobcollaborator.add');
     Route::delete('/admin/jobcollaborator', 'JobCollaboratorController@destroyMass')->name('destroyMass');
+    Route::get('/admin/jobcollaborator/{id}/status/{status}', 'JobCollaboratorController@updateJobCollaboratorStatus')->name('jobcollaborator.updatestatus');
+
 
 
     Route::get('/admin/job-confirm', 'JobConfirmController@index')->name('jobconfirm.index');

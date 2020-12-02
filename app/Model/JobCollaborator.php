@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 
 class JobCollaborator extends Model
 {
-
+    const CONFIRMED =0;
     const CANCEL = 1;
     const PENDING = 2;
     const APPROVED = 3;
@@ -57,9 +57,12 @@ class JobCollaborator extends Model
         $check = DB::table('job_collaborators')
             ->where('job_id', $job_id)
             ->count();
-        if ($check > JobCollaborator::CANDIDATESFULL) {
+        if ($check >= JobCollaborator::CANDIDATESFULL) {
             return true;
         }
         return false;
     }
+
+
+
 }

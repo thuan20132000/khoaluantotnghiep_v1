@@ -29,7 +29,7 @@
 
                       </div>
                     </button>
-                    <a type="button" class="btn btn-info" style="margin:auto 20px" href="{{ route('jobcollaborator.create') }}">Create</a>
+                    {{-- <a type="button" class="btn btn-info" style="margin:auto 20px" href="{{ route('jobcollaborator.create') }}">Create</a> --}}
                   </div>
             </div>
             <!-- /.card-header -->
@@ -41,10 +41,10 @@
                         <input type="checkbox" id="jobcollaborator-selectAllCheckbox" >
                     </th>
                     <th>ID</th>
-                    <th>EXPECTED PRICE</th>
-                    <th>DESCRIPTION</th>
-                    <th>COLLABORATOR</th>
-                    <th>JOB</th>
+                    <th>Giá</th>
+                    <th>Mô TẢ</th>
+                    <th>NGUỜI ỨNG TUYỂN</th>
+                    <th>CÔNG VIỆC</th>
                     <th>CREATED_AT</th>
                     <th>UPDATED_AT</th>
                     <th>STATUS</th>
@@ -74,11 +74,11 @@
                         <td>{{$job_collaborator->updated_at}}</td>
                         <td>
                             @if ($job_collaborator->status == 0)
-                                <button type="button" class="btn btn-block bg-gradient-info btn-xs">Published</button>
+                                <button type="button" class="btn btn-block bg-gradient-info btn-xs">CONFIRM</button>
                             @endif
 
                             @if ($job_collaborator->status == 1)
-                            <button type="button" class="btn btn-block bg-gradient-secondary btn-xs">Draft</button>
+                            <button type="button" class="btn btn-block bg-gradient-secondary btn-xs">Cancel</button>
                             @endif
 
                             @if ($job_collaborator->status == 2)
@@ -86,7 +86,7 @@
                             @endif
 
                             @if ($job_collaborator->status == 3)
-                            <button type="button" class="btn btn-block bg-gradient-success btn-xs">Confirm</button>
+                            <button type="button" class="btn btn-block bg-gradient-success btn-xs">Approved</button>
                             @endif
 
 

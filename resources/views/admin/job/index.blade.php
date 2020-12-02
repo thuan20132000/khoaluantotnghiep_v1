@@ -100,6 +100,9 @@
 
                         </td>
                         <td>
+                            <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('job.show', $job->id) }}">
+                                <i class="fas fa-eye"></i> Show
+                            </a>
                             <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('job.edit', $job->id) }}">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
