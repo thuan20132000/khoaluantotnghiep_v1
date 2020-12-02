@@ -90,6 +90,8 @@ class JobCollaborator extends Controller
                 ]);
             }
 
+
+
             $job_collaborator = new ModelJobCollaborator();
             $job_collaborator->expected_price = $request->expected_price;
             $job_collaborator->description = $request->description;
@@ -97,7 +99,7 @@ class JobCollaborator extends Controller
             $job_collaborator->finish_at = $request->finish_at;
             $job_collaborator->user_id = $request->user_id;
             $job_collaborator->job_id = $request->job_id;
-            $job_collaborator->status = 2;
+            $job_collaborator->status = ModelJobCollaborator::PENDING;
             $job_collaborator->save();
 
             DB::commit();
