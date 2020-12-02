@@ -18,6 +18,7 @@ class CategoryController extends Controller
         $categories = Category::orderBy('name','desc')->get();
         // dd($categories);
         return view('admin.category.index',['categories'=>$categories]);
+
     }
 
     /**

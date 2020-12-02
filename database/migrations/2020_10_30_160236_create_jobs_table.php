@@ -25,7 +25,7 @@ class CreateJobsTable extends Migration
             $table->foreign('occupation_id')->references('id')->on('occupations')->onDelete('cascade');
             $table->tinyInteger('status')->default(0);
             $table->unsignedBigInteger('location_id');
-            $table->timestamps();
+            
         });
     }
 

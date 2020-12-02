@@ -47,6 +47,10 @@
 $('#lfm').filemanager('image');
 
 </script>
+<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+  <script>
+    AOS.init();
+  </script><!-- s -->
 
 </body>
 </html>

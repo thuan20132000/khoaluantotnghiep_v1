@@ -1,7 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Model\Category;
+use App\Model\Occupation;
+use App\Model\Job;
+use App\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -19,12 +22,20 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      *
-     * @return \Illuminate\Contracts\Support\Renderable
+     * @return \Illuminate\Http\Response
+     * inate\Contracts\Support\Renderable
      */
     public function index()
-    {
-        return view('admin.index');
+    {   
+        $categories = Category::all();
+        $occupation = Occupation::all();
+        $jobs = Job::all();
+        //dd($jobs);
+
+        return view('page.pages.index',['categories'=>$categories,'occupation'=>$occupation,'jobs'=>$jobs]);
     }
+
+
 
     public function checkout()
     {
@@ -38,10 +49,15 @@ class HomeController extends Controller
     {
         return view('page.pages.shop_detail');
     }
-    public function shoplist()
-    {
-        return view('page.pages.shoplist');
+    public function joblist()
+    {   $job =Job::all();
+        //dd($job);
+        return view('page.pages.joblist',['job'=>$job]);
     }
-
-
+    public function collaborators()
+    {
+        $collaborators_all = User::all();
+        //echo($collaborators_all);
+        return view('page.pages.listcollaborator', ['collaborators_all'=>$collaborators_all] );
+    }
 }

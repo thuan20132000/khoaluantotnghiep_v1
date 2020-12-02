@@ -13,18 +13,13 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('page.pages.index');
-});
 
-
-
-Route::get('/admin', 'HomeController@index');
+Route::get('/', 'HomeController@index');
 Route::get('checkout','HomeController@checkout');
 Route::get('shoppingcart','HomeController@shoppingcart');
-Route::get('shoplist','HomeController@shoplist');
+Route::get('joblist','HomeController@joblist');
 Route::get('shop_detail','HomeController@shop_detail');
-
+Route::get('collaborators','HomeController@collaborators');
 
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
