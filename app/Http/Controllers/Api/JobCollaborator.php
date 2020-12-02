@@ -97,7 +97,7 @@ class JobCollaborator extends Controller
             $job_collaborator->finish_at = $request->finish_at;
             $job_collaborator->user_id = $request->user_id;
             $job_collaborator->job_id = $request->job_id;
-            $job_collaborator->status = 0;
+            $job_collaborator->status = 2;
             $job_collaborator->save();
 
             DB::commit();
