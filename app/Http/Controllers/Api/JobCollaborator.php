@@ -210,7 +210,7 @@ class JobCollaborator extends Controller
     }
 
 
-    public function getCollaboratorJobApplying(Request $request)
+    public function getJobCollaboratorApplying(Request $request)
     {
         try {
             //code...
@@ -232,18 +232,19 @@ class JobCollaborator extends Controller
                     "status" => true,
                     "data" => CollaboratorJobApplyingCollection::collection($job_collaborator)
                 ]);
-            } else if ($collaborator_id && $collaborator_job_status == JobCollaborator::CONFIRM_STATUS) {
-                $job_collaborator = ModelJobCollaborator::where('user_id', $collaborator_id)
-                    ->where("status", $collaborator_job_status)
-                    ->orderBy('created_at', 'desc')
-                    ->limit($per_page)
-                    ->get();
-
-                return response()->json([
-                    "status" => true,
-                    "data" => CollaboratorJobApplyingCollection::collection($job_collaborator)
-                ]);
             }
+            // else if ($collaborator_id && $collaborator_job_status == JobCollaborator::CONFIRM_STATUS) {
+            //     $job_collaborator = ModelJobCollaborator::where('user_id', $collaborator_id)
+            //         ->where("status", $collaborator_job_status)
+            //         ->orderBy('created_at', 'desc')
+            //         ->limit($per_page)
+            //         ->get();
+
+            //     return response()->json([
+            //         "status" => true,
+            //         "data" => CollaboratorJobApplyingCollection::collection($job_collaborator)
+            //     ]);
+            // }
 
 
 
@@ -321,6 +322,9 @@ class JobCollaborator extends Controller
             ]);
         }
     }
+
+
+
 
 
 
