@@ -79,6 +79,28 @@ class User extends Authenticatable
         return $collaborators_all;
     }
 
+
+    /**
+     * author:thuantruong
+     * created_at:3/12/2020
+     * description: get all review of a collaborator
+     */
+    static function collaboratorReviews($user_id)
+    {
+        // return $user_id;
+        $collaborator_reviews = DB::table('users')
+        ->join('job_collaborators','job_collaborators.user_id','=','users.id')
+        ->join('job_confirms','job_confirms.job_collaborator_id','=','job_collaborators.id')
+        ->join('evaluates','evaluates.job_confirm_id','=','job_confirms.id')
+        ->where('users.id','=',$user_id)
+        ->select('evaluates.*')
+        ->get();
+
+        return $collaborator_reviews;
+        return 1;
+    }
+
+
     public function getOccupationByUserId(){
          $collaborator_occupations = DB::table('users')
                                     ->join('occupation_user','occupation_user.user_id','=','users.id')

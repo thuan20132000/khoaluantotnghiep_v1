@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -27,7 +28,8 @@ class UserResource extends JsonResource
             'role'=>$this->roles,
             'relationships'=>[
                 'occupations'=>$this->occupations
-            ]
+            ],
+            'reviews'=>User::collaboratorReviews($this->id)
         ];
     }
 }

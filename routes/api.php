@@ -48,9 +48,17 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('login', 'Api\UserController@login');
     Route::post('register', 'Api\UserController@register');
 
+
+    /**
+     *
+     */
     Route::get('jobconfirm/{user_id}','Api\JobConfirmController@getUserConfirmJob');
+    Route::post('jobconfirm','Api\JobConfirmController@confirmJobCollaborator');
 
 
+    /**
+     *
+     */
     Route::get('job-sort','Api\JobController@sortJob');
 
     Route::get('job-search','Api\JobController@searchJob');
