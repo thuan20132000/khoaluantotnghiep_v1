@@ -64,11 +64,15 @@ class JobConfirmController extends Controller
             }else{
                 $job_confirm = JobConfirm::where('job_collaborator_id',$request->job_collaborator_id)->first();
                 $job_confirm->confirmed_price = $request->confirmed_price;
+                $job_confirm->status = 0;
+
                 $job_confirm->update();
 
                 $evaluate = Evaluate::where('job_confirm_id',$job_confirm->id)->first();
                 $evaluate->range = $request->range || $evaluate->range;
                 $evaluate->content = $request->content || $evaluate->content;
+                $evaluate->status = 0;
+
                 $evaluate->update();
             }
 
