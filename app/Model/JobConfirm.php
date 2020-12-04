@@ -52,6 +52,17 @@ class JobConfirm extends Model
         return $collaborator;
     }
 
+
+    static function checkIsConfirmed($job_collaborator_id)
+    {
+        $confirmed = JobConfirm::where('job_collaborator_id',$job_collaborator_id)->first();
+        if($confirmed){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     // public function customer()
     // {
     //     $customer = DB::table('job_confirms')
