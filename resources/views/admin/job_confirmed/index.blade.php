@@ -42,7 +42,7 @@
                     <th>CUSTOMER</th>
                     <th>CREATED AT</th>
                     <th>STATUS</th>
-                    <th>OPERATIONS</th>
+                    {{-- <th>OPERATIONS</th> --}}
                 </tr>
                 </thead>
                 <tbody>
@@ -54,16 +54,16 @@
                         </td>
                         <td>{{$job_confirm->id}}</td>
                         <td>
-                            <a href="{{ route('job.edit', $job_confirm->job()->id) }}">{{$job_confirm->job()->name}}</a>
+                            <a href="{{ route('job.show', $job_confirm->job()->id) }}">{{$job_confirm->job()->name}}</a>
                         </td>
                         <td>
                             {{$job_confirm->confirmed_price}}
                         </td>
                         <td>
-                            <a href="{{ route('user.edit',$job_confirm->collaborator()->id) }}">{{$job_confirm->collaborator()->name}}</a>
+                            <a href="{{ route('user.show',$job_confirm->collaborator()->id) }}">{{$job_confirm->collaborator()->name}}</a>
                         </td>
                         <td>
-                            <a href="{{ route('user.edit',$job_confirm->job()->user_id) }}">{{$job_confirm->job()->user_name}}</a>
+                            <a href="{{ route('user.show',$job_confirm->job()->user_id) }}">{{$job_confirm->job()->user_name}}</a>
                         </td>
                         <td>{{$job_confirm->updated_at}}</td>
                         <td>
@@ -80,7 +80,7 @@
                             @endif
 
                         </td>
-                        <td>
+                        {{-- <td>
                             <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('jobcollaborator.edit', $job_confirm->id) }}">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
@@ -92,7 +92,7 @@
                                 </form>
                             </a>
 
-                        </td>
+                        </td> --}}
                     </tr>
                 @endforeach
 
