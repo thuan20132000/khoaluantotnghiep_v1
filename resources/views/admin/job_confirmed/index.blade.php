@@ -80,7 +80,7 @@
                             @endif
 
                         </td>
-                        {{-- <td>
+                        <td>
                             <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('jobcollaborator.edit', $job_confirm->id) }}">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
@@ -92,7 +92,7 @@
                                 </form>
                             </a>
 
-                        </td> --}}
+                        </td>
                     </tr>
                 @endforeach
 
