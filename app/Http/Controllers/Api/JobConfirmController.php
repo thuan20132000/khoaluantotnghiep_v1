@@ -40,24 +40,45 @@ class JobConfirmController extends Controller
         try {
             //code...
 
-            $job_confirm = new JobConfirm();
-            $job_confirm->confirmed_price = $request->confirmed_price;
-            $job_confirm->job_collaborator_id = $request->job_collaborator_id;
-            $job_confirm->status = 0;
-            $job_confirm->save();
+            $isConfirmed = JobConfirm::checkIsConfirmed($request->job_collaborator_id);
 
-            $evaluate = new Evaluate();
-            $evaluate->range = $request->range;
-            $evaluate->content = $request->content;
-            $evaluate->job_confirm_id  = $job_confirm->id;
-            $evaluate->status = 0;
+            if(!$isConfirmed){
+                $job_confirm = new JobConfirm();
+                $job_confirm->confirmed_price = $request->confirmed_price;
+                $job_confirm->job_collaborator_id = $request->job_collaborator_id;
+                $job_confirm->status = 0;
+                $job_confirm->save();
 
-            $evaluate->save();
+
+
+
+                $evaluate = new Evaluate();
+                $evaluate->range = $request->range;
+                $evaluate->content = $request->content;
+                $evaluate->job_confirm_id  = $job_confirm->id;
+                $evaluate->status = 0;
+
+                $evaluate->save();
+
+
+            }else{
+                $job_confirm = JobConfirm::where('job_collaborator_id',$request->job_collaborator_id)->first();
+                $job_confirm->confirmed_price = $request->confirmed_price;
+                $job_confirm->update();
+
+                $evaluate = Evaluate::where('job_confirm_id',$job_confirm->id)->first();
+                $evaluate->range = $request->range || $evaluate->range;
+                $evaluate->content = $request->content || $evaluate->content;
+                $evaluate->update();
+            }
 
 
             $job_collaborator_confirmed =  JobCollaborator::where('id',$job_confirm->job_collaborator_id)->first();
             $job_collaborator_confirmed->status = JobCollaborator::CONFIRMED;
             $job_collaborator_confirmed->update();
+
+
+
 
             DB::commit();
 
