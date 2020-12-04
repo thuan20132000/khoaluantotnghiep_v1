@@ -43,14 +43,14 @@ class JobConfirmController extends Controller
             $job_confirm = new JobConfirm();
             $job_confirm->confirmed_price = $request->confirmed_price;
             $job_confirm->job_collaborator_id = $request->job_collaborator_id;
-            $job_confirm->status = 1;
+            $job_confirm->status = 0;
             $job_confirm->save();
 
             $evaluate = new Evaluate();
             $evaluate->range = $request->range;
             $evaluate->content = $request->content;
             $evaluate->job_confirm_id  = $job_confirm->id;
-            $evaluate->status = 1;
+            $evaluate->status = 0;
 
             $evaluate->save();
 
