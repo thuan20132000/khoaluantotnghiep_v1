@@ -501,7 +501,11 @@ class JobController extends Controller
 
 
 
-
+    /**
+     * author:thuantruong
+     * created_at:02/12/2020
+     * description:Get jobs by job's author approved
+     */
     public function getApprovedJobsByAuthor($author_id,Request $request)
     {
         try {
@@ -525,6 +529,62 @@ class JobController extends Controller
                 'status'=>true,
                 'data'=>$user_approved_jobs,
                 'message'=>"Get approved'jobs is successfull"
+            ]);
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status'=>false,
+                'data'=>[],
+                'message'=>$th
+            ]);
+        }
+    }
+
+
+    /**
+     * author:thuantruong
+     * created_at:04/12/2020
+     * description:Get jobs by job's author confirmed
+     */
+    public function getConfirmedJobsByAuthor($author_id,Request $request)
+    {
+        try {
+            //code...
+            $user_jobs = Job::where('user_id',$author_id)->get();
+
+
+            $user_confirmed_jobs = array();
+            foreach ($user_jobs as $job) {
+                # code...
+
+                $user_job_collaborator = JobCollaborator::where('job_id',$job->id)
+                                        ->where('status',JobCollaborator::CONFIRMED)
+                                        ->orderBy('created_at','desc')
+                                        ->first();
+
+                if($user_job_collaborator){
+
+                    $job = [
+                        "confirm"=>$user_job_collaborator->confirmedJob->last(),
+                        "review"=>$user_job_collaborator->confirmedJob->last()->evaluates->last(),
+                        "relationships"=>[
+                            "job_collaborator"=>$user_job_collaborator,
+                            "author"=>$user_job_collaborator->author()
+                        ]
+                    ];
+
+                    array_push($user_confirmed_jobs,$job);
+                }
+
+            }
+
+
+            return response()->json([
+                'status'=>true,
+                'data'=>$user_confirmed_jobs,
+                'message'=>"Get confirmed'jobs is successfull"
             ]);
 
 

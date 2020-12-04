@@ -64,5 +64,11 @@ class JobCollaborator extends Model
     }
 
 
+    public function confirmedJob()
+    {
+        return $this->hasMany(JobConfirm::class);
+    }
+
+
 
 }
