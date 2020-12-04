@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Model\Evaluate;
+use App\Model\JobCollaborator;
 use App\Model\JobConfirm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -52,6 +53,11 @@ class JobConfirmController extends Controller
             $evaluate->status = 1;
 
             $evaluate->save();
+
+
+            $job_collaborator_confirmed =  JobCollaborator::where('id',$job_confirm->job_collaborator_id)->first();
+            $job_collaborator_confirmed->status = JobCollaborator::CONFIRMED;
+            $job_collaborator_confirmed->update();
 
             DB::commit();
 

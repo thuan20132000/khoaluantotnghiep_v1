@@ -263,6 +263,9 @@
                                                             @case(3)
                                                                 btn-primary
                                                                 @break
+                                                            @case(0)
+                                                                btn-info
+                                                                @break
                                                             @default
 
                                                         @endswitch
@@ -282,12 +285,15 @@
                                                     @case(3)
                                                         Approved
                                                         @break
+                                                    @case(0)
+                                                        Confirmed
+                                                        @break
                                                     @default
 
                                                 @endswitch
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    @for ($i = 1; $i <= 3; $i++)
+                                                    @for ($i = 0; $i <= 3; $i++)
                                                         @if ($i != $candidate->job_collaborator_status)
                                                             <a class="dropdown-item"
 
@@ -303,6 +309,8 @@
                                                                     @case(3)
                                                                         Approved
                                                                         @break
+                                                                    @case(0)
+                                                                        Confirmed
                                                                     @default
                                                                 @endswitch
                                                             </a>
