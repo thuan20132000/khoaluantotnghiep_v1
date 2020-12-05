@@ -8,10 +8,13 @@ use Illuminate\Support\Facades\DB;
 
 class JobCollaborator extends Model
 {
-    const CONFIRMED =0;
+    // const CONFIRMED =0;
     const CANCEL = 1;
     const PENDING = 2;
     const APPROVED = 3;
+    const CONFIRMED = 4;
+
+
     const CANDIDATESFULL = 4;
 
 

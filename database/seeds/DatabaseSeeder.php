@@ -1,6 +1,7 @@
 <?php
 
 use App\Model\Occupation;
+use App\Model\RoleUser;
 use App\User;
 use Illuminate\Database\Seeder;
 

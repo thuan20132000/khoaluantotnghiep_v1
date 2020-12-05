@@ -16,13 +16,25 @@ class JobCollaboratorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+
+        $filter_by_status = $request->input('status');
         $job_collaborators = JobCollaborator::all();
+
+        if($filter_by_status && $filter_by_status>=0){
+            $job_collaborators = JobCollaborator::where('status',$filter_by_status)
+                                ->orderBy('created_at','desc')->get();
+
+        }
+
+
+
         return view('admin.job_collaborator.index',[
             'job_collaborators'=>$job_collaborators
         ]);
+
     }
 
     /**
@@ -153,14 +165,6 @@ class JobCollaboratorController extends Controller
 
         try {
             //code...
-            $job_id = $request->job;
-            $collaborator_id = $request->user;
-
-            // $check_duplicate = JobCollaborator::where('job_id',$job_id)
-            //                     ->where('user_id',$collaborator_id)->count();
-            // if($check_duplicate > 0){
-            //     return redirect()->back()->with('failed','Collaborator was exists in this job!');
-            // }
 
 
             $job_colaborator = JobCollaborator::where('id',$id)->first();
@@ -310,9 +314,10 @@ class JobCollaboratorController extends Controller
             $current_job_collaborator = JobCollaborator::where('id',$job_collaborator_id)->first();
             $other_job_collaborator =  JobCollaborator::where('job_id',$current_job_collaborator->job_id)
                                         ->where('id','!=',$job_collaborator_id);
-            $other_job_collaborator->update(['status'=>JobCollaborator::CANCEL]);
 
-
+            if($status == JobCollaborator::CONFIRMED || $status == JobCollaborator::APPROVED){
+                $other_job_collaborator->update(['status'=>JobCollaborator::CANCEL]);
+            }
             $current_job_collaborator->status = $status;
             $current_job_collaborator->update();
         //    dd($other_job_collaborator);
@@ -327,6 +332,21 @@ class JobCollaboratorController extends Controller
 
 
 
+    }
+
+
+    public function getConfirmedJob(Request $request)
+    {
+        try {
+            //code...
+            $confirmed_jobs = JobCollaborator::where('status',JobCollaborator::CONFIRMED)
+                                ->get();
+
+            dd($confirmed_jobs);
+
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
 }

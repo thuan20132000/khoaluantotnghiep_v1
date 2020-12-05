@@ -225,7 +225,17 @@
 
                         <div class="form-group">
                             <label for="inputStatus">Role</label>
-                            <select class="form-control custom-select" name="role" disabled>
+
+                            <select
+                                class="form-control custom-select"
+
+                                @if (Auth::user()->hasRole('isAdmin'))
+                                    name="role"
+                                @else
+                                    disabled
+                                @endif
+
+                            >
 
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->id }}" @if (count($user->roles) > 0)
@@ -330,9 +340,9 @@
                                         <td>{{ $job_collaborator->created_at }}</td>
                                         <td>{{ $job_collaborator->updated_at }}</td>
                                         <td>
-                                            @if ($job_collaborator->status == 0)
+                                            @if ($job_collaborator->status == 4)
                                                 <button type="button"
-                                                    class="btn btn-block bg-gradient-info btn-xs">Published</button>
+                                                    class="btn btn-block bg-gradient-info btn-xs">CONFIRMED</button>
                                             @endif
 
                                             @if ($job_collaborator->status == 1)
