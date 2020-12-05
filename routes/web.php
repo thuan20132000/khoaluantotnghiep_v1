@@ -57,9 +57,9 @@ Route::group(['prefix' => '', 'middleware' => ['web', 'auth']], function () {
     Route::get('/admin/jobcollaborator/confirmed','JobCollaboratorController@getConfirmedJob')->name("jobcollaborator.confirmed");
 
 
-    Route::get('/admin/job-confirm', 'JobConfirmController@index')->name('jobconfirm.index');
-    Route::post('/admin/job-confirm', 'JobConfirmController@confirmJobCollaborator')->name('jobconfirm.post');
-    Route::delete('/admin/job-confirm/{id}', 'JobConfirmController@destroy')->name('jobconfirm.destroy');
+    // Route::get('/admin/job-confirm', 'JobConfirmController@index')->name('jobconfirm.index');
+    // Route::post('/admin/job-confirm', 'JobConfirmController@confirmJobCollaborator')->name('jobconfirm.post');
+    // Route::delete('/admin/job-confirm/{id}', 'JobConfirmController@destroy')->name('jobconfirm.destroy');
 
     Route::get('admin/ajax/jobcollaborator/{id}', 'JobCollaboratorController@getAjaxCollaboratorByJob');
 
