@@ -111,4 +111,9 @@ class User extends Authenticatable
         return $this->hasMany(Job::class);
     }
 
+    public function jobCollaborators()
+    {
+        return $this->hasMany(JobCollaborator::class);
+    }
+
 }

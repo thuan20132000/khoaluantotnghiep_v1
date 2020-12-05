@@ -29,7 +29,7 @@ class UserResource extends JsonResource
             'relationships'=>[
                 'occupations'=>$this->occupations
             ],
-            'reviews'=>User::collaboratorReviews($this->id)
+            'reviews'=>$this->jobCollaborators
         ];
     }
 }
