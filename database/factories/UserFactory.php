@@ -29,5 +29,6 @@ $factory->define(User::class, function (Faker $faker) {
         'idcard'=>random_int(1,10),
         'address'=>$faker->address,
         'status'=>random_int(0,2),
+
     ];
 });

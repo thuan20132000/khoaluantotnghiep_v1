@@ -15,11 +15,15 @@
 
 <section class="content">
     <div class="container-fluid">
-
+        <div class="row">
+            <div class="col-12">
+                    <input type="checkbox" name="" id="">
+            </div>
+        </div>
       <div class="row">
         <div class="col-12">
           <div class="card">
-            <div class="card-header" style="display: flex;flex-direction: row">
+            <div class="card-header">
                 <div class="btn-group">
                     <button type="button" class="btn btn-info">Action</button>
                     <button type="button" class="btn btn-info dropdown-toggle dropdown-hover dropdown-icon" data-toggle="dropdown">
@@ -31,43 +35,8 @@
                       </div>
                     </button>
                     {{-- <a type="button" class="btn btn-info" style="margin:auto 20px" href="{{ route('jobcollaborator.create') }}">Create</a> --}}
-                </div>
-
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Filter By Status
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        @for ($i = -1; $i <= 4; $i++)
-                        <a
-                            class="dropdown-item"
-                            href="{{ route('jobcollaborator.index', ['status'=>$i]) }}"
-                        >
-                            @switch($i)
-                                @case(1)
-                                    Cancel
-                                    @break
-                                @case(2)
-                                    Pending
-                                    @break
-                                @case(3)
-                                    Approved
-                                    @break
-                                @case(4)
-                                    Confirmed
-                                    @break
-                                @case(-1)
-                                    All
-                                @default
-
-                            @endswitch
-                        </a>
-                    @endfor
-                    </div>
                   </div>
-
             </div>
-
             <!-- /.card-header -->
             <div class="card-body">
               <table id="example2" class="table table-bordered table-hover">

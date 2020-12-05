@@ -17,8 +17,8 @@ class CreateJobConfirmsTable extends Migration
             $table->id();
             $table->decimal('confirmed_price');
             $table->tinyInteger('status');
-            $table->unsignedBigInteger('job_collaborator_id');
-            $table->foreign('job_collaborator_id')->references('id')->on('job_collaborators');
+            // $table->unsignedBigInteger('job_collaborator_id');
+            // $table->foreign('job_collaborator_id')->references('id')->on('job_collaborators');
             $table->timestamps();
         });
     }

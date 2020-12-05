@@ -131,7 +131,7 @@
                         <div class="form-group">
                             <label for="inputStatus">Status</label>
                             <select class="form-control custom-select" name="status">
-                                @for ($i = 0; $i <= 3; $i++)
+                                @for ($i = 1; $i <= 4; $i++)
                                     <option value="{{ $i }}" @if ($job_collaborator->status == $i)
                                         selected
                                 @endif
@@ -142,7 +142,7 @@
                                     Cancel
                                 @elseif($i == 2)
                                     Pending
-                                @elseif($i==0)
+                                @elseif($i==4)
                                     Confirmed
                                 @endif
                                 </option>

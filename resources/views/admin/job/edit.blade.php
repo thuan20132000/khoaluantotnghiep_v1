@@ -263,7 +263,7 @@
                                                             @case(3)
                                                                 btn-primary
                                                                 @break
-                                                            @case(0)
+                                                            @case(4)
                                                                 btn-info
                                                                 @break
                                                             @default
@@ -285,7 +285,7 @@
                                                     @case(3)
                                                         Approved
                                                         @break
-                                                    @case(0)
+                                                    @case(4)
                                                         Confirmed
                                                         @break
                                                     @default
@@ -293,7 +293,7 @@
                                                 @endswitch
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    @for ($i = 0; $i <= 3; $i++)
+                                                    @for ($i = 1; $i <= 4; $i++)
                                                         @if ($i != $candidate->job_collaborator_status)
                                                             <a class="dropdown-item"
 
@@ -309,7 +309,7 @@
                                                                     @case(3)
                                                                         Approved
                                                                         @break
-                                                                    @case(0)
+                                                                    @case(4)
                                                                         Confirmed
                                                                     @default
                                                                 @endswitch

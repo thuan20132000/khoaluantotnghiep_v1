@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 use function PHPSTORM_META\type;
 
@@ -165,11 +166,14 @@ class UserController extends Controller
     public function edit($id)
     {
         //
+
+
         try {
             //code...
             $occupations = Occupation::all();
             $user = User::where('id',$id)->first();
             $roles = Role::all();
+
 
             $job_collaborators = array();
             if($user->hasRole('isCollaborator')){
@@ -255,6 +259,10 @@ class UserController extends Controller
                 }
             }
 
+            if($request->role){
+                $user->roles()->detach();
+                $user->roles()->attach($request->role);
+            }
 
             $user_occupation_collect = collect($user->occupations);
             $update_occupation = $request->occupations;
