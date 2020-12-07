@@ -327,6 +327,49 @@ class JobCollaborator extends Controller
 
 
 
+    public function confirmJobCollaborator(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'job_collaborator_id' => 'required',
+
+        ]);
+
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => $validator->errors()
+            ]);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            //code...
+            $job_collaborator_confirm = ModelJobCollaborator::where('job_collaborator_id',$request->job_collaborator_id)->first();
+            $job_collaborator_confirm->confirmed_price = $request->confirmed_price;
+            $job_collaborator_confirm->range = $request->range;
+            $job_collaborator_confirm->review_content = $request->content;
+            $job_collaborator_confirm->status = ModelJobCollaborator::CONFIRMED;
+
+            $job_collaborator_confirm->update();
+
+
+        DB::commit();
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+
+        DB::rollback();
+        }
+    }
+
+
+
+
+
 
 
 
