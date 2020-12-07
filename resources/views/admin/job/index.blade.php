@@ -98,6 +98,13 @@
                             <button type="button" class="btn btn-block bg-gradient-danger btn-xs">Pending</button>
                             @endif
 
+                            @if ($job->status == 3)
+                            <button type="button" class="btn btn-block bg-gradient-info btn-xs">Approved</button>
+                            @endif
+                            @if ($job->status == 4)
+                            <button type="button" class="btn btn-block bg-gradient-warning btn-xs">Confirmed</button>
+                            @endif
+
                         </td>
                         <td>
                             <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('job.show', $job->id) }}">

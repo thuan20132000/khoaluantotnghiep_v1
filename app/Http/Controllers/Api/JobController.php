@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateJobRequest;
+use App\Http\Resources\ConfirmedJobCollection;
 use App\Http\Resources\JobCollection;
 use App\Http\Resources\JobResource;
 use App\Model\Category;
@@ -463,28 +464,14 @@ class JobController extends Controller
         try {
             //code...
 
-            $user_jobs = Job::where('user_id',$author_id)->get();
-
-
-
-
-
-            $user_pending_jobs = array();
-            foreach ($user_jobs as $job) {
-                # code...
-
-                $is_full = JobCollaborator::checkIsFullCandidates($job->id);
-                if(!$is_full){
-                    $pending_job = new JobResource($job);
-                    array_push($user_pending_jobs,$pending_job);
-                }
-
-            }
+            $user_pending_jobs = Job::where('user_id',$author_id)
+                            ->where('status',Job::PENDING)
+                            ->get();
 
 
             return response()->json([
                 'status'=>true,
-                'data'=>$user_pending_jobs,
+                'data'=>JobCollection::collection($user_pending_jobs),
                 'message'=>"Get pending'jobs is successfull"
             ]);
 
@@ -510,24 +497,14 @@ class JobController extends Controller
     {
         try {
             //code...
-            $user_jobs = Job::where('user_id',$author_id)->get();
-
-            $user_approved_jobs = array();
-            foreach ($user_jobs as $job) {
-                # code...
-
-                $is_full = JobCollaborator::checkIsFullCandidates($job->id);
-                if($is_full){
-                    $approved_job = new JobResource($job);
-                    array_push($user_approved_jobs,$approved_job);
-                }
-
-            }
+            $user_approved_jobs = Job::where('user_id',$author_id)
+                        ->where('status',Job::APPROVED)
+                        ->get();
 
 
             return response()->json([
                 'status'=>true,
-                'data'=>$user_approved_jobs,
+                'data'=>JobCollection::collection($user_approved_jobs),
                 'message'=>"Get approved'jobs is successfull"
             ]);
 
@@ -552,38 +529,13 @@ class JobController extends Controller
     {
         try {
             //code...
-            $user_jobs = Job::where('user_id',$author_id)->get();
-
-
-            $user_confirmed_jobs = array();
-            foreach ($user_jobs as $job) {
-                # code...
-
-                $user_job_collaborator = JobCollaborator::where('job_id',$job->id)
-                                        ->where('status',JobCollaborator::CONFIRMED)
-                                        ->orderBy('created_at','desc')
-                                        ->first();
-
-                if($user_job_collaborator){
-
-                    $job = [
-                        "confirm"=>$user_job_collaborator->confirmedJob->last(),
-                        "review"=>$user_job_collaborator->confirmedJob->last()->evaluates->last(),
-                        "relationships"=>[
-                            "job_collaborator"=>$user_job_collaborator,
-                            "author"=>$user_job_collaborator->author()
-                        ]
-                    ];
-
-                    array_push($user_confirmed_jobs,$job);
-                }
-
-            }
-
+            $user_confirmed_jobs = Job::where('user_id',$author_id)
+                            ->where('status',Job::CONFIRMED)
+                            ->get();
 
             return response()->json([
                 'status'=>true,
-                'data'=>$user_confirmed_jobs,
+                'data'=>ConfirmedJobCollection::collection($user_confirmed_jobs),
                 'message'=>"Get confirmed'jobs is successfull"
             ]);
 
@@ -593,7 +545,7 @@ class JobController extends Controller
             return response()->json([
                 'status'=>false,
                 'data'=>[],
-                'message'=>$th
+                'message'=>"ERROR =>> ".$th
             ]);
         }
     }
