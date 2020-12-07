@@ -37,10 +37,20 @@ Route::group(['prefix' => 'v1'], function () {
 
 
 
-
+    /**
+     *
+     */
     Route::resource('job-collaborator', 'Api\JobCollaborator');
     Route::post('job/select-candidate','Api\JobCollaborator@selectCandidate');
     Route::post('job/confirm-candidate','Api\JobCollaborator@confirmCandidate');
+
+
+
+    /**
+     *
+     */
+    // Route::get('collaborator/{id}/detail','Api\CollaboratorController@getCollaboratorDetail');
+    Route::resource('collaborators','Api\CollaboratorController');
 
 
 
@@ -68,7 +78,6 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::get('job-search','Api\JobController@searchJob');
 
-    Route::resource('collaborators','Api\CollaboratorController');
 
 
 
