@@ -117,7 +117,7 @@ class JobController extends Controller
             $job->name = $request->name;
             $job->slug = Str::slug($request->name, '-');
             $job->description = $request->description;
-            $job->status = 3;
+            $job->status = Job::PENDING;
             $job->suggestion_price = $request->suggestion_price;
             $job->location_id = $location->id;
             $job->occupation_id = $request->occupation_id;
