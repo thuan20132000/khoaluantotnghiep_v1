@@ -42,7 +42,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('job/select-candidate','Api\JobCollaborator@selectCandidate');
     Route::get('job-collaborator-applying','Api\JobCollaborator@getJobCollaboratorApplying');
     // Route::get('job-collaborator/{author_id}/status/{status}','Api\JobCollaborator@getJobCollaboratorStatusByAuthor');
-
+    Route::get('job-collaborator-confirm','Api\JobCollaborator@confirmJobCollaborator');
 
     Route::put('user/{id}', 'Api\UserController@update');
     Route::post('login', 'Api\UserController@login');
