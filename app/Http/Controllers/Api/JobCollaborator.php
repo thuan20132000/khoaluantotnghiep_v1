@@ -73,7 +73,7 @@ class JobCollaborator extends Controller
             $collaborator_id = $request->user_id;
 
             $check_full_candidates = ModelJobCollaborator::checkIsFullCandidates($job_id);
-            if($check_full_candidates){
+            if ($check_full_candidates) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Collaborator is full!!!'
@@ -300,25 +300,29 @@ class JobCollaborator extends Controller
             $job_collaborator_approve->status = ModelJobCollaborator::APPROVED;
             $job_collaborator_approve->update();
 
+            $job = Job::where('id', $request->job_id)->first();
+            $job->status = Job::APPROVED;
+            $job->update();
+
             DB::commit();
 
             return response()->json([
                 "status" => true,
                 "data" => [
-                    "id"=>$job_collaborator_approve->user->id,
-                    "name"=>$job_collaborator_approve->user->name,
-                    "email"=>$job_collaborator_approve->user->email,
-                    "phonenumber"=>$job_collaborator_approve->phonenumber,
-                    "address"=>$job_collaborator_approve->address
+                    "id" => $job_collaborator_approve->user->id,
+                    "name" => $job_collaborator_approve->user->name,
+                    "email" => $job_collaborator_approve->user->email,
+                    "phonenumber" => $job_collaborator_approve->phonenumber,
+                    "address" => $job_collaborator_approve->address
                 ],
-                "message"=>"Approved Candidate Successfully"
+                "message" => "Approved Candidate Successfully"
             ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
                 "status" => false,
                 "data" => [],
-                "message" => $th
+                "message" => "ERROR ==> " . $th
             ]);
         }
     }
@@ -327,11 +331,12 @@ class JobCollaborator extends Controller
 
 
 
-    public function confirmJobCollaborator(Request $request)
+    public function confirmCandidate(Request $request)
     {
 
         $validator = Validator::make($request->all(), [
             'job_collaborator_id' => 'required',
+            'job_id' => 'required',
 
         ]);
 
@@ -347,30 +352,42 @@ class JobCollaborator extends Controller
 
         try {
             //code...
-            $job_collaborator_confirm = ModelJobCollaborator::where('job_collaborator_id',$request->job_collaborator_id)->first();
+
+            $job_collaborator_confirm= ModelJobCollaborator::where('id', $request->job_collaborator_id)
+                ->first();
             $job_collaborator_confirm->confirmed_price = $request->confirmed_price;
             $job_collaborator_confirm->range = $request->range;
             $job_collaborator_confirm->review_content = $request->content;
             $job_collaborator_confirm->status = ModelJobCollaborator::CONFIRMED;
 
             $job_collaborator_confirm->update();
+            $job = Job::where('id', $request->job_id)->first();
+            $job->status = Job::CONFIRMED;
+            $job->update();
 
 
-        DB::commit();
 
-
+            DB::commit();
+            return response()->json([
+                "status" => true,
+                "data" => [
+                    "id" => $job_collaborator_confirm->user->id,
+                    "name" => $job_collaborator_confirm->user->name,
+                    "email" => $job_collaborator_confirm->user->email,
+                    "phonenumber" => $job_collaborator_confirm->phonenumber,
+                    "address" => $job_collaborator_confirm->address
+                ],
+                "message" => "Confirmed Candidate Successfully"
+            ]);
         } catch (\Throwable $th) {
             //throw $th;
 
-        DB::rollback();
+            DB::rollback();
+            return response()->json([
+                "status" => false,
+                "data" => [],
+                "message" => "ERROR ==> " . $th
+            ]);
         }
     }
-
-
-
-
-
-
-
-
 }

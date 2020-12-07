@@ -84,7 +84,7 @@
                     <th>CREATED_AT</th>
                     <th>UPDATED_AT</th>
                     <th>STATUS</th>
-                    <th>OPERATIONS</th>
+                    {{-- <th>OPERATIONS</th> --}}
                 </tr>
                 </thead>
                 <tbody>
@@ -109,8 +109,8 @@
                         <td>{{$job_collaborator->created_at}}</td>
                         <td>{{$job_collaborator->updated_at}}</td>
                         <td>
-                            @if ($job_collaborator->status == 0)
-                                <button type="button" class="btn btn-block bg-gradient-info btn-xs">CONFIRM</button>
+                            @if ($job_collaborator->status == 4)
+                                <button type="button" class="btn btn-block bg-gradient-info btn-xs">CONFIRMED</button>
                             @endif
 
                             @if ($job_collaborator->status == 1)
@@ -127,7 +127,7 @@
 
 
                         </td>
-                        <td>
+                        {{-- <td>
                             <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('jobcollaborator.edit', $job_collaborator->id) }}">
                                 <i class="fas fa-edit"></i> Edit
                             </a>
@@ -139,7 +139,7 @@
                                 </form>
                             </a>
 
-                        </td>
+                        </td> --}}
                     </tr>
                 @endforeach
 

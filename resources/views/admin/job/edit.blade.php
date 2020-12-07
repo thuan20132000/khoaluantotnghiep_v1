@@ -258,13 +258,13 @@
                                                                 btn-danger
                                                                 @break
                                                             @case(2)
-                                                                btn-warning
+                                                                btn-info
                                                                 @break
                                                             @case(3)
                                                                 btn-primary
                                                                 @break
                                                             @case(4)
-                                                                btn-info
+                                                                btn-warning
                                                                 @break
                                                             @default
 

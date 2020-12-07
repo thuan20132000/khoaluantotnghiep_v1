@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Model\Image;
 use App\Model\Job;
 use App\Model\JobCollaborator;
 use App\Model\Occupation;
@@ -114,6 +115,11 @@ class User extends Authenticatable
     public function jobCollaborators()
     {
         return $this->hasMany(JobCollaborator::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
     }
 
 }

@@ -22,9 +22,12 @@ class JobCollection extends JsonResource
                 'description'=>$this->description,
                 'suggestion_price'=>$this->suggestion_price,
                 'images'=>$this->images,
-                'created_at'=>$this->created_at
+                'created_at'=>$this->created_at,
+                'status'=>$this->status,
+
             ],
             'relationships'=>[
+                'location'=>$this->location,
                 'author'=>$this->user,
                 'occupation'=>$this->occupation,
                 'candidates'=> $this->candidates()

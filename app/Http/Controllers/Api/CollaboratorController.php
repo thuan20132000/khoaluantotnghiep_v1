@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CollaboratorDetailResource;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Model\Category;
@@ -99,12 +100,13 @@ class CollaboratorController extends Controller
 
         try {
             //code...
-            $collaborator = User::where('id', $id)->first();
+            $collaborator = User::where('id', $id)
+                                ->first();
 
 
             return response()->json([
                 'status' => true,
-                'data' => new UserResource($collaborator)
+                'data' => new CollaboratorDetailResource($collaborator)
             ]);
         } catch (\Throwable $th) {
             //throw $th;
@@ -187,5 +189,31 @@ class CollaboratorController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    /**
+     *
+     */
+    public function getCollaboratorDetail($id,Request $request)
+    {
+
+        try {
+            //code...
+            $collaborator = User::where('id',$id)->first();
+
+            return $collaborator;
+
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status'=>false,
+                'data'=>null,
+                'message'=>'Error => '.$th
+            ]);
+        }
+
+
     }
 }

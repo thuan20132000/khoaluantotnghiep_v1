@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 class Job extends Model
 {
     //
-    const CONFIRMED = 0;
+    const CONFIRMED = 4;
     const DRAFT = 1;
     const PENDING = 2;
     const APPROVED = 3;
