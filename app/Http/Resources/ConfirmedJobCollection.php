@@ -30,7 +30,7 @@ class ConfirmedJobCollection extends JsonResource
             'relationships' => [
                 'location' => $this->location,
                 'occupation' => $this->occupation,
-                'candidate'=>$this->user,
+                'candidate'=>JobCollaborator::where('job_id',$this->id)->first()->user,
                 'confirm'=>$this->jobCollaborators->where('status',JobCollaborator::CONFIRMED)->first()
             ]
 
