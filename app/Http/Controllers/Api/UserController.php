@@ -104,10 +104,10 @@ class UserController extends Controller
             $user->phonenumber = $request->phonenumber;
             $user->idcard = $request->idcard;
             $user->address = $request->address;
-            $user->province = $request->province || $user->province;
-            $user->district = $request->district || $user->district;
-            $user->subdistrict = $request->subdistrict || $user->subdistrict;
-            $user->profile_image = $request->profile_image || $user->profile_image;
+            $user->province = $request->province ?  $request->province : $user->province;
+            $user->district = $request->district ? $request->district : $user->district;
+            $user->subdistrict = $request->subdistrict ? $request->subdistrict : $user->subdistrict;
+            $user->profile_image = $request->profile_image ? $request->profile_image : $user->profile_image;
             $user->update();
 
 
