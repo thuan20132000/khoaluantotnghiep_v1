@@ -60,6 +60,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('job-collaborator-confirm','Api\JobCollaborator@confirmJobCollaborator');
 
     Route::put('user/{id}', 'Api\UserController@update');
+    Route::get('user/{id}','Api\UserController@show');
     Route::post('login', 'Api\UserController@login');
     Route::post('register', 'Api\UserController@register');
 
