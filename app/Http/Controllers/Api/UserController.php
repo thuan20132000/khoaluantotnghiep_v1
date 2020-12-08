@@ -114,12 +114,14 @@ class UserController extends Controller
             return response([
                 "message" => 'updated successfully',
                 "data" => $user,
+                "status"=>true
             ], 201);
         } catch (\Throwable $th) {
             //throw $th;
             return response([
                 "message" => $th,
-                "data" => null
+                "data" => null,
+                "status"=>false
             ], 401);
         }
     }
