@@ -45,6 +45,25 @@ class UserController extends Controller
     public function show($id)
     {
         //
+        try {
+            //code...
+            $user = User::where('id',$id)->first();
+
+        $user_data = new UserResource($user);
+        return response()->json([
+                "status"=>true,
+                "data"=>$user_data,
+                "message"=>"Get user successfully"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                "status"=>false,
+                "data"=>[],
+                "message"=>"Get user data failed"
+            ]);
+        }
+
     }
 
     /**
@@ -85,10 +104,10 @@ class UserController extends Controller
             $user->phonenumber = $request->phonenumber;
             $user->idcard = $request->idcard;
             $user->address = $request->address;
-            $user->province = $request->province | $user->province;
-            $user->district = $request->district | $user->district;
-            $user->subdistrict = $request->subdistrict | $user->subdistrict;
-            $user->profile_image = $request->profile_image | $user->profile_image;
+            $user->province = $request->province || $user->province;
+            $user->district = $request->district || $user->district;
+            $user->subdistrict = $request->subdistrict || $user->subdistrict;
+            $user->profile_image = $request->profile_image || $user->profile_image;
             $user->update();
 
 
