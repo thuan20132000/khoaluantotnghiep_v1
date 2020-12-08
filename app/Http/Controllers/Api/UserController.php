@@ -52,7 +52,7 @@ class UserController extends Controller
         $user_data = new UserResource($user);
         return response()->json([
                 "status"=>true,
-                "data"=>$user_data,
+                "data" => new UserResource($user),
                 "message"=>"Get user successfully"
             ]);
         } catch (\Throwable $th) {
@@ -113,16 +113,16 @@ class UserController extends Controller
 
             return response([
                 "message" => 'updated successfully',
-                "data" => $user,
+                "data" => new UserResource($user),
                 "status"=>true
-            ], 201);
+            ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response([
                 "message" => $th,
                 "data" => null,
                 "status"=>false
-            ], 401);
+            ]);
         }
     }
 
