@@ -27,7 +27,7 @@ class UserResource extends JsonResource
             ],
             'role'=>$this->roles,
             'relationships'=>[
-                'occupations'=>$this->occupations
+                'occupations'=>$this->occupations,
             ],
             'reviews'=>$this->getReviews()
         ];
