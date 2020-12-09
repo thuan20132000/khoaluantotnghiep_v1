@@ -49,7 +49,6 @@ class UserController extends Controller
             //code...
             $user = User::where('id',$id)->first();
 
-        $user_data = new UserResource($user);
         return response()->json([
                 "status"=>true,
                 "data" => new UserResource($user),
@@ -60,7 +59,7 @@ class UserController extends Controller
             return response()->json([
                 "status"=>false,
                 "data"=>[],
-                "message"=>"Get user data failed"
+                "message"=>"Get user data failed".$th
             ]);
         }
 
