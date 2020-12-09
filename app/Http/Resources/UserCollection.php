@@ -22,11 +22,15 @@ class UserCollection extends JsonResource
                 'profile_image' => $this->profile_image,
                 'phone_number' => $this->phone_number,
                 'id_card'=>$this->idcard,
+                'address'=>$this->address,
 
             ],
             'relationships'=>[
-                'occupations'=>$this->occupations
-            ]
+                'occupations'=>$this->occupations,
+                'activity_images'=>$this->images
+            ],
+            'reviews'=>$this->getReviews()
+
 
         ];
     }
