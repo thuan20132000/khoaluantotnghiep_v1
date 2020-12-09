@@ -36,7 +36,7 @@ class JobCollaborator extends Model
             ->join('jobs', 'job_collaborators.job_id', '=', 'jobs.id')
             ->join('users', 'users.id', '=', 'jobs.user_id')
             ->where('job_collaborators.id', $this->id)
-            ->select('users.id', 'users.name', 'users.email', 'users.phonenumber')
+            ->select('users.id', 'users.name', 'users.email', 'users.phonenumber','users.profile_image')
             ->first();
         return $author;
     }
