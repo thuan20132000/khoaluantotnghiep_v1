@@ -129,8 +129,16 @@ class User extends Authenticatable
 
     public function getReviews()
     {
-        $reviews = DB::table('users')
-            ->join('jobs', 'jobs.user_id', '=', 'users.id')
+        $reviews = DB::table('job_collaborators')
+            ->join('jobs','jobs.id','=','job_collaborators.job_id')
+            ->join('users','users.id','=','jobs.user_id')
+            ->where('job_collaborators.user_id',$this->id)
+            ->select(
+                'users.name as author_name',
+                'users.profile_image as author_image',
+                'users.email as author_email',
+                'job_collaborators.*'
+            )
             ->get();
         return $reviews;
     }
