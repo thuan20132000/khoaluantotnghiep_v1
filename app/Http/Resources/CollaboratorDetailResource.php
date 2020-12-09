@@ -29,7 +29,7 @@ class CollaboratorDetailResource extends JsonResource
                 'occupations'=>$this->occupations,
                 'activity_images'=>$this->images
             ],
-            'reviews'=>$this->jobCollaborators->where('status',JobCollaborator::CONFIRMED)
+            'reviews'=>$this->getReviews()
 
 
         ];

@@ -133,6 +133,7 @@ class User extends Authenticatable
             ->join('jobs','jobs.id','=','job_collaborators.job_id')
             ->join('users','users.id','=','jobs.user_id')
             ->where('job_collaborators.user_id',$this->id)
+            ->where('job_collaborators.status',JobCollaborator::CONFIRMED)
             ->select(
                 'users.name as author_name',
                 'users.profile_image as author_image',
