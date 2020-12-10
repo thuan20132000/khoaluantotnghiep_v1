@@ -53,6 +53,7 @@ class Job extends Model
                 'users.phonenumber',
                 'users.address',
                 'users.id',
+                'users.profile_image',
                 'users.email',
                 'job_collaborators.expected_price',
                 'job_collaborators.description as job_collaborator_description',
