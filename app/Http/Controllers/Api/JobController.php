@@ -573,4 +573,34 @@ class JobController extends Controller
             ]);
         }
     }
+
+
+    /**
+     * author:thuantruong
+     * created_at:10/12/2020
+     * description:Delete a job by author
+     */
+    public function deleteJobByAuthor($author_id,$job_id)
+    {
+
+        try {
+            //code...
+            $job_collaborator_delete = JobCollaborator::where('job_id',$job_id)->delete();
+            $job_delete = Job::where('id',$job_id)->delete();
+
+            return response()->json([
+                "status"=>true,
+                "data"=>null,
+                "message"=>"Delete a job successfully"
+            ]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                "status"=>false,
+                "data"=>null,
+                "message"=>"Delete Job Failed ".$th
+            ]);
+        }
+    }
 }
