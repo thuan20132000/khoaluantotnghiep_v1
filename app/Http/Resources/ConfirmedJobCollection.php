@@ -24,6 +24,7 @@ class ConfirmedJobCollection extends JsonResource
                 'suggestion_price' => $this->suggestion_price,
                 'images' => $this->images,
                 'created_at' => $this->created_at,
+                'updated_at'=>$this->updated_at,
                 'status' => $this->status,
 
             ],

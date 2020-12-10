@@ -34,6 +34,8 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('job/{author_id}/status/approved','Api\JobController@getApprovedJobsByAuthor');
     Route::get('job/{author_id}/status/confirmed','Api\JobController@getConfirmedJobsByAuthor');
 
+    Route::delete('job/{author_id}/delete/{job_id}','Api\JobController@deleteJobByAUthor');
+
 
 
 
