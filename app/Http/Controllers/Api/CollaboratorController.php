@@ -264,7 +264,7 @@ class CollaboratorController extends Controller
                     ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
                     ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
                     ->where('role_user.role_id', '=', Role::COLLABORATOR)
-                    ->where('occupation.name', 'LIKE', '%' . $query . '%')
+                    ->where('occupations.name', 'LIKE', '%' . $query . '%')
                     ->select('users.*')
                     ->get();
             }
