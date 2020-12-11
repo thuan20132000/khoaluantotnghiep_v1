@@ -20,7 +20,7 @@ class UserCollection extends JsonResource
                 'name' => $this->name,
                 'email' => $this->email,
                 'profile_image' => $this->profile_image,
-                'phone_number' => $this->phone_number,
+                'phone_number' => $this->phonenumber,
                 'id_card'=>$this->idcard,
                 'address'=>$this->address,
 
