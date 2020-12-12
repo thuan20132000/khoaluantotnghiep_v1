@@ -58,6 +58,9 @@ Route::group(['prefix' => 'v1'], function () {
 
 
     Route::get('job-collaborator-applying','Api\JobCollaborator@getJobCollaboratorApplying');
+
+    Route::get('jobcollaborator/{user_id}/status/{status}','Api\JobCollaborator@getJobCollaboratorStatus');
+
     // Route::get('job-collaborator/{author_id}/status/{status}','Api\JobCollaborator@getJobCollaboratorStatusByAuthor');
     Route::get('job-collaborator-confirm','Api\JobCollaborator@confirmJobCollaborator');
 
