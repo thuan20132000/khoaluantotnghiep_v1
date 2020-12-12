@@ -317,7 +317,10 @@ class JobCollaboratorController extends Controller
 
             if($status == JobCollaborator::CONFIRMED || $status == JobCollaborator::APPROVED){
                 $other_job_collaborator->update(['status'=>JobCollaborator::CANCEL]);
+
             }
+            $job_status_update = Job::where('id',$current_job_collaborator->job_id)->update(['status'=>$status]);
+
             $current_job_collaborator->status = $status;
             $current_job_collaborator->update();
         //    dd($other_job_collaborator);
