@@ -353,7 +353,7 @@ class JobCollaborator extends Controller
         try {
             //code...
 
-            $job_collaborator_confirm= ModelJobCollaborator::where('id', $request->job_collaborator_id)
+            $job_collaborator_confirm = ModelJobCollaborator::where('id', $request->job_collaborator_id)
                 ->first();
             $job_collaborator_confirm->confirmed_price = $request->confirmed_price;
             $job_collaborator_confirm->range = $request->range;
@@ -387,6 +387,41 @@ class JobCollaborator extends Controller
                 "status" => false,
                 "data" => [],
                 "message" => "ERROR ==> " . $th
+            ]);
+        }
+    }
+
+
+
+
+    public function getJobCollaboratorStatus($user_id,$status,Request $request)
+    {
+
+
+        try {
+            //code...
+            $per_page = 15;
+            if ($request->input('per_page')) {
+                $per_page = (int)$request->input('per_page');
+            }
+
+            $collaborator_jobs = ModelJobCollaborator::where('user_id',$user_id)
+                                                ->where("status",$status)
+                                                ->orderBy('created_at','desc')
+                                                ->limit($per_page)
+                                                ->get();
+
+
+            return response()->json([
+                "status" => true,
+                "data" => JobCollaboratorCollection::collection($collaborator_jobs),
+                "message"=>"Get job successfully"
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => false,
+                "data" => [],
+                "message"=>"Get job failed"
             ]);
         }
     }
