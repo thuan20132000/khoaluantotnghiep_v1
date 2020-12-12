@@ -29,7 +29,8 @@ class JobCollaboratorCollection extends JsonResource
                 'job'=>$this->job,
                 'collaborators'=>$this->collaborators(),
                 'job_images'=>$this->job->images,
-                'job_author'=>$this->job->user
+                'job_author'=>$this->job->user,
+                'job_location'=>$this->job->location
 
             ]
         ];
