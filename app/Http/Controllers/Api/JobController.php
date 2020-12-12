@@ -31,7 +31,7 @@ class JobController extends Controller
     {
         //
         $per_page = 15;
-        $jobs = Job::all();
+        $jobs = Job::where('status', '!=', Job::CONFIRMED)->limit($per_page)->get();
         $sortBy = 'desc';
 
 
@@ -48,7 +48,7 @@ class JobController extends Controller
 
             if ($request->input('category')) {
                 $category_id = $request->input('category');
-                $jobs =  Category::find($category_id)->jobs->take($per_page);
+                $jobs =  Category::find($category_id)->jobs->where('status','!=',Job::CONFIRMED);
             }
 
 
@@ -580,26 +580,25 @@ class JobController extends Controller
      * created_at:10/12/2020
      * description:Delete a job by author
      */
-    public function deleteJobByAuthor($author_id,$job_id)
+    public function deleteJobByAuthor($author_id, $job_id)
     {
 
         try {
             //code...
-            $job_collaborator_delete = JobCollaborator::where('job_id',$job_id)->delete();
-            $job_delete = Job::where('id',$job_id)->delete();
+            $job_collaborator_delete = JobCollaborator::where('job_id', $job_id)->delete();
+            $job_delete = Job::where('id', $job_id)->delete();
 
             return response()->json([
-                "status"=>true,
-                "data"=>null,
-                "message"=>"Delete a job successfully"
+                "status" => true,
+                "data" => null,
+                "message" => "Delete a job successfully"
             ]);
-
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
-                "status"=>false,
-                "data"=>null,
-                "message"=>"Delete Job Failed ".$th
+                "status" => false,
+                "data" => null,
+                "message" => "Delete Job Failed " . $th
             ]);
         }
     }
