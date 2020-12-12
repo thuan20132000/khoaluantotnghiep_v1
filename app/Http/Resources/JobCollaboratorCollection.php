@@ -23,6 +23,8 @@ class JobCollaboratorCollection extends JsonResource
                 'start_at'=>$this->start_at,
                 'finish_at'=>$this->finish_at,
                 'status'=>$this->status,
+                'updated_at'=>$this->updated_at,
+                'created_at'=>$this->created_at
 
 
             ],
