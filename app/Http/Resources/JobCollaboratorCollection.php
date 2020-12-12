@@ -18,6 +18,7 @@ class JobCollaboratorCollection extends JsonResource
             'id'=>$this->id,
             'attributes'=>[
                 'expected_price'=>$this->expected_price,
+                'confirmed_price'=>$this->confirmed_price,
                 'description'=>$this->description,
                 'start_at'=>$this->start_at,
                 'finish_at'=>$this->finish_at,
