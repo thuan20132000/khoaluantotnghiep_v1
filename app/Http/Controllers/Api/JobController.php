@@ -94,7 +94,7 @@ class JobController extends Controller
                 'province' => 'required',
                 'district' => 'required',
                 'subdistrict' => 'required',
-                'street' => 'required',
+                'address' => 'required',
                 'suggestion_price' => 'required',
                 'author' => 'required',
             ]);
@@ -110,7 +110,7 @@ class JobController extends Controller
             $location->province = $request->province;
             $location->district = $request->district;
             $location->subdistrict = $request->subdistrict;
-            $location->street = $request->street;
+            $location->address = $request->address;
             $location->save();
 
             $job = new Job();
