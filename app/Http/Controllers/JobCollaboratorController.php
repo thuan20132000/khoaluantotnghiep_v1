@@ -107,6 +107,8 @@ class JobCollaboratorController extends Controller
     public function show($id)
     {
         //
+
+        // return view('admin.job.show');
     }
 
     /**
@@ -271,6 +273,13 @@ class JobCollaboratorController extends Controller
                     return redirect()->back()->with('failed','Collaborator was exists in this job!');
                 }
 
+                $check_full_candidates = JobCollaborator::checkIsFullCandidates($job_id);
+                // dd($check_full_candidates);
+                // dd($check_full_candidates);
+                if($check_full_candidates){
+                    return redirect()->back()->with('failed','Job was full candidates');
+                }
+
                 $job_colaborator = new JobCollaborator();
                 $job_colaborator->description = $request->description;
                 $job_colaborator->user_id = $collaborator_id;
@@ -289,6 +298,35 @@ class JobCollaboratorController extends Controller
         } catch (\Throwable $th) {
             throw $th;
         }
+    }
+
+
+    public function updateJobCollaboratorStatus($job_collaborator_id,$status,Request $request)
+    {
+        try {
+            //code...
+            //dd($status,$job_collaborator_id);
+            DB::beginTransaction();
+            $current_job_collaborator = JobCollaborator::where('id',$job_collaborator_id)->first();
+            $other_job_collaborator =  JobCollaborator::where('job_id',$current_job_collaborator->job_id)
+                                        ->where('id','!=',$job_collaborator_id);
+            $other_job_collaborator->update(['status'=>JobCollaborator::CANCEL]);
+
+
+            $current_job_collaborator->status = $status;
+            $current_job_collaborator->update();
+        //    dd($other_job_collaborator);
+            DB::commit();
+
+            return redirect()->back();
+
+        } catch (\Throwable $th) {
+            throw $th;
+            DB::rollback();
+        }
+
+
+
     }
 
 }

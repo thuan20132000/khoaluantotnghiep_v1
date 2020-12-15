@@ -28,6 +28,7 @@
 <!-- wow Animation css -->
 <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}" />
 <!-- revolution slider css -->
+
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/revolution/css/settings.css')}}" />
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/revolution/css/layers.css')}}" />
 <link rel="stylesheet" type="text/css" href="{{ asset('assets/revolution/css/navigation.css')}}" />
@@ -183,6 +184,8 @@
 @include('page.layouts.footer')
 <!-- end footer -->
 <!-- js section -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+
 <script src="{{asset('assets/js/jquery.min.js')}}"></script>
 <script src="{{asset('assets/js/bootstrap.min.js')}}"></script>
 <!-- menu js -->

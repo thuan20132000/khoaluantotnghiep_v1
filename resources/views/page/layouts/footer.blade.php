@@ -1,4 +1,4 @@
-<!-- footer -->
+
 <footer class="footer_style_2">
       <div class="footer_blog">
         <div class="row">
@@ -63,5 +63,4 @@
     </div>
   </div>
 </footer>
-!-- end footer -->
-<!-- js section -->
+

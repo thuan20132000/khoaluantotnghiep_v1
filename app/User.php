@@ -9,12 +9,14 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+use Laravel\Passport\HasApiTokens;
+
 use App\Role;
 use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable,HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -71,7 +73,6 @@ class User extends Authenticatable
                 'users.address',
                 'users.profile_image',
                 'roles.name as role_name',
-                // 'occupations.name as occupation_name'
             )
         ->get();
 
@@ -80,10 +81,10 @@ class User extends Authenticatable
 
     public function getOccupationByUserId(){
          $collaborator_occupations = DB::table('users')
-                                    ->join('occupation_user','occupation_user.id','=','users.id')
-                                    ->join('occupations','occupations.id','occupation_user.occupation_id')
+                                    ->join('occupation_user','occupation_user.user_id','=','users.id')
+                                    ->join('occupations','occupations.id','=','occupation_user.occupation_id')
                                     ->where('users.id',$this->id)
-                                    ->select('occupations')
+                                    ->select('occupations.id','occupations.name','occupations.slug','occupations.status','occupations.image')
                                     ->get();
         return $collaborator_occupations;
 

@@ -84,6 +84,7 @@ class OccupationController extends Controller
     public function show(Occupation $occupation)
     {
         //
+        return view('admin.occupation.show',['occupation'=>$occupation]);
     }
 
     /**

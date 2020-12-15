@@ -6,7 +6,7 @@
 <div class="col-md-12">
         <div class="full">
           <div class="main_heading text_align_center">
-            <h2>Danh Mục </h2>
+            <h1>Danh Mục </h1>
           </div>
         </div>
   <div class="container">  
@@ -17,7 +17,8 @@
           <div class="center">
             <div class="icon"> <img src="{{$cat->image}}" alt="#" /> </div>
           </div>
-          <h4><a href="it_shop_detail.html">{{$cat->name}}</a></h4>
+          <h4><a href="jobCategory/{{$cat->id}}">{{$cat->name}}</a>
+          </h4>
         </div>
       </div>
     @endforeach
@@ -25,36 +26,7 @@
 <!-- section -->
 <!-- end section -->
 <!-- section -->
-<div class="section padding_layout_1">
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="full">
-          <div class="main_heading text_align_center">
-            <h2>Nghề Nghiệp</h2>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-    @foreach($occupation as $key => $oc)
-      <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 margin_bottom_30_all" data-aos="fade-right">
-        <div class="product_list">
-          <div class="product_img"> <img class="img-responsive" src="{{$oc->image}}" alt=""> </div>
-          <div class="product_detail_btm">
-            <div class="center">
-              <h4><a href="it_shop_detail.html">{{$oc->name}}</a></h4>
-            </div>
-          </div>
-        </div>
-      </div>
-      @endforeach
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+
 <!-- end section -->
 <!-- section -->
 
@@ -125,7 +97,12 @@
     @foreach($jobs as $jb)
       <div class="col-md-4">
         <div class="full blog_colum">
-          <div class="blog_feature_img"> <img src"{{$jb->images}}" alt="" /></div>
+          <div class="blog_feature_img">
+          @foreach($jb->images as $image)
+            <img src="{{$image->image_url}}" style="width:100px;height:100px" alt="" srcset="">
+          @endforeach
+          </div>
+        
           <div class="blog_feature_head">
             <h4>{{$jb->name}}</h4>
           </div>  

@@ -66,7 +66,21 @@
                         <td>{{$user->phonenumber}}</td>
                         <td>
                             @foreach ($user->roles as $role)
-                                <button type="button" class="btn btn-block btn-outline-primary btn-sm">{{$role->name}}</button>
+                                <button type="button" class="btn btn-block btn-outline-primary btn-sm">
+                                    @switch($role->name)
+                                        @case('isCustomer')
+                                            Người tuyển dụng
+                                            @break
+                                        @case('isCollaborator')
+                                           Người tìm việc
+                                            @break
+                                        @case('isAdmin')
+                                            Quản trị viên
+                                            @break
+                                        @default
+
+                                    @endswitch
+                                </button>
                             @endforeach
                         </td>
                         <td>
@@ -84,6 +98,9 @@
 
                         </td>
                         <td>
+                            <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('user.show', $user->id) }}">
+                                <i class="fas fa-eye"></i> Show
+                            </a>
                             <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('user.edit', $user->id) }}">
                                 <i class="fas fa-edit"></i> Edit
                             </a>

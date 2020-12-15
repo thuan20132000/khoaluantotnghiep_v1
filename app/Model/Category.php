@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Category extends Model
 {
@@ -12,6 +13,11 @@ class Category extends Model
     public function occupations()
     {
         return $this->hasMany(Occupation::class);
+    }
+
+    public function jobs()
+    {
+        return $this->hasManyThrough(Job::class, Occupation::class);
     }
 
 }

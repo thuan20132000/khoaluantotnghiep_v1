@@ -15,19 +15,19 @@ class OccupationResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id'=>$this->id,
-            'attributes'=>[
-                'name'=>$this->name,
-                'slug'=>$this->slug,
-                'image'=>$this->image,
-                'status'=>$this->status
+            'id' => $this->id,
+            'attributes' => [
+                'name' => $this->name,
+                'slug' => $this->slug,
+                'image' => $this->image,
+                'status' => $this->status
             ],
-            'relationships'=>[
-                'category'=>$this->category,
-                'collaborators'=>$this->collaborators()
+            'relationships' => [
+                'category' => $this->category,
+                'collaborators' => $this->collaborators()
             ],
-            'include'=>[
-                'jobs'=>$this->jobs
+            'include' => [
+                'jobs' => $this->jobs
             ]
         ];
     }

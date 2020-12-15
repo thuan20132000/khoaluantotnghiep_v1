@@ -37,4 +37,6 @@ class Occupation extends Model
                                     ->select('users.*')->get();
         return $occupation_collaborators;
     }
+
+
 }

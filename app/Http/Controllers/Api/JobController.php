@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateJobRequest;
 use App\Http\Resources\JobCollection;
 use App\Http\Resources\JobResource;
+use App\Model\Category;
 use App\Model\Job;
 use App\Model\Location;
+use App\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,10 +26,50 @@ class JobController extends Controller
     {
         //
         $per_page = 15;
-        if($request->input('per_page')){
-            $per_page = (int)$request->input('per_page');
+        $jobs = Job::all();
+        $sortBy = 'desc';
+
+
+        try {
+            //code...
+            if ($request->input('per_page')) {
+                $per_page = (int)$request->input('per_page');
+                $jobs = $jobs->take($per_page);
+            }
+            if($request->input('sort_by')){
+                $sortBy = $request->input('sort_by');
+            }
+
+
+            if ($request->input('category')) {
+                $category_id = $request->input('category');
+                $jobs =  Category::find($category_id)->jobs->take($per_page);
+            }
+
+
+
+            if($request->input('user_id')){
+
+
+                $jobs_id_array = User::find($request->input('user_id'))->jobs->pluck('id');
+
+                $jobs = Job::whereIn('id',$jobs_id_array)
+                        ->orderBy('created_at',$sortBy)
+                        ->limit($per_page)
+                        ->get();
+
+            }
+
+            return  JobCollection::collection($jobs);
+
+
+        } catch (\Throwable $th) {
+            // throw $th;
+            return  response()->json([
+                "status"=>false,
+                "data"=>[]
+            ]);
         }
-        return  JobCollection::collection(Job::paginate($per_page));
     }
 
     /**
@@ -46,23 +88,24 @@ class JobController extends Controller
             DB::beginTransaction();
 
             $validator = Validator::make($request->all(), [
-                'name'=>'required|string',
-                'province'=>'required',
-                'district'=>'required',
-                'subdistrict'=>'required',
-                'street'=>'required',
-                'suggestion_price'=>'required',
-                'author'=>'required',
+                'name' => 'required|string',
+                'province' => 'required',
+                'district' => 'required',
+                'subdistrict' => 'required',
+                'street' => 'required',
+                'suggestion_price' => 'required',
+                'author' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status'=>$validator->errors()
+                    'status' => false,
+                    'message' => $validator->errors()
                 ]);
             }
 
             $location = new Location();
-            $location->province= $request->province;
+            $location->province = $request->province;
             $location->district = $request->district;
             $location->subdistrict = $request->subdistrict;
             $location->street = $request->street;
@@ -70,7 +113,7 @@ class JobController extends Controller
 
             $job = new Job();
             $job->name = $request->name;
-            $job->slug = Str::slug($request->name,'-');
+            $job->slug = Str::slug($request->name, '-');
             $job->description = $request->description;
             $job->status = 3;
             $job->suggestion_price = $request->suggestion_price;
@@ -78,21 +121,37 @@ class JobController extends Controller
             $job->occupation_id = $request->occupation_id;
             $job->user_id = $request->author;
             $job->save();
+
+
+            $images_thumbnail_array = $request->images;
+
+            if (is_array($images_thumbnail_array)) {
+                foreach ($images_thumbnail_array as $key => $value) {
+                    # code...
+                    if ($value) {
+                        DB::table('images')->insert(
+                            ['image_url' => $value, 'job_id' => $job->id]
+                        );
+                    }
+                }
+            }
+
+
+
             DB::commit();
 
-            return new JobResource($job);
-
-
+            return response()->json([
+                'status' => true,
+                'data' => new JobResource($job)
+            ]);
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollback();
             return response()->json([
-                'status'=>204,
-                'message'=>$th
+                'status' => false,
+                'message' => $th
             ]);
         }
-
-
     }
 
     /**
@@ -104,13 +163,13 @@ class JobController extends Controller
     public function show($id)
     {
         //
-        $job = Job::where('id',$id)->first();
-        if($job){
+        $job = Job::where('id', $id)->first();
+        if ($job) {
             return new JobResource($job);
-        }else{
+        } else {
             return response()->json([
-                "data"=>null,
-                "message"=>"Not found any item."
+                "data" => null,
+                "message" => "Not found any item."
             ]);
         }
     }
@@ -131,18 +190,19 @@ class JobController extends Controller
             DB::beginTransaction();
 
             $validator = Validator::make($request->all(), [
-                'name'=>'required|string',
-                'province'=>'required',
-                'district'=>'required',
-                'subdistrict'=>'required',
-                'street'=>'required',
-                'suggestion_price'=>'required',
-                'author'=>'required',
+                'name' => 'required|string',
+                'province' => 'required',
+                'district' => 'required',
+                'subdistrict' => 'required',
+                'street' => 'required',
+                'suggestion_price' => 'required',
+                'author' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status'=>$validator->errors()
+                    'status' => false,
+                    'message' => $validator->errors()
                 ]);
             }
 
@@ -152,10 +212,10 @@ class JobController extends Controller
             // $location->street = $request->street;
             // $location->save();
 
-            $job = Job::where('id',$id)->first();
+            $job = Job::where('id', $id)->first();
 
             $job->name = $request->name;
-            $job->slug = Str::slug($request->name,'-');
+            $job->slug = Str::slug($request->name, '-');
             $job->description = $request->description;
             $job->status = 3;
             $job->suggestion_price = $request->suggestion_price;
@@ -163,8 +223,22 @@ class JobController extends Controller
             $job->user_id = $request->author;
             $job->update();
 
-            $location = Location::where('id',$job->location_id)->first();
-            $location->province= $request->province;
+
+            $images_thumbnail_array = $request->images;
+
+            if (is_array($images_thumbnail_array)) {
+                foreach ($images_thumbnail_array as $key => $value) {
+                    # code...
+                    if ($value) {
+                        DB::table('images')->insert(
+                            ['image_url' => $value, 'job_id' => $job->id]
+                        );
+                    }
+                }
+            }
+
+            $location = Location::where('id', $job->location_id)->first();
+            $location->province = $request->province;
             $location->district = $request->district;
             $location->subdistrict = $request->subdistrict;
             $location->street = $request->street;
@@ -172,15 +246,17 @@ class JobController extends Controller
 
             DB::commit();
 
-            return new JobResource($job);
 
-
+            return response()->json([
+                'status' => true,
+                'data' => new JobResource($job)
+            ]);
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollback();
             return response()->json([
-                'status'=>204,
-                'message'=>$th
+                'status' => false,
+                'message' => $th
             ]);
         }
     }
@@ -196,20 +272,186 @@ class JobController extends Controller
         //
         try {
             //code...
-            $job = Job::where('id',$id)->first();
-            Location::where('id',$job->location_id)->delete();
+            $job = Job::where('id', $id)->first();
+            Location::where('id', $job->location_id)->delete();
             $job->delete();
 
             return response()->json([
-                'status'=>204,
+                'status' => 204,
             ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
-                'status'=>404,
+                'status' => 404,
+                'message' => $th
+            ]);
+        }
+    }
+
+
+    /**
+     * author:thuantruong
+     * description:Sort Job by district and price
+     * created_at:23/11/2020
+     */
+    public function sortJob(Request $request)
+    {
+        try {
+            //code...
+            $price_sort = 'desc';
+            $category = '';
+            $district_id = $request->input('district');
+            $number = 12;
+
+            if ($request->input('price')) {
+                $price_sort = $request->input('price');
+            }
+
+            if ($request->input('limit')) {
+                $number = $request->input('limit');
+            }
+
+            if ($request->input('category')) {
+                $category = $request->input('category');
+            }
+
+            $data =  DB::table('jobs')
+                ->join('location', 'location.id', '=', 'jobs.location_id')
+                ->orderBy('jobs.suggestion_price', $price_sort)
+                ->limit($number)
+                ->select('jobs.*')
+                ->get();
+
+
+            if ($district_id) {
+
+                $data =  DB::table('jobs')
+                    ->join('location', 'location.id', '=', 'jobs.location_id')
+                    ->where('location.district', $district_id)
+                    ->orderBy('jobs.suggestion_price', $price_sort)
+                    ->limit($number)
+                    ->select('jobs.*')
+                    ->get();
+            }
+            return response()->json([
+                'status' => true,
+                'data' => $data
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'data' => []
+            ]);
+        }
+    }
+
+
+
+    /**
+     * author:thuantruong
+     * desction:Search job by name,occupation,author
+     * created_at:23/11/2020
+     */
+    public function searchJob(Request $request)
+    {
+        try {
+            //code...
+            $limit = 8;
+            $district = null;
+            $orderByPrice = 'desc';
+            $query = $request->input('query');
+            if ($request->input('limit')) {
+                $limit = (int)$request->input('limit');
+            }
+            if ($request->input('district')) {
+                $district = (int)$request->input('district');
+            }
+            if($request->input('order_by')){
+                $orderByPrice = $request->input('order_by');
+            }
+
+            if ($district && $query) {
+                $filter = DB::table('jobs')
+                    ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
+                    ->join('users', 'users.id', '=', 'jobs.user_id')
+                    ->join('location', 'location.id', '=', 'jobs.location_id')
+                    ->orWhere('jobs.name', 'LIKE', '%' . $query . '%')
+                    ->orWhere('users.name', 'LIKE', '%' . $query . '%')
+                    ->orWhere('occupations.name', 'LIKE', '%' . $query . '%')
+                    ->where('location.district', $district)
+                    ->orderBy('jobs.suggestion_price', $orderByPrice)
+                    ->limit($limit)
+                    ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
+                    ->get();
+            }else if($query) {
+                $filter = DB::table('jobs')
+                    ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
+                    ->join('users', 'users.id', '=', 'jobs.user_id')
+                    ->orWhere('jobs.name', 'LIKE', '%' . $query . '%')
+                    ->orWhere('users.name', 'LIKE', '%' . $query . '%')
+                    ->orWhere('occupations.name', 'LIKE', '%' . $query . '%')
+                    ->orderBy('jobs.suggestion_price', $orderByPrice)
+                    ->limit($limit)
+                    ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
+                    ->get();
+            }else if($district){
+                $filter = DB::table('jobs')
+                    ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
+                    ->join('users', 'users.id', '=', 'jobs.user_id')
+                    ->join('location', 'location.id', '=', 'jobs.location_id')
+                    ->where('location.district', $district)
+                    ->orderBy('jobs.suggestion_price', $orderByPrice)
+                    ->limit($limit)
+                    ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
+                    ->get();
+            }else{
+                return response()->json([
+                    'status' => true,
+                    'data' => []
+                ]);
+            }
+
+
+            return response()->json([
+                'status' => true,
+                'data' => $filter,
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => false,
+                'data' => []
+            ]);
+        }
+    }
+
+
+
+    public function getJobsApproved($author_id,Request $request)
+    {
+
+        try {
+            //code...
+
+            $author = Job::getJobsApproved($author_id);
+
+            return response()->json([
+                'status'=>true,
+                'data'=>$author
+            ]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status'=>false,
                 'message'=>$th
             ]);
         }
 
+
     }
+
+
+
+
 }

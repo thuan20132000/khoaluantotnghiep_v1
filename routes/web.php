@@ -17,10 +17,10 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', 'HomeController@index');
 Route::get('checkout','HomeController@checkout');
 Route::get('shoppingcart','HomeController@shoppingcart');
-Route::get('joblist','HomeController@joblist');
+Route::get('listJob','HomeController@listJob');
 Route::get('shop_detail','HomeController@shop_detail');
-Route::get('collaborators','HomeController@collaborators');
-
+Route::get('user','HomeController@custommer');
+Route::get('jobCategory/{id}','HomeController@jobCategory');
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -48,6 +48,8 @@ Route::group(['prefix' => '', 'middleware' => ['web', 'auth']], function () {
     Route::resource('/admin/jobcollaborator', 'JobCollaboratorController');
     Route::post('/admin/add-jobcollaborator', 'JobCollaboratorController@addJobCollaborator')->name('jobcollaborator.add');
     Route::delete('/admin/jobcollaborator', 'JobCollaboratorController@destroyMass')->name('destroyMass');
+    Route::get('/admin/jobcollaborator/{id}/status/{status}', 'JobCollaboratorController@updateJobCollaboratorStatus')->name('jobcollaborator.updatestatus');
+
 
 
     Route::get('/admin/job-confirm', 'JobConfirmController@index')->name('jobconfirm.index');
@@ -56,6 +58,18 @@ Route::group(['prefix' => '', 'middleware' => ['web', 'auth']], function () {
 
     Route::get('admin/ajax/jobcollaborator/{id}', 'JobCollaboratorController@getAjaxCollaboratorByJob');
 
-    
+
 });
-    
+
+Route::get('verify/{remember_token}','UserController@verifyUser')->name('user.verify');
+
+
+Route::post('registerrr','HomeController@registerClient');
+Route::post('loginnn','HomeController@postLoginClient');
+Route::get('loginn','HomeController@getLogin');
+Route::get('registerr','HomeController@getRegister');
+Route::get('search','HomeController@getSearch');
+Route::get('logout','HomeController@getLogoutClient');
+Route::get('search','HomeController@getSearch');
+Route::get('postjob','HomeController@postJob');
+Route::post('postjob','HomeController@postPostJob')->name('post.job');
