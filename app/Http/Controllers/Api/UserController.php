@@ -110,6 +110,14 @@ class UserController extends Controller
             $user->update();
 
 
+
+            $occupations = $request->occupations;
+            if($occupations && count($occupations) > 0){
+                $user->occupations()->detach();
+                $user->occupations()->attach($occupations);
+            }
+
+
             return response([
                 "message" => 'updated successfully',
                 "data" => new UserResource($user),
@@ -118,7 +126,7 @@ class UserController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             return response([
-                "message" => $th,
+                "message" => "ERROR: ".$th,
                 "data" => null,
                 "status"=>false
             ]);
