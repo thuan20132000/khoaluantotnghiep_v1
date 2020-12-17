@@ -82,7 +82,7 @@
                 <div class="col-md-12"><h3>Chọn Loại Lĩnh Vực</h3></div>
                 <div class="col-md-12 mb-3 mb-md-0">
                    
-                        <select class="form-control idProductType" name="occupation ">
+                        <select class="form-control idProductType" name="occupation_id">
                           
                             @foreach ($occupation as $ct)
                           
@@ -99,9 +99,17 @@
                   <input type="text" class="form-control" name="address" placeholder="New York City">
                 </div>
               </div>
-            <div class="form-group">
-                        <label for="image"><h3>Hình ảnh</h3></label>
-                        <input type="file" name="filepaths" class="form-control">
+               <label for="occupation-images" class="text-primary">Hình ảnh</label>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                        <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-primary">
+                            <i class="fa fa-picture-o"></i> Chọn
+                        </a>
+                        </span>
+                        <input id="thumbnail" class="form-control" type="text" name="filepaths">
+                    </div>
+                    <div id="holder" style="display: flex;flex-direction: row;flex-wrap: wrap;padding:16px">
+
                     </div>
               <div class="row form-group">
                 <div class="col-md-12"><h3>Mô tả công việc</h3></div>
@@ -111,7 +119,7 @@
               </div>
               <div class="form-group">
                         <label for="quantity"><h3>Giá đưa ra</h3></label>
-                        <input type="number" name="price" min="1" value="1" class="form-control">
+                        <input type="number" name="suggestion_price" min="1" value="1" class="form-control">
                     </div>
               <div class="row form-group">
                 <div class="col-md-12">

@@ -3,6 +3,8 @@
     Job
 @endsection
 @section('content')
+
+
 <div id="inner_banner" class="section inner_banner_section">
   <div class="container">
     <div class="row">
@@ -23,6 +25,21 @@
   </div>
 </div>
 
+
+<div class="container">
+        <div>
+            @if(session()->has('success'))
+            <div class="alert alert-success" >
+                {{ session()->get('success') }}
+            </div>
+            @endif
+            @if(session()->has('failed'))
+            <div class="alert alert-success" >
+                {{ session()->get('failed') }}
+            </div>
+            @endif
+
+        </div>
 <div class="section padding_layout_1 product_list_main">
   <div class="container">
     <div class="row">
@@ -31,6 +48,7 @@
         @foreach($job as $key => $jb)
           <div class="col-md-4 col-sm-6 col-xs-12 margin_bottom_30_all">
             <div class="product_list">
+            
               <div class="product_img">
                @foreach($jb->images as $image)
               <img src="{{$image->image_url}}" style="width:500px;height:300px;padding-right:210px" alt="" srcset="">
@@ -38,13 +56,48 @@
               </div>
               <div class="product_detail_btm">
                 <div class="center">
-                  <h4><a href="it_shop_detail.html">{{$jb->name}}</a></h4>
+                  <h3><a href="it_shop_detail.html">{{$jb->name}}</a></h3>
                 </div>
-                <div class="starratin">
-                  <div class="center"> <i class="fa fa-star" aria-hidden="true"></i> <i class="fa fa-star" aria-hidden="true"></i> <i class="fa fa-star" aria-hidden="true"></i> <i class="fa fa-star" aria-hidden="true"></i> <i class="fa fa-star-o" aria-hidden="true"></i> </div>
-                </div>
+               
+
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+  Ứng Tuyển Vị Trí
+</button>
+   
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+  
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Nhập Thông Tin</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form action="{{route('post.ungtuyen')}}" method="post">
+@csrf
+      <div class="modal-body">
+
+      <label for="quantity"><h4>Giá đưa ra</h4></label>
+                        <input type="number" name="price" min="1" value="1" class="form-control">
+                                        <input type="text" name="user"  hidden value={{Auth::user()->id}} class="form-control">
+                                        <input type="text" name="job" hidden value={{$jb->id}} class="form-control">
+                        <label for="inputDescription"><h4>Lời Nhắn</h4></label>
+                            <textarea id="inputDescription" name="description" class="form-control" rows="4">
+                            </textarea>
+      </div>
+      <div class="modal-footer">
+
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+     
+        <button type="submit" class="btn btn-primary">Ứng tuyển</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
                 <div class="product_price">
-                  <p><span class="old_price">$15.00</span> – <span class="new_price">$25.00</span></p>
+                  <h4>Gía đưa ra:{{$jb->suggestion_price}}</h4>
                 </div>
               </div>
               <div class="blog_feature_cont">
@@ -55,7 +108,7 @@
     @endforeach          
         </div>
       </div>
-       
+       </form>
       <div class="col-md-3">
         <div class="side_bar">
           <div class="side_bar_blog">
@@ -68,45 +121,7 @@
                 </span> </div>
             </div>
           </div>
-          <div class="side_bar_blog">
-            <h4>GET A QUOTE</h4>
-            <p>An duo lorem altera gloriatur. No imperdiet adver sarium pro. No sit sumo lorem. Mei ea eius elitr consequ unturimperdiet.</p>
-            <a class="btn sqaure_bt" href="it_service.html">View Service</a> </div>
-          <div class="side_bar_blog">
-            <h4>OUR SERVICE</h4>
-            <div class="categary">
-              <ul>
-                <li><a href="it_data_recovery.html"><i class="fa fa-angle-right"></i> Data recovery</a></li>
-                <li><a href="it_computer_repair.html"><i class="fa fa-angle-right"></i> Computer repair</a></li>
-                <li><a href="it_mobile_service.html"><i class="fa fa-angle-right"></i> Mobile service</a></li>
-                <li><a href="it_network_solution.html"><i class="fa fa-angle-right"></i> Network solutions</a></li>
-                <li><a href="it_techn_support.html"><i class="fa fa-angle-right"></i> Technical support</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="side_bar_blog">
-            <h4>RECENT NEWS</h4>
-            <div class="categary">
-              <ul>
-                <li><a href="it_data_recovery.html"><i class="fa fa-angle-right"></i> Land lights let be divided</a></li>
-                <li><a href="it_computer_repair.html"><i class="fa fa-angle-right"></i> Seasons over bearing air</a></li>
-                <li><a href="it_mobile_service.html"><i class="fa fa-angle-right"></i> Greater open after grass</a></li>
-                <li><a href="it_network_solution.html"><i class="fa fa-angle-right"></i> Gathered was divide second</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="side_bar_blog">
-            <h4>TAG</h4>
-            <div class="tags">
-              <ul>
-                <li><a href="#">Bootstrap</a></li>
-                <li><a href="#">HTML5</a></li>
-                <li><a href="#">Wordpress</a></li>
-                <li><a href="#">Bootstrap</a></li>
-                <li><a href="#">HTML5</a></li>
-              </ul>
-            </div>
-          </div>
+          
         </div>
       </div>
     </div>

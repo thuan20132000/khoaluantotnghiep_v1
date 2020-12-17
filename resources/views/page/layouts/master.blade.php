@@ -315,5 +315,38 @@
 <!-- google map js -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8eaHt9Dh5H57Zh0xVTqxVdBFCvFMqFjQ&callback=initMap"></script>
 <!-- end google map js -->
+<script src=" {{ asset('vendor/laravel-filemanager/js/stand-alone-button.js') }}"></script>
+
+<script>
+$(document).ready(function(){
+  $(".nav-tabs a").click(function(){
+    $(this).tab('show');
+  });
+});
+</script>
+<script >
+    $(function () {
+
+        $("#example2").DataTable({
+            "responsive": true,
+            "autoWidth": false,
+        });
+        // $('#example2').DataTable({
+        //     "paging": true,
+        //     "lengthChange": false,
+        //     "searching": false,
+        //     "ordering": false,
+        //     "info": true,
+        //     "autoWidth": false,
+        //     "responsive": true,
+        // });
+
+    });
+
+
+$('#lfm').filemanager('image');
+
+</script>
+
 </body>
 </html>

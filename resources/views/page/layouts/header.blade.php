@@ -24,31 +24,48 @@
               <ul class="first-ul">
                 <li> <a class="active" href="/">Trang Chủ</a>
                 <li><a href="user">Người Tìm Việc</a></li>
-                <li> <a href="it_service.html">Cộng Tác Viên</a>
+                <li> <a>Nhà Tuyển Dụng</a>
                   <ul>
-                    <li><a href="it_service_list.html">#</a></li>
-                    <li><a href="it_service_detail.html">#</a></li>
+                    <li><a href="postjob">Đăng Tin</a></li>
+                    <li><a href="it_service_detail.html">Quản Lý Tin</a></li>
                   </ul>
                 </li>
-                <li> <a href="it_shop.html">Job</a>
+                <li> <a href="it_shop.html">Việc Làm</a>
                   <ul>
-                    <li><a href="{{asset('listJob')}}">Job List</a></li>
+                    <li><a href="{{asset('listJob')}}">Danh Sách Việc Làm</a></li>
                     <li><a href="{{asset('jobdetail')}}">Shop Detail</a></li>
-                    <li><a href="{{asset('shoppingcart')}}">Shopping Cart</a></li>
-                    <li><a href="{{asset('checkout')}}">Checkout</a></li>
+
                   </ul>
                 </li>
-               @if (Auth::check())
-                             @if(Auth::user()->role == 1)
-                            <a href="/home">Admin</a>
+                 @if (Auth::check())
+                 
+                    <li> <a href="it_shop.html">Thông Tin cá Nhân</a>
+                      <ul>
+                        <li>
+                         @if(Auth::user()->role == 1)
+                            <a href="/profile">Admin</a>
                             @else
-                            <a href="">{{Auth::user()->email}}</a>
+                            <a href="/profile">{{Auth::user()->email}}</a>
                             @endif
-                            <a href="/logout">Log out</a>
-                        @else
+                        </li>
+                        <li><a href="{{asset('vieclam')}}">Quản Lý Việc Làm</a></li>
+                        <li><a href="{{asset('shoppingcart')}}">Quản lý danh sách</a></li>
+                        <li>
+                                                    <a href="/logout">Log out</a>
+
+                        </li>
+                      </ul>
+                    </li>
+                             
+               
+             @else
+          
                 <li> <a href="/loginn">Đăng nhập</a>
                 <li> <a href="/registerr">Đăng kí</a>
+
              @endif
+             
+              
           </div>
           <!-- menu end -->
         </div>

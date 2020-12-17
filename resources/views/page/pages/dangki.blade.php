@@ -118,9 +118,10 @@
                     <div class="col-md-3 register-left">
                         <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
                         <h3>Việc Làm 24h</h3>
-                
-                        <input type="submit"  href="/loginn" method="get" value="Login"/><br/>
-                        @csrf
+                <form action="/loginn" method="get">
+										@csrf
+                        <input type="submit"  value="Login"/><br/>
+                    </form>
                     </div>
                     <div class="col-md-9 register-right">
                         <ul class="nav nav-tabs nav-justified" id="myTab" role="tablist">
@@ -168,6 +169,7 @@
 										@if ($errors->has('password'))
 								                {{$errors->first('password')}}						
 							                @endif
+                                            
                                         </div>
                                          
                              <div class="form-group">
@@ -179,8 +181,8 @@
                                         <div class="form-group">
                                         <label for="exampleFormControlSelect1">Tôi Là</label>
                                          <select class="form-control" id="exampleFormControlSelect1" name="role">
-                                         <option value="2">Nhà Tuyển Dụng</option>
-                                         <option value="3">Người Tìm Việc</option>
+                                         <option value="2">Người Tìm Việc</option>
+                                         <option value="3">Người Tuyển Dụng</option>
                                          
                                             </select>
                                           

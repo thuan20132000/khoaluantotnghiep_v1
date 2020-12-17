@@ -73,3 +73,7 @@ Route::get('logout','HomeController@getLogoutClient');
 Route::get('search','HomeController@getSearch');
 Route::get('postjob','HomeController@postJob');
 Route::post('postjob','HomeController@postPostJob')->name('post.job');
+Route::get('profile','HomeController@profile');
+Route::get('vieclam','HomeController@quanly');
+Route::get('ungtuyen','HomeController@getungtuyen');
+Route::post('ungtuyen','HomeController@postungtuyen')->name('post.ungtuyen');
