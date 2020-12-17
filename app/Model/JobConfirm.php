@@ -9,6 +9,10 @@ class JobConfirm extends Model
 {
     //
 
+    const DRAFT = 1;
+    const PENDING = 2;
+    const PUBLISHED = 3;
+
     public function job()
     {
         $job = DB::table('job_confirms')
@@ -30,6 +34,7 @@ class JobConfirm extends Model
             ->select('job_confirms.id as job_confirm_id')
             ->first();
         return $is_confirm;
+
         if ($is_confirm > 0) {
             return true;
         }
@@ -45,6 +50,17 @@ class JobConfirm extends Model
             ->select('users.*')
             ->first();
         return $collaborator;
+    }
+
+
+    static function checkIsConfirmed($job_collaborator_id)
+    {
+        $confirmed = JobConfirm::where('job_collaborator_id',$job_collaborator_id)->first();
+        if($confirmed){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     // public function customer()
@@ -80,5 +96,12 @@ class JobConfirm extends Model
             )
             ->get();
         return $job_confirmed;
+    }
+
+
+
+    public function evaluates()
+    {
+        return $this->hasMany(Evaluate::class);
     }
 }

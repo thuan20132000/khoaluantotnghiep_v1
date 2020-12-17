@@ -8,10 +8,13 @@ use Illuminate\Support\Facades\DB;
 
 class JobCollaborator extends Model
 {
-    const CONFIRMED =0;
+    // const CONFIRMED =0;
     const CANCEL = 1;
     const PENDING = 2;
     const APPROVED = 3;
+    const CONFIRMED = 4;
+
+
     const CANDIDATESFULL = 4;
 
 
@@ -33,7 +36,7 @@ class JobCollaborator extends Model
             ->join('jobs', 'job_collaborators.job_id', '=', 'jobs.id')
             ->join('users', 'users.id', '=', 'jobs.user_id')
             ->where('job_collaborators.id', $this->id)
-            ->select('users.id', 'users.name', 'users.email', 'users.phonenumber')
+            ->select('users.id', 'users.name', 'users.email', 'users.phonenumber','users.profile_image')
             ->first();
         return $author;
     }
@@ -61,6 +64,12 @@ class JobCollaborator extends Model
             return true;
         }
         return false;
+    }
+
+
+    public function confirmedJob()
+    {
+        return $this->hasMany(JobConfirm::class);
     }
 
 

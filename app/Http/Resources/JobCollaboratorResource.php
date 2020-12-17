@@ -26,7 +26,8 @@ class JobCollaboratorResource extends JsonResource
             'relationship'=>[
                 'job'=>$this->job,
                 'collaborator'=>$this->collaborators()
-            ]
+            ],
+            'status'=>true
         ];
     }
 }

@@ -34,31 +34,32 @@ class JobConfirmController extends Controller
         try {
             DB::beginTransaction();
 
-            $other_job_collaborators =  JobCollaborator::where('job_id',$request->job_id)
-                                        ->where('id','!=',$request->job_collaborator_id)
-                                        ->get();
+            // $other_job_collaborators =  JobCollaborator::where('job_id',$request->job_id)
+            //                             ->where('id','!=',$request->job_collaborator_id)
+            //                             ->get();
             $job_collaborator_confirm = JobCollaborator::where('id',$request->job_collaborator_id)->first();
-            $job_collaborator_confirm->status = 3;
+            $job_collaborator_confirm->status = JobCollaborator::CONFIRMED;
             $job_collaborator_confirm->update();
 
-            foreach ($other_job_collaborators as $job_collaborator) {
-                            # code...
-                            $job_collaborator->status = 1;
-                            $job_collaborator->save();
-            }
+            // foreach ($other_job_collaborators as $job_collaborator) {
+            //                 # code...
+            //                 $job_collaborator->status = JobCollaborator::CANCEL;
+            //                 $job_collaborator->update();
+            // }
 
-            $check_is_confirm = JobConfirm::isConfirmedJob($request->job_id);
-            if($check_is_confirm){
-                $job_confirmed = JobConfirm::where('id',$check_is_confirm->job_confirm_id)->first();
-                $job_confirmed->job_collaborator_id = $request->job_collaborator_id;
-                $job_confirmed->update();
-            }else{
+            // $check_is_confirm = JobConfirm::isConfirmedJob($request->job_id);
+            // dd($check_is_confirm);
+            // if($check_is_confirm){
+            //     $job_confirmed = JobConfirm::where('id',$check_is_confirm->job_confirm_id)->first();
+            //     $job_confirmed->job_collaborator_id = $request->job_collaborator_id;
+            //     $job_confirmed->update();
+            // }else{
                 $job_confirmed = new JobConfirm();
                 $job_confirmed->confirmed_price = $request->confirmed_price;
-                $job_confirmed->status = 0;
+                $job_confirmed->status = JobConfirm::PUBLISHED;
                 $job_confirmed->job_collaborator_id = $request->job_collaborator_id;
                 $job_confirmed->save();
-            }
+            // }
             DB::commit();
 
             return redirect()->back()->with('success','Confirmed Successfully.');

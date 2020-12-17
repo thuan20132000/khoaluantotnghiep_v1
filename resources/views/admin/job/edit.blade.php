@@ -133,22 +133,25 @@
                         <div class="form-group">
                             <label for="inputStatus">Status</label>
                             <select class="form-control custom-select" name="status">
-                                @for ($i = 0; $i < 3; $i++)
-                                    <option value="{{ $i }}" @if ($job->status == $i)
-                                        selected
-                                @endif
-                                >
-
-                                @if($i == 1)
-                                    Draft
-                                @elseif($i == 2)
-                                    Pending
-                                @else
-                                    Published
-                                @endif
-                                </option>
-
+                                @for ($i = 1; $i <= 4; $i++)
+                                    <option
+                                        value="{{ $i }}"
+                                         @if ($job->status == $i)
+                                            selected
+                                        @endif
+                                        >
+                                            @if ($i == 3)
+                                                Approved
+                                            @elseif($i == 1)
+                                                Cancel
+                                            @elseif($i == 2)
+                                                Pending
+                                            @elseif($i==4)
+                                                Confirmed
+                                            @endif
+                                    </option>
                                 @endfor
+
                             </select>
                         </div>
 
@@ -258,10 +261,13 @@
                                                                 btn-danger
                                                                 @break
                                                             @case(2)
-                                                                btn-warning
+                                                                btn-info
                                                                 @break
                                                             @case(3)
                                                                 btn-primary
+                                                                @break
+                                                            @case(4)
+                                                                btn-warning
                                                                 @break
                                                             @default
 
@@ -282,12 +288,15 @@
                                                     @case(3)
                                                         Approved
                                                         @break
+                                                    @case(4)
+                                                        Confirmed
+                                                        @break
                                                     @default
 
                                                 @endswitch
                                                 </button>
                                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                    @for ($i = 1; $i <= 3; $i++)
+                                                    @for ($i = 1; $i <= 4; $i++)
                                                         @if ($i != $candidate->job_collaborator_status)
                                                             <a class="dropdown-item"
 
@@ -303,6 +312,8 @@
                                                                     @case(3)
                                                                         Approved
                                                                         @break
+                                                                    @case(4)
+                                                                        Confirmed
                                                                     @default
                                                                 @endswitch
                                                             </a>

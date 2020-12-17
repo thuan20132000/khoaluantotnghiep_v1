@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CollaboratorDetailResource;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Model\Category;
+use App\Role;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +16,10 @@ use Carbon\Carbon;
 
 class CollaboratorController extends Controller
 {
+
+
+
+
     /**
      * Display a listing of the resource.
      *
@@ -99,12 +105,13 @@ class CollaboratorController extends Controller
 
         try {
             //code...
-            $collaborator = User::where('id', $id)->first();
+            $collaborator = User::where('id', $id)
+                ->first();
 
 
             return response()->json([
                 'status' => true,
-                'data' => new UserResource($collaborator)
+                'data' => new CollaboratorDetailResource($collaborator)
             ]);
         } catch (\Throwable $th) {
             //throw $th;
@@ -165,15 +172,14 @@ class CollaboratorController extends Controller
             DB::commit();
 
             return response()->json([
-                'status'=>true,
-                'data'=>new UserResource($user)
+                'status' => true,
+                'data' => new UserResource($user)
             ]);
-
         } catch (\Throwable $th) {
             DB::rollBack();
             return response()->json([
-                'status'=>false,
-                'data'=>[]
+                'status' => false,
+                'data' => []
             ]);
         }
     }
@@ -187,5 +193,101 @@ class CollaboratorController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+
+    /**
+     *
+     */
+    public function getCollaboratorDetail($id, Request $request)
+    {
+
+        try {
+            //code...
+            $collaborator = User::where('id', $id)->first();
+
+            return $collaborator;
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => false,
+                'data' => null,
+                'message' => 'Error => ' . $th
+            ]);
+        }
+    }
+
+
+
+
+    public function search(Request $request)
+    {
+        try {
+            //code...
+            $limit = 6;
+            $district = null;
+            $orderBy = 'desc';
+            $query = $request->input('query');
+
+            if ($request->input('limit')) {
+                $limit = (int)$request->input('limit');
+            }
+            if ($request->input('district')) {
+                $district = (int)$request->input('district');
+            }
+            if ($request->input('order_by')) {
+                $orderByPrice = $request->input('order_by');
+            }
+
+
+
+            if ($district && $query) {
+                $collaborators = DB::table('users')
+                    ->join('role_user', 'role_user.user_id', '=', 'users.id')
+                    ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                    ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                    ->where('role_user.role_id', '=', Role::COLLABORATOR)
+                    ->where('occupations.name', 'LIKE', '%' . $query . '%')
+                    ->where('district', $district)
+                    ->select('users.*')
+                    ->get();
+            } elseif ($district) {
+                $collaborators = DB::table('users')
+                    ->join('role_user', 'role_user.user_id', '=', 'users.id')
+                    ->where('role_user.role_id', '=', Role::COLLABORATOR)
+                    ->where('district', $district)
+                    ->select('users.*')
+                    ->get();
+            } elseif ($query) {
+                $collaborators = DB::table('users')
+                    ->join('role_user', 'role_user.user_id', '=', 'users.id')
+                    ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                    ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                    ->where('role_user.role_id', '=', Role::COLLABORATOR)
+                    ->where('occupations.name', 'LIKE', '%' . $query . '%')
+                    ->select('users.*')
+                    ->get();
+            }
+
+            $collaborator_ids = $collaborators->pluck('id')->all();
+
+            $collaborators = User::whereIn('id',$collaborator_ids)->get();
+
+            $collaborator_collection = UserCollection::collection($collaborators);
+
+
+            return response()->json([
+                "status" => true,
+                "data" => $collaborator_collection,
+                "message" => "Search Users Successfully"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                "status" => false,
+                "data" => null,
+                "message" => "Search Users Failed " . $th
+            ]);
+        }
     }
 }

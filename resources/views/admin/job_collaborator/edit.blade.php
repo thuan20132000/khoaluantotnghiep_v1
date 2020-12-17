@@ -131,24 +131,26 @@
                         <div class="form-group">
                             <label for="inputStatus">Status</label>
                             <select class="form-control custom-select" name="status">
-                                @for ($i = 0; $i < 3; $i++)
+                                @for ($i = 1; $i <= 4; $i++)
                                     <option value="{{ $i }}" @if ($job_collaborator->status == $i)
                                         selected
                                 @endif
                                 >
-                                @if ($i == 0)
-                                    Published
+                                @if ($i == 3)
+                                    Approved
                                 @elseif($i == 1)
-                                    Draft
+                                    Cancel
                                 @elseif($i == 2)
                                     Pending
+                                @elseif($i==4)
+                                    Confirmed
                                 @endif
                                 </option>
                                 @endfor
                             </select>
                         </div>
 
-                        @if ($job_collaborator->status != 3)
+                        {{-- @if ($job_collaborator->status != 3)
                             <button type="button" onclick="document.getElementById(`job_collaborator_confirm`).submit()"  class="btn btn-block bg-gradient-info btn-lg">
                                 CONFIRM
                             </button>
@@ -156,7 +158,7 @@
                         <button type="button" disabled   class="btn btn-block bg-gradient-success btn-sm">
                             CONFIRMED
                         </button>
-                        @endif
+                        @endif --}}
 
                     </div>
                     <!-- /.card-body -->

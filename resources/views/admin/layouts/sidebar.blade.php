@@ -268,10 +268,10 @@
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Danh sách đăng ký</p>
                             </a>
-                            <a href="{{ route('jobconfirm.index') }}" class="nav-link">
+                            {{-- <a href="{{ route('jobconfirm.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Danh sách xác nhận</p>
-                            </a>
+                            </a> --}}
                         </li>
                     </ul>
                 </li>

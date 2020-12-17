@@ -72,7 +72,7 @@ class JobCollaborator extends Controller
             $collaborator_id = $request->user_id;
 
             $check_full_candidates = ModelJobCollaborator::checkIsFullCandidates($job_id);
-            if($check_full_candidates){
+            if ($check_full_candidates) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Collaborator is full!!!'
@@ -89,6 +89,8 @@ class JobCollaborator extends Controller
                 ]);
             }
 
+
+
             $job_collaborator = new ModelJobCollaborator();
             $job_collaborator->expected_price = $request->expected_price;
             $job_collaborator->description = $request->description;
@@ -96,7 +98,7 @@ class JobCollaborator extends Controller
             $job_collaborator->finish_at = $request->finish_at;
             $job_collaborator->user_id = $request->user_id;
             $job_collaborator->job_id = $request->job_id;
-            $job_collaborator->status = 0;
+            $job_collaborator->status = ModelJobCollaborator::PENDING;
             $job_collaborator->save();
 
             DB::commit();
@@ -207,7 +209,7 @@ class JobCollaborator extends Controller
     }
 
 
-    public function getCollaboratorJobApplying(Request $request)
+    public function getJobCollaboratorApplying(Request $request)
     {
         try {
             //code...
@@ -229,18 +231,19 @@ class JobCollaborator extends Controller
                     "status" => true,
                     "data" => CollaboratorJobApplyingCollection::collection($job_collaborator)
                 ]);
-            } else if ($collaborator_id && $collaborator_job_status == JobCollaborator::CONFIRM_STATUS) {
-                $job_collaborator = ModelJobCollaborator::where('user_id', $collaborator_id)
-                    ->where("status", $collaborator_job_status)
-                    ->orderBy('created_at', 'desc')
-                    ->limit($per_page)
-                    ->get();
-
-                return response()->json([
-                    "status" => true,
-                    "data" => CollaboratorJobApplyingCollection::collection($job_collaborator)
-                ]);
             }
+            // else if ($collaborator_id && $collaborator_job_status == JobCollaborator::CONFIRM_STATUS) {
+            //     $job_collaborator = ModelJobCollaborator::where('user_id', $collaborator_id)
+            //         ->where("status", $collaborator_job_status)
+            //         ->orderBy('created_at', 'desc')
+            //         ->limit($per_page)
+            //         ->get();
+
+            //     return response()->json([
+            //         "status" => true,
+            //         "data" => CollaboratorJobApplyingCollection::collection($job_collaborator)
+            //     ]);
+            // }
 
 
 
@@ -296,25 +299,29 @@ class JobCollaborator extends Controller
             $job_collaborator_approve->status = ModelJobCollaborator::APPROVED;
             $job_collaborator_approve->update();
 
+            $job = Job::where('id', $request->job_id)->first();
+            $job->status = Job::APPROVED;
+            $job->update();
+
             DB::commit();
 
             return response()->json([
                 "status" => true,
                 "data" => [
-                    "id"=>$job_collaborator_approve->user->id,
-                    "name"=>$job_collaborator_approve->user->name,
-                    "email"=>$job_collaborator_approve->user->email,
-                    "phonenumber"=>$job_collaborator_approve->phonenumber,
-                    "address"=>$job_collaborator_approve->address
+                    "id" => $job_collaborator_approve->user->id,
+                    "name" => $job_collaborator_approve->user->name,
+                    "email" => $job_collaborator_approve->user->email,
+                    "phonenumber" => $job_collaborator_approve->phonenumber,
+                    "address" => $job_collaborator_approve->address
                 ],
-                "message"=>"Approved Candidate Successfully"
+                "message" => "Approved Candidate Successfully"
             ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
                 "status" => false,
                 "data" => [],
-                "message" => $th
+                "message" => "ERROR ==> " . $th
             ]);
         }
     }
@@ -323,4 +330,98 @@ class JobCollaborator extends Controller
 
 
 
+    public function confirmCandidate(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'job_collaborator_id' => 'required',
+            'job_id' => 'required',
+
+        ]);
+
+
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => $validator->errors()
+            ]);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            //code...
+
+            $job_collaborator_confirm = ModelJobCollaborator::where('id', $request->job_collaborator_id)
+                ->first();
+            $job_collaborator_confirm->confirmed_price = $request->confirmed_price;
+            $job_collaborator_confirm->range = $request->range;
+            $job_collaborator_confirm->review_content = $request->content;
+            $job_collaborator_confirm->status = ModelJobCollaborator::CONFIRMED;
+
+            $job_collaborator_confirm->update();
+            $job = Job::where('id', $request->job_id)->first();
+            $job->status = Job::CONFIRMED;
+            $job->update();
+
+
+
+            DB::commit();
+            return response()->json([
+                "status" => true,
+                "data" => [
+                    "id" => $job_collaborator_confirm->user->id,
+                    "name" => $job_collaborator_confirm->user->name,
+                    "email" => $job_collaborator_confirm->user->email,
+                    "phonenumber" => $job_collaborator_confirm->phonenumber,
+                    "address" => $job_collaborator_confirm->address
+                ],
+                "message" => "Confirmed Candidate Successfully"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            DB::rollback();
+            return response()->json([
+                "status" => false,
+                "data" => [],
+                "message" => "ERROR ==> " . $th
+            ]);
+        }
+    }
+
+
+
+
+    public function getJobCollaboratorStatus($user_id,$status,Request $request)
+    {
+
+
+        try {
+            //code...
+            $per_page = 15;
+            if ($request->input('per_page')) {
+                $per_page = (int)$request->input('per_page');
+            }
+
+            $collaborator_jobs = ModelJobCollaborator::where('user_id',$user_id)
+                                                ->where("status",$status)
+                                                ->orderBy('created_at','desc')
+                                                ->limit($per_page)
+                                                ->get();
+
+
+            return response()->json([
+                "status" => true,
+                "data" => JobCollaboratorCollection::collection($collaborator_jobs),
+                "message"=>"Get job successfully"
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                "status" => false,
+                "data" => [],
+                "message"=>"Get job failed"
+            ]);
+        }
+    }
 }

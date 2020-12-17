@@ -45,6 +45,24 @@ class UserController extends Controller
     public function show($id)
     {
         //
+        try {
+            //code...
+            $user = User::where('id',$id)->first();
+
+        return response()->json([
+                "status"=>true,
+                "data" => new UserResource($user),
+                "message"=>"Get user successfully"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                "status"=>false,
+                "data"=>[],
+                "message"=>"Get user data failed".$th
+            ]);
+        }
+
     }
 
     /**
@@ -85,23 +103,33 @@ class UserController extends Controller
             $user->phonenumber = $request->phonenumber;
             $user->idcard = $request->idcard;
             $user->address = $request->address;
-            $user->province = $request->province | $user->province;
-            $user->district = $request->district | $user->district;
-            $user->subdistrict = $request->subdistrict | $user->subdistrict;
-            $user->profile_image = $request->profile_image | $user->profile_image;
+            $user->province = $request->province ?  $request->province : $user->province;
+            $user->district = $request->district ? $request->district : $user->district;
+            $user->subdistrict = $request->subdistrict ? $request->subdistrict : $user->subdistrict;
+            $user->profile_image = $request->profile_image ? $request->profile_image : $user->profile_image;
             $user->update();
+
+
+
+            $occupations = $request->occupations;
+            if($occupations && count($occupations) > 0){
+                $user->occupations()->detach();
+                $user->occupations()->attach($occupations);
+            }
 
 
             return response([
                 "message" => 'updated successfully',
-                "data" => $user,
-            ], 201);
+                "data" => new UserResource($user),
+                "status"=>true
+            ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response([
-                "message" => $th,
-                "data" => null
-            ], 401);
+                "message" => "ERROR: ".$th,
+                "data" => null,
+                "status"=>false
+            ]);
         }
     }
 

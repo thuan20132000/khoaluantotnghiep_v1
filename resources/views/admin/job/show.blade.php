@@ -200,9 +200,9 @@
                                     <td>{{ $candidate->expected_price }}</td>
                                     <td>{{ $candidate->job_collaborator_description }}</td>
                                     <td>
-                                        @if ($candidate->job_collaborator_status == 0)
+                                        @if ($candidate->job_collaborator_status == 4)
                                             <button type="button"
-                                                class="btn btn-block bg-gradient-info btn-xs">Confirmed</button>
+                                                class="btn btn-block bg-gradient-warning btn-xs">Confirmed</button>
                                         @endif
 
                                         @if ($candidate->job_collaborator_status == 1)

@@ -10,10 +10,10 @@ use Illuminate\Support\Facades\DB;
 class Job extends Model
 {
     //
-    const CONFIRMED = 0;
-    const PUBLISHED = 1;
+    const CONFIRMED = 4;
+    const DRAFT = 1;
     const PENDING = 2;
-    const DRAFT = 3;
+    const APPROVED = 3;
 
     public function images()
     {
@@ -23,6 +23,11 @@ class Job extends Model
     public function location()
     {
         return $this->belongsTo(Location::class);
+    }
+
+    public function jobCollaborators()
+    {
+        return $this->hasMany(JobCollaborator::class);
     }
 
     public function user()
@@ -48,6 +53,7 @@ class Job extends Model
                 'users.phonenumber',
                 'users.address',
                 'users.id',
+                'users.profile_image',
                 'users.email',
                 'job_collaborators.expected_price',
                 'job_collaborators.description as job_collaborator_description',
@@ -86,6 +92,7 @@ class Job extends Model
             ->get();
         return $job_approved;
     }
+
 
 
 }

@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateJobRequest;
+use App\Http\Resources\ConfirmedJobCollection;
 use App\Http\Resources\JobCollection;
 use App\Http\Resources\JobResource;
 use App\Model\Category;
 use App\Model\Job;
+use App\Model\JobCollaborator;
 use App\Model\Location;
 use App\User;
 use Illuminate\Support\Facades\Validator;
@@ -17,6 +19,9 @@ use Illuminate\Support\Str;
 
 class JobController extends Controller
 {
+
+    public $per_page = 15;
+    public $order_by = 'desc';
     /**
      * Display a listing of the resource.
      *
@@ -26,7 +31,7 @@ class JobController extends Controller
     {
         //
         $per_page = 15;
-        $jobs = Job::all();
+        $jobs = Job::where('status', '!=', Job::CONFIRMED)->limit($per_page)->get();
         $sortBy = 'desc';
 
 
@@ -36,38 +41,35 @@ class JobController extends Controller
                 $per_page = (int)$request->input('per_page');
                 $jobs = $jobs->take($per_page);
             }
-            if($request->input('sort_by')){
+            if ($request->input('sort_by')) {
                 $sortBy = $request->input('sort_by');
             }
 
 
             if ($request->input('category')) {
                 $category_id = $request->input('category');
-                $jobs =  Category::find($category_id)->jobs->take($per_page);
+                $jobs =  Category::find($category_id)->jobs->where('status','!=',Job::CONFIRMED);
             }
 
 
 
-            if($request->input('user_id')){
+            if ($request->input('user_id')) {
 
 
                 $jobs_id_array = User::find($request->input('user_id'))->jobs->pluck('id');
 
-                $jobs = Job::whereIn('id',$jobs_id_array)
-                        ->orderBy('created_at',$sortBy)
-                        ->limit($per_page)
-                        ->get();
-
+                $jobs = Job::whereIn('id', $jobs_id_array)
+                    ->orderBy('created_at', $sortBy)
+                    ->limit($per_page)
+                    ->get();
             }
 
             return  JobCollection::collection($jobs);
-
-
         } catch (\Throwable $th) {
             // throw $th;
             return  response()->json([
-                "status"=>false,
-                "data"=>[]
+                "status" => false,
+                "data" => []
             ]);
         }
     }
@@ -92,7 +94,7 @@ class JobController extends Controller
                 'province' => 'required',
                 'district' => 'required',
                 'subdistrict' => 'required',
-                'street' => 'required',
+                'address' => 'required',
                 'suggestion_price' => 'required',
                 'author' => 'required',
             ]);
@@ -108,14 +110,14 @@ class JobController extends Controller
             $location->province = $request->province;
             $location->district = $request->district;
             $location->subdistrict = $request->subdistrict;
-            $location->street = $request->street;
+            $location->address = $request->address;
             $location->save();
 
             $job = new Job();
             $job->name = $request->name;
             $job->slug = Str::slug($request->name, '-');
             $job->description = $request->description;
-            $job->status = 3;
+            $job->status = Job::PENDING;
             $job->suggestion_price = $request->suggestion_price;
             $job->location_id = $location->id;
             $job->occupation_id = $request->occupation_id;
@@ -366,7 +368,7 @@ class JobController extends Controller
             if ($request->input('district')) {
                 $district = (int)$request->input('district');
             }
-            if($request->input('order_by')){
+            if ($request->input('order_by')) {
                 $orderByPrice = $request->input('order_by');
             }
 
@@ -383,7 +385,7 @@ class JobController extends Controller
                     ->limit($limit)
                     ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
                     ->get();
-            }else if($query) {
+            } else if ($query) {
                 $filter = DB::table('jobs')
                     ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
                     ->join('users', 'users.id', '=', 'jobs.user_id')
@@ -394,7 +396,7 @@ class JobController extends Controller
                     ->limit($limit)
                     ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
                     ->get();
-            }else if($district){
+            } else if ($district) {
                 $filter = DB::table('jobs')
                     ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
                     ->join('users', 'users.id', '=', 'jobs.user_id')
@@ -404,7 +406,7 @@ class JobController extends Controller
                     ->limit($limit)
                     ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
                     ->get();
-            }else{
+            } else {
                 return response()->json([
                     'status' => true,
                     'data' => []
@@ -427,7 +429,7 @@ class JobController extends Controller
 
 
 
-    public function getJobsApproved($author_id,Request $request)
+    public function getJobsApproved($author_id, Request $request)
     {
 
         try {
@@ -436,22 +438,168 @@ class JobController extends Controller
             $author = Job::getJobsApproved($author_id);
 
             return response()->json([
-                'status'=>true,
-                'data'=>$author
+                'status' => true,
+                'data' => $author
             ]);
-
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
-                'status'=>false,
-                'message'=>$th
+                'status' => false,
+                'message' => $th
             ]);
         }
+    }
 
 
+    /**
+     * author:thuantruon
+     * created_at:02/12/2020
+     * description: Get jobs by job's author pending
+     */
+    public function getPendingJobsByAuthor($author_id, Request $request)
+    {
+        try {
+            //code...
+
+
+            $per_page_get = $request->input('per_page');
+            if ($per_page_get) {
+                $this->per_page = $per_page_get;
+            }
+            $order_by_get = $request->input('sort_by');
+            if ($order_by_get) {
+                $this->order_by = $order_by_get;
+            }
+
+            $user_pending_jobs = Job::where('user_id', $author_id)
+                ->where('status', Job::PENDING)
+                ->orderBy('created_at', $this->order_by)
+                ->limit($this->per_page)
+                ->get();
+
+
+            return response()->json([
+                'status' => true,
+                'data' => JobCollection::collection($user_pending_jobs),
+                'message' => "Get pending'jobs is successfull"
+            ]);
+        } catch (\Throwable $th) {
+            // throw $th;
+            return response()->json([
+                'status' => false,
+                'data' => [],
+                'message' => $th
+            ]);
+        }
     }
 
 
 
+    /**
+     * author:thuantruong
+     * created_at:02/12/2020
+     * description:Get jobs by job's author approved
+     */
+    public function getApprovedJobsByAuthor($author_id, Request $request)
+    {
+        try {
+            //code...
+            $per_page_get = $request->input('per_page');
+            if ($per_page_get) {
+                $this->per_page = $per_page_get;
+            }
+            $order_by_get = $request->input('sort_by');
+            if ($order_by_get) {
+                $this->order_by = $order_by_get;
+            }
 
+            $user_approved_jobs = Job::where('user_id', $author_id)
+                ->where('status', Job::APPROVED)
+                ->orderBy('created_at', $this->order_by)
+                ->limit($this->per_page)
+                ->get();
+
+
+            return response()->json([
+                'status' => true,
+                'data' => JobCollection::collection($user_approved_jobs),
+                'message' => "Get approved'jobs is successfull"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => false,
+                'data' => [],
+                'message' => $th
+            ]);
+        }
+    }
+
+
+    /**
+     * author:thuantruong
+     * created_at:04/12/2020
+     * description:Get jobs by job's author confirmed
+     */
+    public function getConfirmedJobsByAuthor($author_id, Request $request)
+    {
+        try {
+            //code...
+            $per_page_get = $request->input('per_page');
+            if ($per_page_get) {
+                $this->per_page = $per_page_get;
+            }
+            $order_by_get = $request->input('sort_by');
+            if ($order_by_get) {
+                $this->order_by = $order_by_get;
+            }
+            $user_confirmed_jobs = Job::where('user_id', $author_id)
+                ->where('status', Job::CONFIRMED)
+                ->orderBy('created_at', $this->order_by)
+                ->limit($this->per_page)
+                ->get();
+
+            return response()->json([
+                'status' => true,
+                'data' => ConfirmedJobCollection::collection($user_confirmed_jobs),
+                'message' => "Get confirmed'jobs is successfull"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'status' => false,
+                'data' => [],
+                'message' => "ERROR =>> " . $th
+            ]);
+        }
+    }
+
+
+    /**
+     * author:thuantruong
+     * created_at:10/12/2020
+     * description:Delete a job by author
+     */
+    public function deleteJobByAuthor($author_id, $job_id)
+    {
+
+        try {
+            //code...
+            $job_collaborator_delete = JobCollaborator::where('job_id', $job_id)->delete();
+            $job_delete = Job::where('id', $job_id)->delete();
+
+            return response()->json([
+                "status" => true,
+                "data" => null,
+                "message" => "Delete a job successfully"
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                "status" => false,
+                "data" => null,
+                "message" => "Delete Job Failed " . $th
+            ]);
+        }
+    }
 }

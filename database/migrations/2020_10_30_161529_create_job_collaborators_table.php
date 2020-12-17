@@ -17,6 +17,9 @@ class CreateJobCollaboratorsTable extends Migration
             $table->id();
             $table->decimal('expected_price',18,2)->nullable();
             $table->text('description')->nullable();
+            $table->decimal('confirmed_price',18,2)->nullable();
+            $table->tinyInteger('range')->nullable();
+            $table->text('review_content')->nullable();
             $table->dateTime('start_at')->nullable();
             $table->dateTime('finish_at')->nullable();
             $table->unsignedBigInteger('job_id');

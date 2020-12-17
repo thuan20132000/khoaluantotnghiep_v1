@@ -49,12 +49,12 @@ Route::group(['prefix' => '', 'middleware' => ['web', 'auth']], function () {
     Route::post('/admin/add-jobcollaborator', 'JobCollaboratorController@addJobCollaborator')->name('jobcollaborator.add');
     Route::delete('/admin/jobcollaborator', 'JobCollaboratorController@destroyMass')->name('destroyMass');
     Route::get('/admin/jobcollaborator/{id}/status/{status}', 'JobCollaboratorController@updateJobCollaboratorStatus')->name('jobcollaborator.updatestatus');
+    Route::get('/admin/jobcollaborator/confirmed','JobCollaboratorController@getConfirmedJob')->name("jobcollaborator.confirmed");
 
 
-
-    Route::get('/admin/job-confirm', 'JobConfirmController@index')->name('jobconfirm.index');
-    Route::post('/admin/job-confirm', 'JobConfirmController@confirmJobCollaborator')->name('jobconfirm.post');
-    Route::delete('/admin/job-confirm/{id}', 'JobConfirmController@destroy')->name('jobconfirm.destroy');
+    // Route::get('/admin/job-confirm', 'JobConfirmController@index')->name('jobconfirm.index');
+    // Route::post('/admin/job-confirm', 'JobConfirmController@confirmJobCollaborator')->name('jobconfirm.post');
+    // Route::delete('/admin/job-confirm/{id}', 'JobConfirmController@destroy')->name('jobconfirm.destroy');
 
     Route::get('admin/ajax/jobcollaborator/{id}', 'JobCollaboratorController@getAjaxCollaboratorByJob');
 

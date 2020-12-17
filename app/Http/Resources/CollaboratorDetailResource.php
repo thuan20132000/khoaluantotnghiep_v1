@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
-use App\User;
+use App\Model\JobCollaborator;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class CollaboratorDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,20 +16,22 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->id,
-            'attributes' => [
+            'id'=>$this->id,
+            'attributes'=>[
                 'name' => $this->name,
-                'email' => $this->email,
-                'phonenumber' => $this->phonenumber,
-                'idcard' => $this->idcard,
+                'email' => $this->slug,
+                'phonenumber' => $this->image,
+                'idcard' => $this->status,
                 'address'=>$this->address,
                 'profile_image'=>$this->profile_image
             ],
-            'role'=>$this->roles,
             'relationships'=>[
                 'occupations'=>$this->occupations,
+                'activity_images'=>$this->images
             ],
             'reviews'=>$this->getReviews()
+
+
         ];
     }
 }
