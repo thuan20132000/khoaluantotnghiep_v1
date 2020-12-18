@@ -100,7 +100,7 @@ class CollaboratorController extends Controller
                     ->get();
 
                 return response()->json([
-                    'status' => false,
+                    'status' => true,
                     'data' => UserCollection::collection($collaborator_by_category),
                     'links' => [
 
@@ -118,9 +118,9 @@ class CollaboratorController extends Controller
                 'data' => []
             ]);
         } catch (\Throwable $th) {
-            throw $th;
+           // throw $th;
             return response()->json([
-                'status' => true,
+                'status' => false,
                 'data' => $th
             ]);
         }
