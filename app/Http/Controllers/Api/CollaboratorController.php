@@ -84,8 +84,7 @@ class CollaboratorController extends Controller
                     'status' => true,
                     'data' => UserCollection::collection($collaborator_by_category),
                     'links' => [
-
-                        "next" => URL::current() . "?postnumber=$postnumber&perpage=$perpage",
+                        "next" => URL::current() . "?postnumber=".($postnumber+$perpage)."&page=$perpage",
                     ],
                     "meta" => [
                         "per_page" => $perpage,
@@ -107,7 +106,7 @@ class CollaboratorController extends Controller
                     'data' => UserCollection::collection($collaborator_by_category),
                     'links' => [
 
-                        "next" => URL::current() . "?postnumber=".($postnumber+$perpage)."page=$perpage",
+                        "next" => URL::current() . "?postnumber=".($postnumber+$perpage)."&page=$perpage",
                     ],
                     "meta" => [
                         "per_page" => $perpage,
