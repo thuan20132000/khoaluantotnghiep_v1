@@ -19,6 +19,12 @@ class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
+
+    const PUBLISH  = 0;
+    const DRAFT = 1;
+    const PENDING = 2;
+
+
     /**
      * The attributes that are mass assignable.
      *
@@ -66,7 +72,7 @@ class User extends Authenticatable
             // ->join('occupation_user','occupation_user.user_id','=','users.id')
             // ->join('occupations','occupations.id','=','occupation_user.occupation_id')
             ->where('roles.name', '=', 'isCollaborator')
-            ->where('status', '=', 0)
+            ->where('status', '=', User::PUBLISH)
             ->select(
                 'users.id',
                 'users.name',
