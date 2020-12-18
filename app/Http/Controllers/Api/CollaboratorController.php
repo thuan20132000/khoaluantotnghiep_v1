@@ -35,12 +35,12 @@ class CollaboratorController extends Controller
             $limit = 15;
             $orderby = 'desc';
             $perpage = 12;
-            $postnumber = 1;
+            $postnumber = 0;
             if ($request->input('limit')) {
                 $limit = $request->input('limit');
             }
             if ($request->input('orderby')) {
-                $orderBy = $request->input('orderby');
+                $orderby = $request->input('orderby');
             }
             if ($request->input('postnumber')) {
                 $postnumber = (int) $request->input('postnumber');
@@ -48,9 +48,7 @@ class CollaboratorController extends Controller
             if ($request->input('perpage')) {
                 $perpage = (int) $request->input('perpage');
             }
-            if ($request->input('page')) {
-                $page = (int) $request->input('page');
-            }
+
 
 
 
@@ -84,7 +82,7 @@ class CollaboratorController extends Controller
                     'status' => true,
                     'data' => UserCollection::collection($collaborator_by_category),
                     'links' => [
-                        "next" => URL::current() . "?postnumber=".($postnumber+$perpage)."&page=$perpage",
+                        "next" => URL::current() . "?postnumber=".($postnumber+$perpage)."&perpage=$perpage",
                     ],
                     "meta" => [
                         "per_page" => $perpage,
@@ -106,10 +104,10 @@ class CollaboratorController extends Controller
                     'data' => UserCollection::collection($collaborator_by_category),
                     'links' => [
 
-                        "next" => URL::current() . "?postnumber=".($postnumber+$perpage)."&page=$perpage",
+                        "next" => URL::current() . "?postnumber=".($postnumber+$perpage)."&perpage=$perpage",
                     ],
                     "meta" => [
-                        "per_page" => $perpage,
+                        "perpage" => $perpage,
                         "total" => $collaborator_by_category->count()
                     ]
                 ]);
