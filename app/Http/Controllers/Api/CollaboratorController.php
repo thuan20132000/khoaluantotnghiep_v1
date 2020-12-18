@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\URL;
 
 class CollaboratorController extends Controller
 {
@@ -32,9 +33,27 @@ class CollaboratorController extends Controller
         try {
             //code...
             $limit = 15;
+            $orderby = 'desc';
+            $perpage = 12;
+            $postnumber = 1;
             if ($request->input('limit')) {
                 $limit = $request->input('limit');
             }
+            if ($request->input('orderby')) {
+                $orderBy = $request->input('orderby');
+            }
+            if ($request->input('postnumber')) {
+                $postnumber = (int) $request->input('postnumber');
+            }
+            if ($request->input('perpage')) {
+                $perpage = (int) $request->input('perpage');
+            }
+            if ($request->input('page')) {
+                $page = (int) $request->input('page');
+            }
+
+
+
             $category = null;
 
 
@@ -53,19 +72,47 @@ class CollaboratorController extends Controller
 
                 $collaborator_id = collect($collaborator_id_by_category)->collapse();
 
-                $collaborator_by_category = User::whereIn('id', $collaborator_id)->distinct()->limit($limit)->get();
+                $collaborator_by_category = User::whereIn('id', $collaborator_id)
+                    ->distinct()
+                    ->skip($postnumber)
+                    ->orderBy('created_at', $orderby)
+                    ->take($perpage)
+                    ->get();
 
 
                 return response()->json([
                     'status' => true,
-                    'data' => UserCollection::collection($collaborator_by_category)
+                    'data' => UserCollection::collection($collaborator_by_category),
+                    'links' => [
+
+                        "next" => URL::current() . "?postnumber=$postnumber&perpage=$perpage",
+                    ],
+                    "meta" => [
+                        "per_page" => $perpage,
+                        "total" => $collaborator_by_category->count()
+                    ]
                 ]);
             } else {
                 $collaborators_id = User::getCollaborators()->pluck('id');
-                $collaborator_by_category = User::whereIn('id', $collaborators_id)->limit($limit)->get();
+
+                $collaborator_by_category = User::whereIn('id', $collaborators_id)
+                    // ->limit($limit)
+                    ->skip($postnumber)
+                    ->orderBy('created_at', $orderby)
+                    ->take($perpage)
+                    ->get();
+
                 return response()->json([
                     'status' => false,
-                    'data' => UserCollection::collection($collaborator_by_category)
+                    'data' => UserCollection::collection($collaborator_by_category),
+                    'links' => [
+
+                        "next" => URL::current() . "?postnumber=".($postnumber+$perpage)."page=$perpage",
+                    ],
+                    "meta" => [
+                        "per_page" => $perpage,
+                        "total" => $collaborator_by_category->count()
+                    ]
                 ]);
             }
 
@@ -74,7 +121,7 @@ class CollaboratorController extends Controller
                 'data' => []
             ]);
         } catch (\Throwable $th) {
-            //throw $th;
+            throw $th;
             return response()->json([
                 'status' => true,
                 'data' => $th
@@ -271,7 +318,7 @@ class CollaboratorController extends Controller
 
             $collaborator_ids = $collaborators->pluck('id')->all();
 
-            $collaborators = User::whereIn('id',$collaborator_ids)->get();
+            $collaborators = User::whereIn('id', $collaborator_ids)->get();
 
             $collaborator_collection = UserCollection::collection($collaborators);
 
