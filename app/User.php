@@ -105,6 +105,7 @@ class User extends Authenticatable
             ->where('roles.id', '=',Role::COLLABORATOR )
             ->where('users.status', '=', User::PUBLISH)
             ->orderBy($by,$order)
+            ->distinct()
             ->skip($skip)
             ->take($perpage)
             ->select(
@@ -133,6 +134,7 @@ class User extends Authenticatable
             ->where('roles.id', '=',Role::COLLABORATOR )
             ->where('users.status', '=', User::PUBLISH)
             ->where('users.district','=',$district)
+            ->distinct()
             ->skip($skip)
             ->take($perpage)
             ->select(
