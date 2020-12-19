@@ -13,7 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\URL;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class CollaboratorController extends Controller
 {
@@ -34,8 +36,13 @@ class CollaboratorController extends Controller
             //code...
             $limit = 15;
             $orderby = 'desc';
-            $perpage = 12;
+            $perpage = 10;
             $postnumber = 0;
+
+
+            $sortByTopRating = false;
+            $sortByNearByDistrict = false;
+
             if ($request->input('limit')) {
                 $limit = $request->input('limit');
             }
@@ -48,11 +55,59 @@ class CollaboratorController extends Controller
             if ($request->input('perpage')) {
                 $perpage = (int) $request->input('perpage');
             }
+            if ($request->input('sortbytoprating')) {
+                $sortByTopRating = (bool) $request->input('sortbytoprating');
+            }
+            if ($request->input('sortbynearbydistrict')) {
+                $sortByNearByDistrict = (int) $request->input('sortbynearbydistrict');
+            }
 
 
 
 
             $category = null;
+
+
+            if ($sortByTopRating == true) {
+                $collaborators_by_rating = User::getCollaboratorsOrderBy('range', 'desc', $postnumber, $perpage);
+
+                $collaborators = User::hydrate($collaborators_by_rating->toArray());
+                return response()->json([
+                    'status' => true,
+                    'data' => UserCollection::collection($collaborators),
+                    'links' => [
+
+                        "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
+                    ],
+                    "meta" => [
+                        "perpage" => $perpage,
+                        "total" => $collaborators->count()
+                    ]
+                ]);
+            }
+
+
+
+            if ($sortByNearByDistrict) {
+
+                $collaborators_by_district = User::getCollaboratorsNearBy($sortByNearByDistrict,$postnumber,$perpage);
+                $collaborators = User::hydrate($collaborators_by_district->toArray());
+
+                return response()->json([
+                    'status' => true,
+                    'data' => UserCollection::collection($collaborators),
+                    'links' => [
+
+                        "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
+                    ],
+                    "meta" => [
+                        "perpage" => $perpage,
+                        "total" => $collaborators->count()
+                    ]
+                ]);
+            }
+
+
 
 
             // Get collaborators by category
@@ -82,7 +137,7 @@ class CollaboratorController extends Controller
                     'status' => true,
                     'data' => UserCollection::collection($collaborator_by_category),
                     'links' => [
-                        "next" => URL::current() . "?postnumber=".($postnumber+$perpage)."&perpage=$perpage",
+                        "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
                     ],
                     "meta" => [
                         "per_page" => $perpage,
@@ -104,7 +159,7 @@ class CollaboratorController extends Controller
                     'data' => UserCollection::collection($collaborator_by_category),
                     'links' => [
 
-                        "next" => URL::current() . "?postnumber=".($postnumber+$perpage)."&perpage=$perpage",
+                        "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
                     ],
                     "meta" => [
                         "perpage" => $perpage,
@@ -118,10 +173,11 @@ class CollaboratorController extends Controller
                 'data' => []
             ]);
         } catch (\Throwable $th) {
-           // throw $th;
+            // throw $th;
             return response()->json([
                 'status' => false,
-                'data' => $th
+                'data' => [],
+                'message' => "ERROR : " . $th
             ]);
         }
     }
