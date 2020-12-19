@@ -113,35 +113,67 @@ class CollaboratorController extends Controller
             // Get collaborators by category
             if ($request->input('category')) {
                 $category = $request->input('category');
+                $district = $request->input('district');
 
                 //code...
-                $occupations_by_category = Category::find($category)->occupations;
+                // dd(Category::find($category)->users);
+                // $collaborators  = User::whereIn(
+                //     Category::find($category)->
+                // )
 
-                $collaborator_id_by_category = [];
-                foreach ($occupations_by_category as $key => $occupation) {
-                    # code...
-                    array_push($collaborator_id_by_category, $occupation->collaborators()->pluck('id'));
+                if($district){
+                    $collaborators = DB::table('users')
+                    ->join('occupation_user','occupation_user.user_id','=','users.id')
+                    ->join('occupations','occupations.id','=','occupation_user.occupation_id')
+                    ->join('categories','categories.id','=','occupations.category_id')
+                    ->join('job_collaborators','job_collaborators.user_id','users.id')
+                    ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
+                    ->where('categories.id','=',$category)
+                    ->where('users.district','=',$district)
+                    ->orderByRaw('SUM(job_collaborators.range) DESC')
+                    // ->where('status', '<>', 1
+                    ->groupBy('users.id')
+                    ->skip($postnumber)
+                    ->take($perpage)
+                    ->select(
+                        'users.*'
+                    )
+                    ->get();
+                }else{
+                    $collaborators = DB::table('users')
+                    ->join('occupation_user','occupation_user.user_id','=','users.id')
+                    ->join('occupations','occupations.id','=','occupation_user.occupation_id')
+                    ->join('categories','categories.id','=','occupations.category_id')
+                    ->join('job_collaborators','job_collaborators.user_id','users.id')
+                    ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
+                    ->where('categories.id','=',$category)
+                    ->orderByRaw('SUM(job_collaborators.range) DESC')
+                    // ->where('status', '<>', 1
+                    ->groupBy('users.id')
+                    ->skip($postnumber)
+                    ->take($perpage)
+                    ->select(
+                        'users.*'
+                    )
+                    ->get();
                 }
 
-                $collaborator_id = collect($collaborator_id_by_category)->collapse();
 
-                $collaborator_by_category = User::whereIn('id', $collaborator_id)
-                    ->distinct()
-                    ->skip($postnumber)
-                    ->orderBy('created_at', $orderby)
-                    ->take($perpage)
-                    ->get();
+
+
+                $collaborators_eloquent = User::hydrate($collaborators->toArray());
+
 
 
                 return response()->json([
                     'status' => true,
-                    'data' => UserCollection::collection($collaborator_by_category),
+                    'data' => UserCollection::collection($collaborators_eloquent),
                     'links' => [
                         "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
                     ],
                     "meta" => [
                         "per_page" => $perpage,
-                        "total" => $collaborator_by_category->count()
+                        "total" => $collaborators_eloquent->count()
                     ]
                 ]);
             } else {
@@ -156,6 +188,7 @@ class CollaboratorController extends Controller
 
                 return response()->json([
                     'status' => true,
+                    'message'=>'3',
                     'data' => UserCollection::collection($collaborator_by_category),
                     'links' => [
 
