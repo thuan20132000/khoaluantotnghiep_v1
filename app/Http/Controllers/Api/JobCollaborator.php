@@ -390,14 +390,6 @@ class JobCollaborator extends Controller
 
             DB::commit();
 
-
-
-            return response()->json([
-                'user'=>$collaborator
-            ]);
-        //    dd($collaborator);
-
-
             return response()->json([
                 "status" => true,
                 "data" => [
