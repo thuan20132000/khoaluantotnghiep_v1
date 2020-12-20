@@ -63,53 +63,6 @@ class CollaboratorController extends Controller
                 $sortByNearByDistrict = (int) $request->input('sortbynearbydistrict');
             }
 
-
-
-
-            $category = null;
-
-
-            if ($sortByTopRating == true) {
-                $collaborators_by_rating = User::getCollaboratorsOrderBy('range', 'desc', $postnumber, $perpage);
-
-                $collaborators = User::hydrate($collaborators_by_rating->toArray());
-                return response()->json([
-                    'status' => true,
-                    'data' => UserCollection::collection($collaborators),
-                    'links' => [
-
-                        "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
-                    ],
-                    "meta" => [
-                        "perpage" => $perpage,
-                        "total" => $collaborators->count()
-                    ]
-                ]);
-            }
-
-
-
-            if ($sortByNearByDistrict) {
-
-                $collaborators_by_district = User::getCollaboratorsNearBy($sortByNearByDistrict, $postnumber, $perpage);
-                $collaborators = User::hydrate($collaborators_by_district->toArray());
-
-                return response()->json([
-                    'status' => true,
-                    'data' => UserCollection::collection($collaborators),
-                    'links' => [
-
-                        "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
-                    ],
-                    "meta" => [
-                        "perpage" => $perpage,
-                        "total" => $collaborators->count()
-                    ]
-                ]);
-            }
-
-
-
             $category = $request->input('category');
             $district = $request->input('district');
             // Get collaborators by category
