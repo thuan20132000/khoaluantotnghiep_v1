@@ -214,7 +214,8 @@ class User extends Authenticatable
                 'users.name as author_name',
                 'users.profile_image as author_image',
                 'users.email as author_email',
-                'job_collaborators.*'
+                'job_collaborators.*',
+                'jobs.name as job_name',
             )
             ->get();
         return $reviews;
