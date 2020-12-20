@@ -115,55 +115,107 @@ class CollaboratorController extends Controller
             // Get collaborators by category
             if ($category && $district) {
 
-                $collaborators = DB::table('users')
-                    ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
-                    ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
-                    ->join('categories', 'categories.id', '=', 'occupations.category_id')
-                    ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
-                    ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
-                    ->where('categories.id', '=', $category)
-                    ->where('users.district', '=', $district)
-                    ->orderByRaw('SUM(job_collaborators.range) DESC')
-                    // ->where('status', '<>', 1
-                    ->groupBy('users.id')
-                    ->skip($postnumber)
-                    ->take($perpage)
-                    ->select(
-                        'users.*'
-                    )
-                    ->get();
+
+                if ($sortByTopRating == true) {
+                    $collaborators = DB::table('users')
+                        ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                        ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                        ->join('categories', 'categories.id', '=', 'occupations.category_id')
+                        ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
+                        ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
+                        ->where('categories.id', '=', $category)
+                        ->where('users.district', '=', $district)
+                        ->orderByRaw('SUM(job_collaborators.range) DESC')
+                        // ->where('status', '<>', 1
+                        ->groupBy('users.id')
+                        ->skip($postnumber)
+                        ->take($perpage)
+                        ->select(
+                            'users.*'
+                        )
+                        ->get();
+                } else {
+                    $collaborators = DB::table('users')
+                        ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                        ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                        ->join('categories', 'categories.id', '=', 'occupations.category_id')
+                        ->where('categories.id', '=', $category)
+                        ->where('users.district', '=', $district)
+                        // ->where('status', '<>', 1
+                        ->groupBy('users.id')
+                        ->skip($postnumber)
+                        ->take($perpage)
+                        ->select(
+                            'users.*'
+                        )
+                        ->get();
+                }
 
                 $collaborators = User::hydrate($collaborators->toArray());
                 $message_response = "Get collaborators by Category and District Successfully";
             } else if ($category) {
-                $collaborators = DB::table('users')
-                    ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
-                    ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
-                    ->join('categories', 'categories.id', '=', 'occupations.category_id')
-                    ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
-                    ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
-                    ->where('categories.id', '=', $category)
-                    ->orderByRaw('SUM(job_collaborators.range) DESC')
-                    // ->where('status', '<>', 1
-                    ->groupBy('users.id')
-                    ->skip($postnumber)
-                    ->take($perpage)
-                    ->select(
-                        'users.*'
-                    )
-                    ->get();
-                $collaborators = User::hydrate($collaborators->toArray());
 
+
+                if ($sortByTopRating == true) {
+                    $collaborators = DB::table('users')
+                        ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                        ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                        ->join('categories', 'categories.id', '=', 'occupations.category_id')
+                        ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
+                        ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
+                        ->where('categories.id', '=', $category)
+                        ->orderByRaw('SUM(job_collaborators.range) DESC')
+                        // ->where('status', '<>', 1
+                        ->groupBy('users.id')
+                        ->skip($postnumber)
+                        ->take($perpage)
+                        ->select(
+                            'users.*'
+                        )
+                        ->get();
+                } else {
+                    $collaborators = DB::table('users')
+                        ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                        ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                        ->join('categories', 'categories.id', '=', 'occupations.category_id')
+                        ->where('categories.id', '=', $category)
+                        // ->where('status', '<>', 1
+                        ->groupBy('users.id')
+                        ->skip($postnumber)
+                        ->take($perpage)
+                        ->select(
+                            'users.*'
+                        )
+                        ->get();
+                }
+
+                $collaborators = User::hydrate($collaborators->toArray());
                 $message_response = "Get collaborators by Category Successfully";
             } else if ($district) {
-                $collaborators = DB::table('users')
+
+                if ($sortByTopRating == true) {
+                    $collaborators = DB::table('users')
+                        ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                        ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                        ->join('categories', 'categories.id', '=', 'occupations.category_id')
+                        ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
+                        ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
+                        ->where('users.district', '=', $district)
+                        ->orderByRaw('SUM(job_collaborators.range) DESC')
+                        // ->where('status', '<>', 1
+                        ->groupBy('users.id')
+                        ->skip($postnumber)
+                        ->take($perpage)
+                        ->select(
+                            'users.*'
+                        )
+                        ->get();
+                } else {
+                    $collaborators = DB::table('users')
                     ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
                     ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
                     ->join('categories', 'categories.id', '=', 'occupations.category_id')
-                    ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
-                    ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
                     ->where('users.district', '=', $district)
-                    ->orderByRaw('SUM(job_collaborators.range) DESC')
                     // ->where('status', '<>', 1
                     ->groupBy('users.id')
                     ->skip($postnumber)
@@ -172,11 +224,15 @@ class CollaboratorController extends Controller
                         'users.*'
                     )
                     ->get();
-                $collaborators = User::hydrate($collaborators->toArray());
+                }
 
+
+                $collaborators = User::hydrate($collaborators->toArray());
                 $message_response = "Get collaborators by District Successfully";
             } else {
-                $collaborators = DB::table('users')
+
+                if($sortByTopRating==true){
+                    $collaborators = DB::table('users')
                     ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
                     ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
                     ->join('categories', 'categories.id', '=', 'occupations.category_id')
@@ -191,8 +247,22 @@ class CollaboratorController extends Controller
                         'users.*'
                     )
                     ->get();
-                $collaborators = User::hydrate($collaborators->toArray());
+                }else{
+                    $collaborators = DB::table('users')
+                    ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                    ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                    ->join('categories', 'categories.id', '=', 'occupations.category_id')
+                    // ->where('status', '<>', 1
+                    ->groupBy('users.id')
+                    ->skip($postnumber)
+                    ->take($perpage)
+                    ->select(
+                        'users.*'
+                    )
+                    ->get();
+                }
 
+                $collaborators = User::hydrate($collaborators->toArray());
                 $message_response = "Get all Collaborators Successfully";
             }
 
