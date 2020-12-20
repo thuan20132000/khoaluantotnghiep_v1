@@ -39,6 +39,7 @@ class CollaboratorController extends Controller
             $perpage = 10;
             $postnumber = 0;
 
+            $message_response = '';
 
             $sortByTopRating = false;
             $sortByNearByDistrict = false;
@@ -90,7 +91,7 @@ class CollaboratorController extends Controller
 
             if ($sortByNearByDistrict) {
 
-                $collaborators_by_district = User::getCollaboratorsNearBy($sortByNearByDistrict,$postnumber,$perpage);
+                $collaborators_by_district = User::getCollaboratorsNearBy($sortByNearByDistrict, $postnumber, $perpage);
                 $collaborators = User::hydrate($collaborators_by_district->toArray());
 
                 return response()->json([
@@ -109,68 +110,103 @@ class CollaboratorController extends Controller
 
 
 
-
+            $category = $request->input('category');
+            $district = $request->input('district');
             // Get collaborators by category
-            if ($request->input('category')) {
-                $category = $request->input('category');
+            if ($category && $district) {
 
-                //code...
-                $occupations_by_category = Category::find($category)->occupations;
-
-                $collaborator_id_by_category = [];
-                foreach ($occupations_by_category as $key => $occupation) {
-                    # code...
-                    array_push($collaborator_id_by_category, $occupation->collaborators()->pluck('id'));
-                }
-
-                $collaborator_id = collect($collaborator_id_by_category)->collapse();
-
-                $collaborator_by_category = User::whereIn('id', $collaborator_id)
-                    ->distinct()
+                $collaborators = DB::table('users')
+                    ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                    ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                    ->join('categories', 'categories.id', '=', 'occupations.category_id')
+                    ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
+                    ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
+                    ->where('categories.id', '=', $category)
+                    ->where('users.district', '=', $district)
+                    ->orderByRaw('SUM(job_collaborators.range) DESC')
+                    // ->where('status', '<>', 1
+                    ->groupBy('users.id')
                     ->skip($postnumber)
-                    ->orderBy('created_at', $orderby)
                     ->take($perpage)
+                    ->select(
+                        'users.*'
+                    )
                     ->get();
 
+                $collaborators = User::hydrate($collaborators->toArray());
+                $message_response = "Get collaborators by Category and District Successfully";
+            } else if ($category) {
+                $collaborators = DB::table('users')
+                    ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                    ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                    ->join('categories', 'categories.id', '=', 'occupations.category_id')
+                    ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
+                    ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
+                    ->where('categories.id', '=', $category)
+                    ->orderByRaw('SUM(job_collaborators.range) DESC')
+                    // ->where('status', '<>', 1
+                    ->groupBy('users.id')
+                    ->skip($postnumber)
+                    ->take($perpage)
+                    ->select(
+                        'users.*'
+                    )
+                    ->get();
+                $collaborators = User::hydrate($collaborators->toArray());
 
-                return response()->json([
-                    'status' => true,
-                    'data' => UserCollection::collection($collaborator_by_category),
-                    'links' => [
-                        "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
-                    ],
-                    "meta" => [
-                        "per_page" => $perpage,
-                        "total" => $collaborator_by_category->count()
-                    ]
-                ]);
+                $message_response = "Get collaborators by Category Successfully";
+            } else if ($district) {
+                $collaborators = DB::table('users')
+                    ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                    ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                    ->join('categories', 'categories.id', '=', 'occupations.category_id')
+                    ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
+                    ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
+                    ->where('users.district', '=', $district)
+                    ->orderByRaw('SUM(job_collaborators.range) DESC')
+                    // ->where('status', '<>', 1
+                    ->groupBy('users.id')
+                    ->skip($postnumber)
+                    ->take($perpage)
+                    ->select(
+                        'users.*'
+                    )
+                    ->get();
+                $collaborators = User::hydrate($collaborators->toArray());
+
+                $message_response = "Get collaborators by District Successfully";
             } else {
-                $collaborators_id = User::getCollaborators()->pluck('id');
-
-                $collaborator_by_category = User::whereIn('id', $collaborators_id)
-                    // ->limit($limit)
+                $collaborators = DB::table('users')
+                    ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
+                    ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
+                    ->join('categories', 'categories.id', '=', 'occupations.category_id')
+                    ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
+                    ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
+                    ->orderByRaw('SUM(job_collaborators.range) DESC')
+                    // ->where('status', '<>', 1
+                    ->groupBy('users.id')
                     ->skip($postnumber)
-                    ->orderBy('created_at', $orderby)
                     ->take($perpage)
+                    ->select(
+                        'users.*'
+                    )
                     ->get();
+                $collaborators = User::hydrate($collaborators->toArray());
 
-                return response()->json([
-                    'status' => true,
-                    'data' => UserCollection::collection($collaborator_by_category),
-                    'links' => [
-
-                        "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
-                    ],
-                    "meta" => [
-                        "perpage" => $perpage,
-                        "total" => $collaborator_by_category->count()
-                    ]
-                ]);
+                $message_response = "Get all Collaborators Successfully";
             }
 
             return response()->json([
                 'status' => true,
-                'data' => []
+                'message' => $message_response,
+                'data' => UserCollection::collection($collaborators),
+                'links' => [
+                    "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
+                ],
+                "meta" => [
+                    "perpage" => $perpage,
+                    "total" => $collaborators->count()
+                ]
             ]);
         } catch (\Throwable $th) {
             // throw $th;
