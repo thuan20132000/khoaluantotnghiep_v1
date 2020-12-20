@@ -9,6 +9,7 @@ use App\Http\Resources\JobCollaboratorCollection;
 use App\Http\Resources\JobCollaboratorResource;
 use App\Model\Job;
 use App\Model\JobCollaborator as ModelJobCollaborator;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -355,6 +356,9 @@ class JobCollaborator extends Controller
 
             $job_collaborator_confirm = ModelJobCollaborator::where('id', $request->job_collaborator_id)
                 ->first();
+
+
+
             $job_collaborator_confirm->confirmed_price = $request->confirmed_price;
             $job_collaborator_confirm->range = $request->range;
             $job_collaborator_confirm->review_content = $request->content;
@@ -367,7 +371,34 @@ class JobCollaborator extends Controller
 
 
 
+            $collaborator = User::where('id',$job_collaborator_confirm->user->id)->first();
+
+
+
+            $rating_number = $collaborator->rating_number | 1;
+            $total_range_review = 0;
+            foreach ($collaborator->getReviews() as $value) {
+                # code...
+                $total_range_review = $total_range_review + $value->range;
+            }
+           $average_rating = $total_range_review/($rating_number+1);
+
+           $collaborator->rating_number = $rating_number+1;
+           $collaborator->average_rating = $average_rating;
+           $collaborator->update();
+
+
+
             DB::commit();
+
+
+
+            return response()->json([
+                'user'=>$collaborator
+            ]);
+        //    dd($collaborator);
+
+
             return response()->json([
                 "status" => true,
                 "data" => [
@@ -394,7 +425,7 @@ class JobCollaborator extends Controller
 
 
 
-    public function getJobCollaboratorStatus($user_id,$status,Request $request)
+    public function getJobCollaboratorStatus($user_id, $status, Request $request)
     {
 
 
@@ -405,23 +436,23 @@ class JobCollaborator extends Controller
                 $per_page = (int)$request->input('per_page');
             }
 
-            $collaborator_jobs = ModelJobCollaborator::where('user_id',$user_id)
-                                                ->where("status",$status)
-                                                ->orderBy('created_at','desc')
-                                                ->limit($per_page)
-                                                ->get();
+            $collaborator_jobs = ModelJobCollaborator::where('user_id', $user_id)
+                ->where("status", $status)
+                ->orderBy('created_at', 'desc')
+                ->limit($per_page)
+                ->get();
 
 
             return response()->json([
                 "status" => true,
                 "data" => JobCollaboratorCollection::collection($collaborator_jobs),
-                "message"=>"Get job successfully"
+                "message" => "Get job successfully"
             ]);
         } catch (\Throwable $th) {
             return response()->json([
                 "status" => false,
                 "data" => [],
-                "message"=>"Get job failed"
+                "message" => "Get job failed"
             ]);
         }
     }

@@ -26,6 +26,8 @@ class CreateUsersTable extends Migration
             $table->string('subdistrict')->nullable();
             $table->string('address')->nullable();
             $table->string('profile_image')->nullable();
+            $table->float('average_rating')->default(0);
+            $table->integer('rating_number')->default(0);
             $table->tinyInteger('status')->default(0);
             $table->rememberToken();
             $table->longText('access_token')->nullable();
