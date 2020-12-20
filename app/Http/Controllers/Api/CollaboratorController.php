@@ -74,13 +74,9 @@ class CollaboratorController extends Controller
                         ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
                         ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
                         ->join('categories', 'categories.id', '=', 'occupations.category_id')
-                        ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
-                        ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
                         ->where('categories.id', '=', $category)
                         ->where('users.district', '=', $district)
-                        ->orderByRaw('SUM(job_collaborators.range) DESC')
-                        // ->where('status', '<>', 1
-                        ->groupBy('users.id')
+                        ->orderBy('users.average_rating','desc')
                         ->skip($postnumber)
                         ->take($perpage)
                         ->select(
@@ -114,12 +110,9 @@ class CollaboratorController extends Controller
                         ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
                         ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
                         ->join('categories', 'categories.id', '=', 'occupations.category_id')
-                        ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
-                        ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
                         ->where('categories.id', '=', $category)
-                        ->orderByRaw('SUM(job_collaborators.range) DESC')
-                        // ->where('status', '<>', 1
                         ->groupBy('users.id')
+                        ->orderBy('users.average_rating','desc')
                         ->skip($postnumber)
                         ->take($perpage)
                         ->select(
@@ -151,13 +144,9 @@ class CollaboratorController extends Controller
                         ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
                         ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
                         ->join('categories', 'categories.id', '=', 'occupations.category_id')
-                        ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
                         ->select(DB::raw('SUM(job_collaborators.range) as user_range'))
                         ->where('users.district', '=', $district)
-                        ->orderByRaw('SUM(job_collaborators.range) DESC')
-                        // ->where('status', '<>', 1
-                        ->groupBy('users.id')
-                        ->skip($postnumber)
+                        ->orderBy('users.average_rating','desc')
                         ->take($perpage)
                         ->select(
                             'users.*'
@@ -189,23 +178,17 @@ class CollaboratorController extends Controller
                         ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
                         ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
                         ->join('categories', 'categories.id', '=', 'occupations.category_id')
-                        ->join('job_collaborators', 'job_collaborators.user_id', 'users.id')
                         ->skip($postnumber)
                         ->take($perpage)
+                        ->orderBy('users.average_rating','desc')
                         ->select('users.*')
-                        ->groupBy('job_collaborators.user_id')
                         ->get();
-
-
-
 
                 } else {
                     $collaborators = DB::table('users')
                         ->join('occupation_user', 'occupation_user.user_id', '=', 'users.id')
                         ->join('occupations', 'occupations.id', '=', 'occupation_user.occupation_id')
                         ->join('categories', 'categories.id', '=', 'occupations.category_id')
-                        // ->where('status', '<>', 1
-                        ->groupBy('users.id')
                         ->skip($postnumber)
                         ->take($perpage)
                         ->select(
@@ -213,7 +196,6 @@ class CollaboratorController extends Controller
                         )
                         ->get();
                 }
-
 
 
                 $collaborators = User::hydrate($collaborators->toArray());
