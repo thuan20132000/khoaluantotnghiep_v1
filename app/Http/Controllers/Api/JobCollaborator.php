@@ -375,15 +375,15 @@ class JobCollaborator extends Controller
 
 
 
-            $rating_number = $collaborator->rating_number | 1;
+            $rating_number = $collaborator->rating_number+1;
             $total_range_review = 0;
             foreach ($collaborator->getReviews() as $value) {
                 # code...
                 $total_range_review = $total_range_review + $value->range;
             }
-           $average_rating = $total_range_review/($rating_number+1);
+           $average_rating = $total_range_review/$rating_number;
 
-           $collaborator->rating_number = $rating_number+1;
+           $collaborator->rating_number = $rating_number;
            $collaborator->average_rating = $average_rating;
            $collaborator->update();
 
