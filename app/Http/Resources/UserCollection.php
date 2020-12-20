@@ -24,7 +24,7 @@ class UserCollection extends JsonResource
                 'phone_number' => $this->phonenumber,
                 'id_card'=>$this->idcard,
                 'address'=>$this->address,
-                'disrict'=>$this->district
+                'district'=>$this->district
 
             ],
             'relationships'=>[
