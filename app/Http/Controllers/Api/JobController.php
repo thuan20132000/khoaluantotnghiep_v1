@@ -356,6 +356,7 @@ class JobController extends Controller
      */
     public function searchJob(Request $request)
     {
+
         try {
             //code...
             $limit = 8;
@@ -377,10 +378,14 @@ class JobController extends Controller
                     ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
                     ->join('users', 'users.id', '=', 'jobs.user_id')
                     ->join('location', 'location.id', '=', 'jobs.location_id')
-                    ->orWhere('jobs.name', 'LIKE', '%' . $query . '%')
-                    ->orWhere('users.name', 'LIKE', '%' . $query . '%')
-                    ->orWhere('occupations.name', 'LIKE', '%' . $query . '%')
-                    ->where('location.district', $district)
+                    ->where([
+                        ['jobs.status', '<>', Job::CONFIRMED],
+                        ['jobs.name','LIKE','%'.$query.'%'],
+                    ])
+                    ->orWhere([
+                        ['occupations.name', 'LIKE', '%' . $query . '%'],
+                        ['jobs.status', '<>', Job::CONFIRMED],
+                    ])
                     ->orderBy('jobs.suggestion_price', $orderByPrice)
                     ->limit($limit)
                     ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
@@ -389,10 +394,14 @@ class JobController extends Controller
                 $filter = DB::table('jobs')
                     ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
                     ->join('users', 'users.id', '=', 'jobs.user_id')
-                    ->orWhere('jobs.name', 'LIKE', '%' . $query . '%')
-                    ->orWhere('users.name', 'LIKE', '%' . $query . '%')
-                    ->orWhere('occupations.name', 'LIKE', '%' . $query . '%')
-                    ->orderBy('jobs.suggestion_price', $orderByPrice)
+                    ->where([
+                        ['jobs.status', '<>', Job::CONFIRMED],
+                        ['jobs.name','LIKE','%'.$query.'%'],
+                    ])
+                    ->orWhere([
+                        ['occupations.name', 'LIKE', '%' . $query . '%'],
+                        ['jobs.status', '<>', Job::CONFIRMED],
+                    ])
                     ->limit($limit)
                     ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
                     ->get();
@@ -401,6 +410,7 @@ class JobController extends Controller
                     ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
                     ->join('users', 'users.id', '=', 'jobs.user_id')
                     ->join('location', 'location.id', '=', 'jobs.location_id')
+                    ->where('jobs.status','<>',Job::CONFIRMED)
                     ->where('location.district', $district)
                     ->orderBy('jobs.suggestion_price', $orderByPrice)
                     ->limit($limit)
@@ -413,16 +423,20 @@ class JobController extends Controller
                 ]);
             }
 
+            $jobs = Job::hydrate($filter->toArray());
+
 
             return response()->json([
                 'status' => true,
-                'data' => $filter,
+                "message"=>"Search Job ",
+                'data' => JobCollection::collection($jobs),
             ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
                 'status' => false,
-                'data' => []
+                "message"=>"No data",
+                'data' => [],
             ]);
         }
     }
