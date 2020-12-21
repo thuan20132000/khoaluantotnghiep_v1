@@ -86,6 +86,4 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('collaborator-search','Api\CollaboratorController@search');
 
 
-
-
 });
