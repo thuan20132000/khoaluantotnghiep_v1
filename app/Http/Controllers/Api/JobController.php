@@ -33,6 +33,7 @@ class JobController extends Controller
         $perpage = 10;
         $postnumber = 0;
         $sortBy = 'desc';
+        $occupations = null;
         if ($request->input('postnumber')) {
             $postnumber = (int) $request->input('postnumber');
         }
@@ -649,4 +650,7 @@ class JobController extends Controller
             ]);
         }
     }
+
+
+
 }
