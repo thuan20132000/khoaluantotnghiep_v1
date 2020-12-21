@@ -30,25 +30,58 @@ class JobController extends Controller
     public function index(Request $request)
     {
         //
-        $per_page = 15;
-        $jobs = Job::where('status', '!=', Job::CONFIRMED)->limit($per_page)->get();
+        $perpage = 10;
+        $postnumber = 0;
         $sortBy = 'desc';
-
+        if ($request->input('postnumber')) {
+            $postnumber = (int) $request->input('postnumber');
+        }
+        if ($request->input('perpage')) {
+            $perpage = (int) $request->input('perpage');
+        }
 
         try {
             //code...
-            if ($request->input('per_page')) {
-                $per_page = (int)$request->input('per_page');
-                $jobs = $jobs->take($per_page);
-            }
-            if ($request->input('sort_by')) {
-                $sortBy = $request->input('sort_by');
-            }
-
 
             if ($request->input('category')) {
                 $category_id = $request->input('category');
-                $jobs =  Category::find($category_id)->jobs->where('status','!=',Job::CONFIRMED);
+                $jobs =  Category::find($category_id)->jobs->where('status','<>',Job::CONFIRMED)->pluck('id');
+
+               // $jobs_category = Job::hydrate($jobs);
+                // $jobs_category->orderBy('created_at','desc');
+              //  dd($jobs->toString);
+                $jobs_category = Job::whereIn('id',$jobs->toArray())
+                ->orderBy('created_at','desc')
+                ->skip($postnumber)
+                ->take($perpage)
+                ->get();
+          //      dd($jobs_category);
+                return response()->json([
+                    "status"=>true,
+                    "message"=>"Get job by category",
+                    "meta" => [
+                        "perpage" => $perpage,
+                        "total" => $jobs_category->count()
+                    ],
+                    "data"=>JobCollection::collection($jobs_category)
+                ]);
+
+
+            }else{
+                $jobs = Job::where('status', '<>', Job::CONFIRMED)
+                ->orderBy('created_at','desc')
+                ->skip($postnumber)
+                ->take($perpage)
+                ->get();
+                return response()->json([
+                    "status"=>true,
+                    "message"=>"Get all Jobs",
+                    "meta" => [
+                        "perpage" => $perpage,
+                        "total" => $jobs->count()
+                    ],
+                    "data"=>JobCollection::collection($jobs)
+                ]);
             }
 
 
@@ -60,7 +93,7 @@ class JobController extends Controller
 
                 $jobs = Job::whereIn('id', $jobs_id_array)
                     ->orderBy('created_at', $sortBy)
-                    ->limit($per_page)
+                    ->limit($perpage)
                     ->get();
             }
 
