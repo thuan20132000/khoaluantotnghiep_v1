@@ -3,7 +3,6 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\URL;
 
 class UserCollection extends JsonResource
 {
@@ -33,7 +32,9 @@ class UserCollection extends JsonResource
                 'occupations'=>$this->occupations,
                 'activity_images'=>$this->images
             ],
-            'reviews'=>$this->getReviews(),
+            'reviews'=>$this->getReviews()
+
+
         ];
     }
 }

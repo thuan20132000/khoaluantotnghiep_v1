@@ -18,12 +18,9 @@ use Illuminate\Support\Facades\DB;
 class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
-
-
     const PUBLISH  = 0;
     const DRAFT = 1;
     const PENDING = 2;
-
 
     /**
      * The attributes that are mass assignable.
@@ -140,46 +137,11 @@ class User extends Authenticatable
                 'users.address',
                 'users.profile_image',
                 'roles.name as role_name',
-                'job_collaborators.range'
             )
             ->get();
 
         return $collaborators_all;
     }
-
-    static function getCollaboratorsNearBy($district,$skip=0,$perpage=10)
-    {
-
-        $collaborators_all = DB::table('users')
-            ->join('role_user', 'role_user.user_id', '=', 'users.id')
-            ->join('roles', 'role_user.role_id', '=', 'roles.id')
-            ->join('job_collaborators','job_collaborators.user_id','=','users.id')
-            ->where('roles.id', '=',Role::COLLABORATOR )
-            ->where('users.status', '=', User::PUBLISH)
-            ->where('users.district','=',$district)
-            ->distinct()
-            ->skip($skip)
-            ->take($perpage)
-            ->select(
-                'users.id',
-                'users.name',
-                'users.email',
-                'users.idcard',
-                'users.phonenumber',
-                'users.address',
-                'users.profile_image',
-                'roles.name as role_name',
-                'job_collaborators.range'
-            )
-            ->get();
-
-        return $collaborators_all;
-    }
-
-
-
-
-
 
 
     public function getOccupationByUserId()
@@ -229,10 +191,10 @@ class User extends Authenticatable
     public function getReviews()
     {
         $reviews = DB::table('job_collaborators')
-            ->join('jobs', 'jobs.id', '=', 'job_collaborators.job_id')
-            ->join('users', 'users.id', '=', 'jobs.user_id')
-            ->where('job_collaborators.user_id', $this->id)
-            ->where('job_collaborators.status', JobCollaborator::CONFIRMED)
+            ->join('jobs','jobs.id','=','job_collaborators.job_id')
+            ->join('users','users.id','=','jobs.user_id')
+            ->where('job_collaborators.user_id',$this->id)
+            ->where('job_collaborators.status',JobCollaborator::CONFIRMED)
             ->select(
                 'users.name as author_name',
                 'users.profile_image as author_image',

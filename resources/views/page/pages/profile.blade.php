@@ -99,7 +99,7 @@
 }
 </style>
 <div class="container emp-profile">
-            <form method="post">
+           
                 <div class="row">
                     <div class="col-md-4">
                         <div class="profile-img">
@@ -128,7 +128,9 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/>
+                        <form action="/editprofile" method="get">
+                        <input type="submit"  class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/>
+                    </form>
                     </div>
                 </div>
                 
@@ -180,5 +182,5 @@
                         </div>
                     </div>
                 </div>
-            </form>           
+                
         </div>

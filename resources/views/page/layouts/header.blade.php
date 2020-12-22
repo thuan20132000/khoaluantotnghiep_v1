@@ -12,8 +12,8 @@
         </div>
         <div class="form-group search col-lg-3">
           <form class="form-inline" action="/search" method="get">
-                            <input class="form-control mr-sm-2" type="search" name="key" placeholder="Nhập tên sản phẩm ..." aria-label="Search" required>
-                            <button class="btn my-2 my-sm-0" type="submit">Tìm kiếm</button>
+                            <input class="form-control mr-sm-2" type="search" name="key" placeholder="Nhập tên việc làm ..." aria-label="Search" required>
+                            <button class="btn  my-2 my-sm-0" type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
                         </form>
             </div>
 
@@ -26,8 +26,8 @@
                 <li><a href="user">Người Tìm Việc</a></li>
                 <li> <a>Nhà Tuyển Dụng</a>
                   <ul>
-                    <li><a href="postjob">Đăng Tin</a></li>
-                    <li><a href="it_service_detail.html">Quản Lý Tin</a></li>
+                    <li><a href="postjob">Đăng Việc Làm</a></li>
+                    
                   </ul>
                 </li>
                 <li> <a href="it_shop.html">Việc Làm</a>
@@ -48,9 +48,10 @@
                             <a href="/profile">{{Auth::user()->email}}</a>
                             @endif
                         </li>
-                        <li><a href="{{asset('vieclam')}}">Quản Lý Việc Làm</a></li>
-                        <li><a href="{{asset('shoppingcart')}}">Quản lý danh sách</a></li>
-                        <li>
+                        <li><a href="{{ route('getAuhorJobByStatus', ['author_id'=>Auth::user()->id,'status'=>2]) }}">Đang tuỷen</a></li>
+                        <li><a href="{{ route('getAuhorJobByStatus', ['author_id'=>Auth::user()->id,'status'=>3]) }}">Cho chap nhan</a></li>
+                        <li><a href="{{ route('getAuhorJobByStatus', ['author_id'=>Auth::user()->id,'status'=>4]) }}">Đã xác nhận</a></li>
+                        <li>    
                                                     <a href="/logout">Log out</a>
 
                         </li>
