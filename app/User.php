@@ -88,6 +88,29 @@ class User extends Authenticatable
         return $collaborators_all;
     }
 
+    static function getCustomer()
+    {
+        $collaborators_all = DB::table('users')
+            ->join('role_user', 'role_user.user_id', '=', 'users.id')
+            ->join('roles', 'role_user.role_id', '=', 'roles.id')
+            // ->join('occupation_user','occupation_user.user_id','=','users.id')
+            // ->join('occupations','occupations.id','=','occupation_user.occupation_id')
+            ->where('roles.name', '=', 'isCustomer')
+            ->where('status', '=', User::PUBLISH)
+            ->select(
+                'users.id',
+                'users.name',
+                'users.email',
+                'users.idcard',
+                'users.phonenumber',
+                'users.address',
+                'users.profile_image',
+                'roles.name as role_name',
+            )
+            ->get();
+
+        return $collaborators_all;
+    }
 
     static function getCollaboratorsOrderBy($by,$order,$skip=0,$perpage=10)
     {

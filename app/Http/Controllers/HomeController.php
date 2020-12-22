@@ -17,6 +17,7 @@ class HomeController extends Controller
 {
     
     public function index()
+
     {   
         $categories = Category::all();
         $occupation = Occupation::all();
