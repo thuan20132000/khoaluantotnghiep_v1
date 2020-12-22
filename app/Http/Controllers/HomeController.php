@@ -24,22 +24,7 @@ class HomeController extends Controller
         $occupation = Occupation::all();
         $jobs = Job::all();
         $user = Auth::user();
-        // foreach($jobs as $job) {
-        //     $job_images = DB::table('images')->where('job_id',$job->id)->get();
-        //     dd($job_images);
-        //     $job_images_array = $job_images->pluck('image_url')->toArray();
-        // }
-       
-        // $job_images = DB::table('images');
-        
-    
-     
-        
-        // $job_images_array = $job_images->pluck('image_url')->toArray();
-       
-        // $candidates = $job->candidates();
 
-        //dd($jobs);
 
         return view('page.pages.index',['categories'=>$categories,'occupation'=>$occupation,'jobs'=>$jobs,'user'=>$user]);
     }
@@ -456,7 +441,6 @@ public function posteditProfile(Request $request)
         $job_images = DB::table('images')->where('job_id',$job->id)->get();
         $job_images_array = $job_images->pluck('image_url')->toArray();
         $candidates = $job->candidates();
-        
         return view('page.pages.chitietcongviec',[
             'job'=>$job,
             'job_images_array'=>$job_images_array,

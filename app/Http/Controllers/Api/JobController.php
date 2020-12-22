@@ -30,25 +30,59 @@ class JobController extends Controller
     public function index(Request $request)
     {
         //
-        $per_page = 15;
-        $jobs = Job::where('status', '!=', Job::CONFIRMED)->limit($per_page)->get();
+        $perpage = 10;
+        $postnumber = 0;
         $sortBy = 'desc';
-
+        $occupations = null;
+        if ($request->input('postnumber')) {
+            $postnumber = (int) $request->input('postnumber');
+        }
+        if ($request->input('perpage')) {
+            $perpage = (int) $request->input('perpage');
+        }
 
         try {
             //code...
-            if ($request->input('per_page')) {
-                $per_page = (int)$request->input('per_page');
-                $jobs = $jobs->take($per_page);
-            }
-            if ($request->input('sort_by')) {
-                $sortBy = $request->input('sort_by');
-            }
-
 
             if ($request->input('category')) {
                 $category_id = $request->input('category');
-                $jobs =  Category::find($category_id)->jobs->where('status','!=',Job::CONFIRMED);
+                $jobs =  Category::find($category_id)->jobs->where('status','<>',Job::CONFIRMED)->pluck('id');
+
+               // $jobs_category = Job::hydrate($jobs);
+                // $jobs_category->orderBy('created_at','desc');
+              //  dd($jobs->toString);
+                $jobs_category = Job::whereIn('id',$jobs->toArray())
+                ->orderBy('created_at','desc')
+                ->skip($postnumber)
+                ->take($perpage)
+                ->get();
+          //      dd($jobs_category);
+                return response()->json([
+                    "status"=>true,
+                    "message"=>"Get job by category",
+                    "meta" => [
+                        "perpage" => $perpage,
+                        "total" => $jobs_category->count()
+                    ],
+                    "data"=>JobCollection::collection($jobs_category)
+                ]);
+
+
+            }else{
+                $jobs = Job::where('status', '<>', Job::CONFIRMED)
+                ->orderBy('created_at','desc')
+                ->skip($postnumber)
+                ->take($perpage)
+                ->get();
+                return response()->json([
+                    "status"=>true,
+                    "message"=>"Get all Jobs",
+                    "meta" => [
+                        "perpage" => $perpage,
+                        "total" => $jobs->count()
+                    ],
+                    "data"=>JobCollection::collection($jobs)
+                ]);
             }
 
 
@@ -60,7 +94,7 @@ class JobController extends Controller
 
                 $jobs = Job::whereIn('id', $jobs_id_array)
                     ->orderBy('created_at', $sortBy)
-                    ->limit($per_page)
+                    ->limit($perpage)
                     ->get();
             }
 
@@ -356,6 +390,7 @@ class JobController extends Controller
      */
     public function searchJob(Request $request)
     {
+
         try {
             //code...
             $limit = 8;
@@ -377,10 +412,14 @@ class JobController extends Controller
                     ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
                     ->join('users', 'users.id', '=', 'jobs.user_id')
                     ->join('location', 'location.id', '=', 'jobs.location_id')
-                    ->orWhere('jobs.name', 'LIKE', '%' . $query . '%')
-                    ->orWhere('users.name', 'LIKE', '%' . $query . '%')
-                    ->orWhere('occupations.name', 'LIKE', '%' . $query . '%')
-                    ->where('location.district', $district)
+                    ->where([
+                        ['jobs.status', '<>', Job::CONFIRMED],
+                        ['jobs.name','LIKE','%'.$query.'%'],
+                    ])
+                    ->orWhere([
+                        ['occupations.name', 'LIKE', '%' . $query . '%'],
+                        ['jobs.status', '<>', Job::CONFIRMED],
+                    ])
                     ->orderBy('jobs.suggestion_price', $orderByPrice)
                     ->limit($limit)
                     ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
@@ -389,10 +428,14 @@ class JobController extends Controller
                 $filter = DB::table('jobs')
                     ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
                     ->join('users', 'users.id', '=', 'jobs.user_id')
-                    ->orWhere('jobs.name', 'LIKE', '%' . $query . '%')
-                    ->orWhere('users.name', 'LIKE', '%' . $query . '%')
-                    ->orWhere('occupations.name', 'LIKE', '%' . $query . '%')
-                    ->orderBy('jobs.suggestion_price', $orderByPrice)
+                    ->where([
+                        ['jobs.status', '<>', Job::CONFIRMED],
+                        ['jobs.name','LIKE','%'.$query.'%'],
+                    ])
+                    ->orWhere([
+                        ['occupations.name', 'LIKE', '%' . $query . '%'],
+                        ['jobs.status', '<>', Job::CONFIRMED],
+                    ])
                     ->limit($limit)
                     ->select('users.name as author', 'occupations.name as occupation_name', 'jobs.*')
                     ->get();
@@ -401,6 +444,7 @@ class JobController extends Controller
                     ->join('occupations', 'occupations.id', '=', 'jobs.occupation_id')
                     ->join('users', 'users.id', '=', 'jobs.user_id')
                     ->join('location', 'location.id', '=', 'jobs.location_id')
+                    ->where('jobs.status','<>',Job::CONFIRMED)
                     ->where('location.district', $district)
                     ->orderBy('jobs.suggestion_price', $orderByPrice)
                     ->limit($limit)
@@ -413,16 +457,20 @@ class JobController extends Controller
                 ]);
             }
 
+            $jobs = Job::hydrate($filter->toArray());
+
 
             return response()->json([
                 'status' => true,
-                'data' => $filter,
+                "message"=>"Search Job ",
+                'data' => JobCollection::collection($jobs),
             ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
                 'status' => false,
-                'data' => []
+                "message"=>"No data",
+                'data' => [],
             ]);
         }
     }
@@ -602,4 +650,7 @@ class JobController extends Controller
             ]);
         }
     }
+
+
+
 }

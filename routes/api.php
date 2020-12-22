@@ -62,7 +62,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('jobcollaborator/{user_id}/status/{status}','Api\JobCollaborator@getJobCollaboratorStatus');
 
     // Route::get('job-collaborator/{author_id}/status/{status}','Api\JobCollaborator@getJobCollaboratorStatusByAuthor');
-    Route::get('job-collaborator-confirm','Api\JobCollaborator@confirmJobCollaborator');
+    // Route::get('job-collaborator-confirm','Api\JobCollaborator@confirmJobCollaborator');
 
     Route::put('user/{id}', 'Api\UserController@update');
     Route::get('user/{id}','Api\UserController@show');
@@ -84,8 +84,6 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::get('job-search','Api\JobController@searchJob');
     Route::get('collaborator-search','Api\CollaboratorController@search');
-
-
 
 
 });
