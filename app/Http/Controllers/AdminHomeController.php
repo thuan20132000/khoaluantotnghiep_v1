@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\JobCollection;
 use App\Model\Job;
 use App\Model\JobCollaborator;
 use App\User;
 use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class AdminHomeController extends Controller
 {
-    /**
+    //
+
+     /**
      * Create a new controller instance.
      *
      * @return void
@@ -20,14 +21,8 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
-
 
         $colaborator_total = User::getCollaborators()->toArray();
         $customer_total = User::getCustomer()->toArray();
@@ -59,25 +54,4 @@ class HomeController extends Controller
             'success_job_collaborator_number'=>$success_job_collaborator_number
         ]);
     }
-
-
-
-    public function checkout()
-    {
-        return view('page.pages.checkout');
-    }
-    public function shoppingcart()
-    {
-        return view('page.pages.shoppingcart');
-    }
-    public function shop_detail()
-    {
-        return view('page.pages.shop_detail');
-    }
-    public function shoplist()
-    {
-        return view('page.pages.shoplist');
-    }
-
-
 }
