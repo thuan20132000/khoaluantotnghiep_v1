@@ -49,10 +49,6 @@ class HomeController extends Controller
 
         $collaborators = User::hydrate($colaborator_total);
         $customers = User::hydrate($customer_total);
-        // dd($jobs_total);
-
-        // dd(User::hydrate($colaborator_total));
-        // dd(count($colaborator_total));
 
         return view('admin.index',[
             'jobs_total'=>$jobs_total,
