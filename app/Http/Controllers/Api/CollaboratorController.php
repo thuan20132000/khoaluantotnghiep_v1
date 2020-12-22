@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\URL;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class CollaboratorController extends Controller
 {
@@ -38,7 +41,6 @@ class CollaboratorController extends Controller
             $message_response = '';
 
             $sortByTopRating = false;
-
 
             if ($request->input('postnumber')) {
                 $postnumber = (int) $request->input('postnumber');
@@ -194,13 +196,22 @@ class CollaboratorController extends Controller
 
             return response()->json([
                 'status' => true,
-                'data' => []
+                'message' => $message_response,
+                'data' => UserCollection::collection($collaborators),
+                'links' => [
+                    "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
+                ],
+                "meta" => [
+                    "perpage" => $perpage,
+                    "total" => $collaborators->count()
+                ]
             ]);
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             return response()->json([
-                'status' => true,
-                'data' => $th
+                'status' => false,
+                'data' => [],
+                'message' => "ERROR : " . $th
             ]);
         }
     }
@@ -394,7 +405,7 @@ class CollaboratorController extends Controller
 
             $collaborator_ids = $collaborators->pluck('id')->all();
 
-            $collaborators = User::whereIn('id',$collaborator_ids)->get();
+            $collaborators = User::whereIn('id', $collaborator_ids)->get();
 
             $collaborator_collection = UserCollection::collection($collaborators);
 
