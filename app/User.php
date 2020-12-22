@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\DB;
 class User extends Authenticatable
 {
     use Notifiable, HasApiTokens;
+    const PUBLISH  = 0;
+    const DRAFT = 1;
+    const PENDING = 2;
 
     /**
      * The attributes that are mass assignable.
