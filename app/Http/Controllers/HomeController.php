@@ -22,7 +22,7 @@ class HomeController extends Controller
     {   
         $categories = Category::all();
         $occupation = Occupation::all();
-        $jobs = Job::all();
+        $jobs = Job::where('status','<>',Job::CONFIRMED)->get();
         $user = Auth::user();
 
 
@@ -85,7 +85,7 @@ class HomeController extends Controller
        $check = Auth::attempt(['email' => $request->email, 'password' => $request->password]);
    
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect('/home');
+            return redirect('/');
         } else {
             return back()->with('errorLogin', 'Đăng nhập không thành công');;
         }
@@ -430,17 +430,19 @@ public function posteditProfile(Request $request)
     public function getAuthorJobByStatus($author_id,$status)
     {
         $user_pending_jobs = Job::where('user_id', $author_id)
-        ->where('status', Job::PENDING)
+        ->where('status',$status)
         ->orderBy('created_at','desc')  
         ->get();
         // dd($user_pending_jobs);
         return view('page.pages.quanlyvieclam',['jobs'=>$user_pending_jobs]);
     }
-    public function chitietcongviec(Job $job){
+    public function chitietcongviec($job_id){
     
+        $job = Job::where('id',$job_id)->first();
         $job_images = DB::table('images')->where('job_id',$job->id)->get();
         $job_images_array = $job_images->pluck('image_url')->toArray();
         $candidates = $job->candidates();
+        // dd($candidates);
         return view('page.pages.chitietcongviec',[
             'job'=>$job,
             'job_images_array'=>$job_images_array,

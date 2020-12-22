@@ -36,6 +36,16 @@
 <div class="site-section bg-light">
   <div class="container">
     <div class="row">
+      @if(session()->has('success'))
+      <div class="alert alert-success" >
+          {{ session()->get('success') }}
+      </div>
+      @endif
+      @if(session()->has('failed'))
+      <div class="alert alert-success" >
+          {{ session()->get('failed') }}
+      </div>
+      @endif
    @foreach ($job as $jb)
        
    
@@ -70,12 +80,9 @@
         
       
           
-          <h3>Giá công việc : {{$jb->suggestion_price}}</h3>
+          <h3>Giá công việc : {{$jb->suggestion_price}}VNĐ</h3>
           <h3>Mô tả công việc: {{$jb->description}}</h3>
-          <p>Ducimus odio, fugiat pariatur. Corporis nobis perferendis voluptatum nostrum nesciunt, voluptates pariatur architecto consequatur! Praesentium dicta enim, laboriosam natus doloribus corrupti in sequi perferendis, cupiditate perspiciatis, porro animi sed impedit.</p>
-          <p>Illum possimus, enim eaque recusandae earum omnis tempore suscipit sapiente voluptas nam quia dicta, repellendus incidunt dolor dolores nemo laboriosam, quasi nulla deserunt neque est ipsam velit cumque. Quos, ipsum!</p>
-          <p>Dignissimos ipsa quibusdam id qui maiores magnam, nesciunt? Voluptatibus nulla quas itaque nostrum necessitatibus repudiandae quaerat facere, amet aperiam iste aspernatur ratione cupiditate est voluptates non. Suscipit corporis, soluta neque.</p>
-          <p>Pariatur itaque reiciendis consectetur, deserunt quam adipisci odio doloribus voluptatem laboriosam magni ut repellat tempore? Minus sit officia impedit veritatis reiciendis debitis iure, porro in quaerat inventore nisi sequi quos!</p>
+
 
           
           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter-{{$jb->id}}">

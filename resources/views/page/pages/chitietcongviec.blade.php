@@ -80,7 +80,7 @@
                                         <tr>
                                             <td>{{ $candidate->id }}</td>
                                             <td>
-                                                <a href="{{ route('chitietcongviec    ', $candidate->id) }}">{{ $candidate->name }}</a>
+                                                <a href="{{ route('chitietcongviec', $candidate->id) }}">{{ $candidate->name }}</a>
                                             </td>
                                             <td>{{ $candidate->email }}</td>
                                             <td>{{ $candidate->phonenumber }}</td>

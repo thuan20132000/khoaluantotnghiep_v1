@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 
-Route::get('/home', 'HomeController@index');
+Route::get('/', 'HomeController@index');
 Route::get('checkout','HomeController@checkout');
 Route::get('jobsingle/{id}','HomeController@jobsingle');
 Route::get('listJob','HomeController@listJob');
@@ -88,4 +88,4 @@ Route::post('posteditprofile','HomeController@posteditProfile');
 Route::get('collaborator/{collaborator_id}/job/status/{status}','HomeController@getCollaboratorJobByStatus')->name('getCollaboratorJobByStatus');
 Route::get('author/{author_id}/job/status/{status}','HomeController@getAuthorJobByStatus')->name('getAuhorJobByStatus');
 
-Route::get('chitietcongviec','HomeController@chitietcongviec')->name('chitietcongviec');
+Route::get('chitietcongviec/{job_id}','HomeController@chitietcongviec')->name('chitietcongviec');

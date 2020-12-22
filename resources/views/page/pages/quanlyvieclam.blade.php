@@ -86,10 +86,19 @@
 
                       </td>
                       <td>
-                       
-                          <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('chitietcongviec', $job->id) }}">
+                       @if($job->status == 2)
+                          <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('chitietcongviec', ['job_id'=>$job->id]) }}">
                               <i class="fas fa-edit"></i> Chi tiết công việc
                           </a>
+                        @endif
+                        @if($job->status == 3)
+                        
+                          <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('chitietcongviec', ['job_id'=>$job->id]) }}">
+                            <i class="fas fa-edit"></i> Xác Nhận
+                        @endif
+                        
+                        
+                        
                           <a class="btn btn-block bg-gradient-danger btn-xs" onclick="document.getElementById(`job-{{$job->id}}`).submit()">
                               <i class="fas fa-trash"></i> Delete
                               <form action="{{ route('job.destroy',$job->id) }}" method="post" hidden id="job-{{$job->id}}">
