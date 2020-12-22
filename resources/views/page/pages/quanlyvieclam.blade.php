@@ -1,40 +1,123 @@
 @extends('page.layouts.master')
 
 @section('content')
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        
+          <!-- /.card-header -->
+          <div class="card-body">
+            <table id="example2" class="table table-bordered table-hover">
+              <thead>
+              <tr>
+                  <th>
+                      <input type="checkbox" id="job-selectAllCheckbox" >
+                  </th>
+                  <th>ID</th>
+                  <th>TITLE</th>
+                  <th>DESCRIPTION</th>
+                  <th>IMAGES</th>
+                  <th>ADDRESS</th>
+                  <th>PRICE</th>
+                  <th>CUSTOMER</th>
+                  <th>FIELD</th>
+                  <th>STATUS</th>
+                  <th>OPERATIONS</th>
+              </tr>
+              </thead>
+              <tbody>
 
-  
-  <div class="container">
-  <h2>CustomerJoblist</h2>
-  <br>
-  <!-- Nav pills -->
-  <ul class="nav nav-pills" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" data-toggle="pill" href="#home">Đang Tuyển</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="pill" href="#menu1">Chờ Xác Nhận</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="pill" href="#menu2">Đã Xác Nhận</a>
-    </li>
-  </ul>
+              @foreach ($jobs as $job)
+                  <tr>
+                      <td>
+                      <input type="checkbox" name="job[]" value="{{$job->id}}" >
+                      </td>
+                      <td>{{$job->id}}</td>
+                      <td>{{$job->name}}</td>
+                      <td style="max-width: 200px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;">
+                          {{$job->description}}
+                      </td>
 
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <div id="home" class="container tab-pane active"><br>
-      <h3>Đang Tuyển</h3></h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                      <td style="max-width: 220px">
+                          @foreach ($job->images as $image)
+                          <img src="{{ $image->image_url }}" width="50px" height="50px" alt="" srcset="">
+
+                          @endforeach
+                      </td>
+
+                      <td>
+                          <p>{{$job->location->address}}</p>
+                          <p>{{$job->location->street}}</p>
+                      </td>
+                      <td>
+                          {{$job->suggestion_price}}
+                      </td>
+                      <td>
+                          <a href="{{$job->user->id }}" class="btn btn-block bg-gradient-info btn-xs">{{$job->user->name}}</a>
+                      </td>
+                      <td>
+                          <a href="{{$job->occupation->id }}" class="btn btn-block bg-gradient-info btn-sm">{{$job->occupation->name}}</a>
+                      </td>
+                      {{-- <td>
+                          @foreach ($job->roles as $role)
+                              <button type="button" class="btn btn-block btn-outline-primary btn-sm">{{$role->name}}</button>
+                          @endforeach
+                      </td> --}}
+                      <td>
+                          @if ($job->status == 0)
+                              <button type="text" class="btn btn-block bg-gradient-success btn-xs">Published</button>
+                          @endif
+
+                          @if ($job->status == 1)
+                          <button type="text" class="btn btn-block bg-gradient-secondary btn-xs">Draft</button>
+                          @endif
+
+                          @if ($job->status == 2)
+                          <button type="text" class="btn btn-block bg-gradient-danger btn-xs">Pending</button>
+                          @endif
+
+                          @if ($job->status == 3)
+                          <button type="text" class="btn btn-block bg-gradient-info btn-xs">Approved</button>
+                          @endif
+                          @if ($job->status == 4)
+                          <button type="text" class="btn btn-block bg-gradient-warning btn-xs">Confirmed</button>
+                          @endif
+
+                      </td>
+                      <td>
+                       
+                          <a class="btn btn-block bg-gradient-info btn-xs" href="{{ route('chitietcongviec', $job->id) }}">
+                              <i class="fas fa-edit"></i> Chi tiết công việc
+                          </a>
+                          <a class="btn btn-block bg-gradient-danger btn-xs" onclick="document.getElementById(`job-{{$job->id}}`).submit()">
+                              <i class="fas fa-trash"></i> Delete
+                              <form action="{{ route('job.destroy',$job->id) }}" method="post" hidden id="job-{{$job->id}}">
+                                  @csrf
+                                  @method('DELETE')
+                              </form>
+                          </a>
+
+                      </td>
+                  </tr>
+              @endforeach
+
+
+              </tbody>
+
+            </table>
+          </div>
+          <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+        <!-- /.card -->
+      </div>
+      <!-- /.col -->
     </div>
-    <div id="menu1" class="container tab-pane fade"><br>
-      <h3>Chờ Xác Nhận</h3>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div id="menu2" class="container tab-pane fade"><br>
-      <h3>Đã Xác Nha</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-    </div>
+    <!-- /.row -->
   </div>
-</div>
-
+  <!-- /.container-fluid -->
+</section>
+  
 @endsection
-

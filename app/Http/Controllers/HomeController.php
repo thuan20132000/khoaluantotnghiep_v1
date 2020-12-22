@@ -12,7 +12,9 @@ use Hash;
 use App\Model\Location;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use App\Http\Controllers\Role;
+use App\Role;
+use App\Http\Resources\CollaboratorJobApplyingCollection;
+
 class HomeController extends Controller
 {
     
@@ -21,6 +23,7 @@ class HomeController extends Controller
         $categories = Category::all();
         $occupation = Occupation::all();
         $jobs = Job::all();
+        $user = Auth::user();
         // foreach($jobs as $job) {
         //     $job_images = DB::table('images')->where('job_id',$job->id)->get();
         //     dd($job_images);
@@ -38,7 +41,7 @@ class HomeController extends Controller
 
         //dd($jobs);
 
-        return view('page.pages.index',['categories'=>$categories,'occupation'=>$occupation,'jobs'=>$jobs]);
+        return view('page.pages.index',['categories'=>$categories,'occupation'=>$occupation,'jobs'=>$jobs,'user'=>$user]);
     }
 
 
@@ -47,9 +50,12 @@ class HomeController extends Controller
     {
         return view('page.pages.checkout');
     }
-    public function shoppingcart()
+    public function jobsingle($id)
     {
-        return view('page.pages.shoppingcart');
+        
+        $job = Job::where('id',$id)->get();
+        return view('page.pages.jobsingle',['job'=>$job]);
+        
     }
     public function jobdetail()
     {
@@ -128,20 +134,34 @@ class HomeController extends Controller
                 'password.max' => 'Mật khẩu chứa từ 3-32 kí tự',
             
             ]
-        );                                                                                                                          
+        );       
+        
+        $images_thumbnail_array = Str::of($request->filepaths)->explode(',');
+                                                                                                                   
         try {
             //code...
-           // dd($request->all());
+            // dd($request->all());
+            DB::beginTransaction();
             $user = new User();
             $user->email = $request->email;
             $user->password = Hash::make($request->password);
             $user->name = $request->name;
             $user->address = $request->address;
             $user->phonenumber = $request->phonenumber;
-            $user-> profile_image = $request -> profile_image ;
+            
             $user->save();
+            
+            $user_id = $user->id;
+            
+            
             $user->roles()->attach($request->role);
-            // dd($user);
+            $occupations = $request->occupations;
+            if($occupations && count($occupations) > 0){
+                $user->occupations()->attach($occupations);
+            }
+
+            DB::commit();
+            
 
         } catch (\Throwable $th) {
             //throw $th;
@@ -157,6 +177,7 @@ class HomeController extends Controller
     }
 
     public function getRegister(){
+
         return view ('page.pages.dangki');
     }
     
@@ -200,6 +221,7 @@ class HomeController extends Controller
         );  
                                                                                                                             
         try {
+            
              
              DB::beginTransaction();
              
@@ -263,6 +285,11 @@ class HomeController extends Controller
 
     
     // dd($request->all());
+        if(!$request->user){
+            return redirect()->back()->with('failed','Bạn Cần Phải Đăng Nhập Với Vai Trò Người Tìm Việc Để Ứng Tuyển!');
+
+        }
+
     $validated = $request->validate([
         'price'=>'required',
         'user'=>'required',
@@ -275,13 +302,21 @@ class HomeController extends Controller
 
     try {
         //code...
+        $user = User::where ('id',$request->user)->first();
+        $user_role = $user->roles;
+        
+        if($request->user == null || $user_role[0]->id != Role::COLLABORATOR){
+    
+            return redirect()->back()->with('failed','Bạn Cần Phải Đăng Nhập Với Vai Trò Người Tìm Việc Để Ứng Tuyển!');
+        }
         $job_id = $request->job;
+        // dd($request->all());
         $collaborator_id = $request->user;
 
         $check_duplicate = JobCollaborator::where('job_id',$job_id)
                             ->where('user_id',$collaborator_id)->count();
         if($check_duplicate > 0){
-            return redirect()->back()->with('failed','Collaborator was exists in this job!');
+            return redirect()->back()->with('failed','Công việc này đã tồn tại!');
         }
 
 
@@ -290,17 +325,145 @@ class HomeController extends Controller
         $job_colaborator->user_id = $request->user;
         $job_colaborator->expected_price = $request->price;
         $job_colaborator->job_id = $request->job;
-        $job_colaborator->status = 0;
+        $job_colaborator->status = JobCollaborator::PENDING;
         
         
         $job_colaborator->save();
 
-        return redirect()->route( )->with('success','Create Successfully');
+        return redirect()->back()->with('success','Ứng tuyển thành công');
     } catch (\Throwable $th) {
         throw $th;
-        return redirect()->back()->with('failed','Create failed!');
+        return redirect()->back()->with('failed','Ứng tuyển thất bại!');
 
     }
+   
+}
+public function getJobCollaborator($user_id,$status,Request $request)
+{
+    // dd($request->all());
+    try {
+        //code...
+        $per_page = 15;
+        if ($request->input('per_page')) {
+            $per_page = (int)$request->input('per_page');
+        }
+        
+        $collaborator_jobs = ModelJobCollaborator::where('user_id',$user_id)
+                                            ->where("status",$status)
+                                            ->orderBy('created_at','desc')
+                                            ->limit($per_page)
+                                            ->get();
+        // $collaborator_jobs->user_id = $request->user_id;
+        // $collaborator_jobs->status = ModelJobCollaborator::PENDING;
+        // return new JobCollaboratorResource($job_collaborator);
+                                            return redirect()->back()->with('success','Create Successfully');
+                                        } catch (\Throwable $th) {
+                                            throw $th;
+                                            return redirect()->back()->with('failed','Create failed!');
+                                    
+                                        }
+}
+
+public function posteditProfile(Request $request)
+{
+    //
+    try {
+        //code...
+        $this->validate(
+            $request,
+             [
+            'name' => 'required',
+            'phonenumber' => 'required',
+            'email' =>'required',
+            'address' => 'required',
+
+
+        ], [
+            'name.required' => 'Mời bạn nhập tên',
+            'phonenumber.required' => 'Mời bạn nhập số điện thoại',
+            
+            'address' => 'Mời bạn nhập địa chỉ'
+        ]);
+        DB::beginTransaction();
+        // dd($user);
+
+        $user = Auth::user();
+        $user->name = $request->name;
+        $user->phonenumber = $request->phonenumber;
+        $user->email = $request->email;
+        $user->address = $request->address;
+        $user->province = $request->province ?  $request->province : $user->province;
+        $user->district = $request->district ? $request->district : $user->district;
+        $user->subdistrict = $request->subdistrict ? $request->subdistrict : $user->subdistrict;
+        // dd($user);
+        $user->update();
+        $user_id = $user->id;
+        $images_thumbnail_array = Str::of($request->filepaths)->explode(',');
+            if($images_thumbnail_array && count($images_thumbnail_array) > 0){
+                foreach ($images_thumbnail_array as $key => $value) {
+                    # code...
+                    if($value){
+                        DB::table('images')->insert(
+                            ['image_url'=>$value,'user_id'=>$user_id]
+                        );
+                    }
+                }
+            }
+
+            DB::commit();
+
+        return redirect()->back()->with('Thành công','Sửa thành công');
+    } catch (\Throwable $th) {
+        throw $th;
+        return redirect()->back()->with('thất bại','Sửa thất bại!');
+
 
 }
+}
+    public function geteditprofile(){
+        $user = Auth::user();
+        return view('page.pages.editProfile',['user'=>$user]);
+    }
+
+
+    public function getCollaboratorJobByStatus($collaborator_id,$status,Request $request)
+    {
+
+     //   $author_id = $request->author_id;
+     
+     
+     $job_collaborator = JobCollaborator::where('user_id', $collaborator_id)
+     ->where("status", $status)
+     ->orderBy('created_at', 'desc')
+     ->get();
+
+        return redirect()->back();
+    }
+
+
+
+    public function getAuthorJobByStatus($author_id,$status)
+    {
+        $user_pending_jobs = Job::where('user_id', $author_id)
+        ->where('status', Job::PENDING)
+        ->orderBy('created_at','desc')  
+        ->get();
+        // dd($user_pending_jobs);
+        return view('page.pages.quanlyvieclam',['jobs'=>$user_pending_jobs]);
+    }
+    public function chitietcongviec(Job $job){
+    
+        $job_images = DB::table('images')->where('job_id',$job->id)->get();
+        $job_images_array = $job_images->pluck('image_url')->toArray();
+        $candidates = $job->candidates();
+        
+        return view('page.pages.chitietcongviec',[
+            'job'=>$job,
+            'job_images_array'=>$job_images_array,
+            'candidates'=>$candidates,
+            
+
+        ]);
+            
+    }
 }

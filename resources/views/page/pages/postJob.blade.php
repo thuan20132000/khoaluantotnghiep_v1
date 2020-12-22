@@ -28,10 +28,10 @@
         <div class="full">
           <div class="title-holder">
             <div class="title-holder-cell text-left">
-              <h1 class="page-title">POST A JOB</h1>
+              <h1 class="page-title">ĐĂNG VIỆC LÀM</h1>
               <ol class="breadcrumb">
-                <li><a href="index.html">Home</a></li>
-                <li class="active">Post a Job</li>
+                <li><a href="/">Trang chủ</a></li>
+                <li class="active">Đăng việc làm</li>
               </ol>
             </div>
           </div>

@@ -5,6 +5,9 @@
 @section('content')
 
 
+
+
+
 <div id="inner_banner" class="section inner_banner_section">
   <div class="container">
     <div class="row">
@@ -25,23 +28,20 @@
   </div>
 </div>
 
+        
 
-<div class="container">
-        <div>
-            @if(session()->has('success'))
-            <div class="alert alert-success" >
-                {{ session()->get('success') }}
-            </div>
-            @endif
-            @if(session()->has('failed'))
-            <div class="alert alert-success" >
-                {{ session()->get('failed') }}
-            </div>
-            @endif
-
-        </div>
 <div class="section padding_layout_1 product_list_main">
   <div class="container">
+    @if(session()->has('success'))
+  <div class="alert alert-success" >
+      {{ session()->get('success') }}
+  </div>
+  @endif
+  @if(session()->has('failed'))
+  <div class="alert alert-success" >
+      {{ session()->get('failed') }}
+  </div>
+  @endif
     <div class="row">
       <div class="col-md-9">
         <div class="row">
@@ -60,11 +60,19 @@
                 </div>
                
 
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter-{{$jb->id}}">
   Ứng Tuyển Vị Trí
 </button>
    
-<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+
+                <div class="product_price">
+                  <h4>Gía đưa ra:{{$jb->suggestion_price}}</h4>
+                </div>
+              </div>
+              <div class="blog_feature_cont">
+            <p>{{$jb->description}}</p>
+          </div>
+           <div class="modal fade" id="exampleModalCenter-{{$jb->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
   
     <div class="modal-content">
@@ -79,36 +87,37 @@
       <div class="modal-body">
 
       <label for="quantity"><h4>Giá đưa ra</h4></label>
-                        <input type="number" name="price" min="1" value="1" class="form-control">
-                                        <input type="text" name="user"  hidden value={{Auth::user()->id}} class="form-control">
-                                        <input type="text" name="job" hidden value={{$jb->id}} class="form-control">
+                        <input type="number" name="price" type="text" class="form-control"/>
+                                        <input type="text" name="user"  hidden value={{Auth::user()->id?Auth::user()->id:null}} class="form-control"/>
+                                        
+                                        <input type="text" name="job"  hidden value={{$jb->id}} class="form-control"/>
+                                        
                         <label for="inputDescription"><h4>Lời Nhắn</h4></label>
                             <textarea id="inputDescription" name="description" class="form-control" rows="4">
                             </textarea>
       </div>
       <div class="modal-footer">
 
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-secondary" >
+        Ung Tuyển
+        </button>
      
-        <button type="submit" class="btn btn-primary">Ứng tuyển</button>
-        </form>
       </div>
+      </form>
+     
     </div>
   </div>
-</div>
-                <div class="product_price">
-                  <h4>Gía đưa ra:{{$jb->suggestion_price}}</h4>
-                </div>
-              </div>
-              <div class="blog_feature_cont">
-            <p>{{$jb->description}}</p>
-          </div>
             </div>
+
+
+            
           </div>
+
+         
+</div>
     @endforeach          
         </div>
       </div>
-       </form>
       <div class="col-md-3">
         <div class="side_bar">
           <div class="side_bar_blog">
