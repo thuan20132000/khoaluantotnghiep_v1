@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Mail\UserVerify;
+use App\Model\JobCollaborator;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -292,6 +293,51 @@ class UserController extends Controller
             ], 401);
         }
     }
+
+
+
+
+    public function collaboratorStatistic($collaborator_id)
+    {
+
+
+
+        try {
+            //code...
+            $collaborator_income_total = 0;
+            $collaborator_income = JobCollaborator::where('user_id',$collaborator_id)
+            ->where('status',JobCollaborator::CONFIRMED)
+            ->get();
+
+            foreach ($collaborator_income as $collaborator) {
+                # code...
+                $collaborator_income_total += $collaborator->confirmed_price;
+            }
+
+            return response()->json([
+                "status"=>true,
+                "message"=>"Success",
+                "data"=>[
+                    "totalIncome"=>$collaborator_income_total,
+                    "jobNumber"=>count($collaborator_income)
+                ]
+
+            ]);
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                "status"=>false,
+                "message"=>"failed",
+                "data"=>null
+            ]);
+        }
+
+
+
+
+    }
+
 
 
 
