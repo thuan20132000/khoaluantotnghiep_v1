@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::get('/', 'HomeController@index');
 Route::get('checkout','HomeController@checkout');
-Route::get('shoppingcart','HomeController@shoppingcart');
+Route::get('jobsingle/{id}','HomeController@jobsingle');
 Route::get('listJob','HomeController@listJob');
 Route::get('shop_detail','HomeController@shop_detail');
 Route::get('user','HomeController@custommer');
@@ -74,6 +74,18 @@ Route::get('search','HomeController@getSearch');
 Route::get('postjob','HomeController@postJob');
 Route::post('postjob','HomeController@postPostJob')->name('post.job');
 Route::get('profile','HomeController@profile');
-Route::get('vieclam','HomeController@quanly');
+Route::get('vieclam','HomeController@quanly')->name('quanlyvieclam');
 Route::get('ungtuyen','HomeController@getungtuyen');
 Route::post('ungtuyen','HomeController@postungtuyen')->name('post.ungtuyen');
+Route::get('jobcollaborator/{user_id}/status/{status}','HomeController@getJobCollaborator');
+Route::get('editprofile','HomeController@geteditprofile');
+Route::post('posteditprofile','HomeController@posteditProfile');
+
+
+
+
+
+Route::get('collaborator/{collaborator_id}/job/status/{status}','HomeController@getCollaboratorJobByStatus')->name('getCollaboratorJobByStatus');
+Route::get('author/{author_id}/job/status/{status}','HomeController@getAuthorJobByStatus')->name('getAuhorJobByStatus');
+
+Route::get('chitietcongviec','HomeController@chitietcongviec')->name('chitietcongviec');

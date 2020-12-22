@@ -13,9 +13,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\URL;
-use phpDocumentor\Reflection\Types\Boolean;
 
 class CollaboratorController extends Controller
 {
@@ -35,15 +32,6 @@ class CollaboratorController extends Controller
         try {
             //code...
             $limit = 15;
-            $orderby = 'desc';
-            $perpage = 10;
-            $postnumber = 0;
-
-            $message_response = '';
-
-            $sortByTopRating = false;
-            $sortByNearByDistrict = false;
-
             if ($request->input('limit')) {
                 $limit = $request->input('limit');
             }
@@ -206,22 +194,13 @@ class CollaboratorController extends Controller
 
             return response()->json([
                 'status' => true,
-                'message' => $message_response,
-                'data' => UserCollection::collection($collaborators),
-                'links' => [
-                    "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
-                ],
-                "meta" => [
-                    "perpage" => $perpage,
-                    "total" => $collaborators->count()
-                ]
+                'data' => []
             ]);
         } catch (\Throwable $th) {
-            // throw $th;
+            //throw $th;
             return response()->json([
-                'status' => false,
-                'data' => [],
-                'message' => "ERROR : " . $th
+                'status' => true,
+                'data' => $th
             ]);
         }
     }
@@ -415,7 +394,7 @@ class CollaboratorController extends Controller
 
             $collaborator_ids = $collaborators->pluck('id')->all();
 
-            $collaborators = User::whereIn('id', $collaborator_ids)->get();
+            $collaborators = User::whereIn('id',$collaborator_ids)->get();
 
             $collaborator_collection = UserCollection::collection($collaborators);
 

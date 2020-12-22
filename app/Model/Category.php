@@ -5,8 +5,6 @@ namespace App\Model;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
-use App\User;
-
 class Category extends Model
 {
     //
@@ -21,6 +19,5 @@ class Category extends Model
     {
         return $this->hasManyThrough(Job::class, Occupation::class);
     }
-
 
 }

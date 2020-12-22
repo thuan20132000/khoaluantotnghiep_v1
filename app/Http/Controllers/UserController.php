@@ -233,8 +233,8 @@ class UserController extends Controller
         try {
             //code...
             DB::beginTransaction();
-
-            $user =  User::where('id',$id)->first();
+ $user =  User::where('id',$id)->first();
+           
             $user->name = $request->name;
             $user->phonenumber = $request->phonenumber;
             $user->idcard = $request->idcard;

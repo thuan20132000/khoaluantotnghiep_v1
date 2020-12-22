@@ -171,12 +171,8 @@
 							                @endif
                                             
                                         </div>
-                                         
-                             <div class="form-group">
-                        <label for="image">Hình ảnh</label>
-                        <input type="file" name="image" class="form-control">
-                    </div>
-
+                                        
+                    
                 
                                         <div class="form-group">
                                         <label for="exampleFormControlSelect1">Tôi Là</label>

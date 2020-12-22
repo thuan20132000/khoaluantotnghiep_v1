@@ -119,6 +119,9 @@ a {
 	-o-transition: all .3s ease-in-out;
 	transition: all .3s ease-in-out;
 }
+.container{
+	margin-top: 14px;
+}
 
 h1,
 h2,
@@ -761,6 +764,7 @@ hr.dottad_border {
 
 .blog_feature_img img {
 	width: 100%;
+	
 }
 
 .main_heading {
@@ -1415,6 +1419,12 @@ header .right_bt .btn {
 	float: left;
 	width: 100%;
 }
+.blog_feature_cont p{
+	width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .header_style_4 .logo {
 	left: 0px;
@@ -1430,7 +1440,14 @@ footer,
 	float: left;
 	width: 100%;
 }
+.form-group.search{
+	position: relative;
 
+}
+.bth-search{
+	position:absolute;
+	bottom: 37px;
+}
 
 /*------------------------------------------------------------------
 		6. SLIDER PARALLAX
