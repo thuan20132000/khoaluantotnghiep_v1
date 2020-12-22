@@ -160,7 +160,7 @@ class JobController extends Controller
 
 
             $images_thumbnail_array = $request->images;
-
+            
             if (is_array($images_thumbnail_array)) {
                 foreach ($images_thumbnail_array as $key => $value) {
                     # code...

@@ -70,7 +70,7 @@ class JobCollaboratorController extends Controller
     public function store(Request $request)
     {
         //
-        // dd($request->all());
+        dd($request->all());
         $validated = $request->validate([
             'price'=>'required',
             'user'=>'required',

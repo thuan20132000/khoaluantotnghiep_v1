@@ -13,19 +13,14 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/', function () {
-    return view('page.pages.index');
-});
 
-
-
-Route::get('/admin', 'HomeController@index');
+Route::get('/', 'HomeController@index');
 Route::get('checkout','HomeController@checkout');
 Route::get('shoppingcart','HomeController@shoppingcart');
-Route::get('shoplist','HomeController@shoplist');
+Route::get('listJob','HomeController@listJob');
 Route::get('shop_detail','HomeController@shop_detail');
-
-
+Route::get('user','HomeController@custommer');
+Route::get('jobCategory/{id}','HomeController@jobCategory');
 
 Route::group(['prefix' => 'laravel-filemanager', 'middleware' => ['web', 'auth']], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
@@ -67,3 +62,18 @@ Route::group(['prefix' => '', 'middleware' => ['web', 'auth']], function () {
 });
 
 Route::get('verify/{remember_token}','UserController@verifyUser')->name('user.verify');
+
+
+Route::post('registerrr','HomeController@registerClient');
+Route::post('loginnn','HomeController@postLoginClient');
+Route::get('loginn','HomeController@getLogin');
+Route::get('registerr','HomeController@getRegister');
+Route::get('search','HomeController@getSearch');
+Route::get('logout','HomeController@getLogoutClient');
+Route::get('search','HomeController@getSearch');
+Route::get('postjob','HomeController@postJob');
+Route::post('postjob','HomeController@postPostJob')->name('post.job');
+Route::get('profile','HomeController@profile');
+Route::get('vieclam','HomeController@quanly');
+Route::get('ungtuyen','HomeController@getungtuyen');
+Route::post('ungtuyen','HomeController@postungtuyen')->name('post.ungtuyen');
