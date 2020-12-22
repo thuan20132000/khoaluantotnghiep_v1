@@ -57,8 +57,8 @@
               <table class="table table-striped table-valign-middle">
                 <thead>
                 <tr>
-                  <th>Người tuyển dụng</th>
                   <th>Người tìm việc</th>
+                  <th>Người tuyển dụng</th>
                 </tr>
                 </thead>
                 <tbody>
