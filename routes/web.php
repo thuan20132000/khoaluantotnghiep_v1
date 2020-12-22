@@ -31,7 +31,7 @@ Auth::routes();
 
 
 Route::group(['prefix' => '', 'middleware' => ['web', 'auth']], function () {
-    Route::get('/admin/home', 'AdminHomeController@index')->name('adminhome');
+    Route::get('/admin', 'AdminHomeController@index')->name('adminhome');
 
     Route::resource('/admin/category', 'CategoryController');
     Route::delete('/admin/category', 'CategoryController@destroyMass')->name('destroyMass');

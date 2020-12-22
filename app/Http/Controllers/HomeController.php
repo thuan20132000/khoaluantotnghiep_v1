@@ -28,7 +28,6 @@ class HomeController extends Controller
     public function index()
     {
 
-        dd('ds');
 
         $colaborator_total = User::getCollaborators()->toArray();
         $customer_total = User::getCustomer()->toArray();
