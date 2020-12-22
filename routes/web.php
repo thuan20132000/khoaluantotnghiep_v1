@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 
-Route::get('/', 'HomeController@index');
+Route::get('/home', 'HomeController@index');
 Route::get('checkout','HomeController@checkout');
 Route::get('jobsingle/{id}','HomeController@jobsingle');
 Route::get('listJob','HomeController@listJob');
