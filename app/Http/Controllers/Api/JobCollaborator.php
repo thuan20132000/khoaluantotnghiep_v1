@@ -60,7 +60,6 @@ class JobCollaborator extends Controller
             ]);
 
 
-
             if ($validator->fails()) {
                 return response()->json([
                     'status' => $validator->errors()
