@@ -13,6 +13,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\URL;
+use phpDocumentor\Reflection\Types\Boolean;
 
 class CollaboratorController extends Controller
 {
@@ -31,13 +34,14 @@ class CollaboratorController extends Controller
 
         try {
             //code...
-            $limit = 15;
-            if ($request->input('limit')) {
-                $limit = $request->input('limit');
-            }
-            if ($request->input('orderby')) {
-                $orderby = $request->input('orderby');
-            }
+
+            $perpage = 10;
+            $postnumber = 0;
+
+            $message_response = '';
+
+            $sortByTopRating = false;
+
             if ($request->input('postnumber')) {
                 $postnumber = (int) $request->input('postnumber');
             }
@@ -47,9 +51,7 @@ class CollaboratorController extends Controller
             if ($request->input('sortbytoprating')) {
                 $sortByTopRating = (bool) $request->input('sortbytoprating');
             }
-            if ($request->input('sortbynearbydistrict')) {
-                $sortByNearByDistrict = (int) $request->input('sortbynearbydistrict');
-            }
+
 
             $category = $request->input('category');
             $district = $request->input('district');
@@ -194,13 +196,22 @@ class CollaboratorController extends Controller
 
             return response()->json([
                 'status' => true,
-                'data' => []
+                'message' => $message_response,
+                'data' => UserCollection::collection($collaborators),
+                'links' => [
+                    "next" => URL::current() . "?postnumber=" . ($postnumber + $perpage) . "&perpage=$perpage",
+                ],
+                "meta" => [
+                    "perpage" => $perpage,
+                    "total" => $collaborators->count()
+                ]
             ]);
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             return response()->json([
-                'status' => true,
-                'data' => $th
+                'status' => false,
+                'data' => [],
+                'message' => "ERROR : " . $th
             ]);
         }
     }
@@ -394,7 +405,7 @@ class CollaboratorController extends Controller
 
             $collaborator_ids = $collaborators->pluck('id')->all();
 
-            $collaborators = User::whereIn('id',$collaborator_ids)->get();
+            $collaborators = User::whereIn('id', $collaborator_ids)->get();
 
             $collaborator_collection = UserCollection::collection($collaborators);
 
