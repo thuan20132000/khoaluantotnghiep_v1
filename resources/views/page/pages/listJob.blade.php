@@ -15,10 +15,10 @@
         <div class="full">
           <div class="title-holder">
             <div class="title-holder-cell text-left">
-              <h1 class="page-title">Job List</h1>
+              <h1 class="page-title">Danh Sách Công Việc</h1>
               <ol class="breadcrumb">
-                <li><a href="index.html">Home</a></li>
-                <li class="active">Job</li>
+                <li><a href="/">Trang Chủ</a></li>
+                <li class="active">Công Việc</li>
               </ol>
             </div>
           </div>
@@ -56,7 +56,7 @@
               </div>
               <div class="product_detail_btm">
                 <div class="center">
-                  <h3><a href="it_shop_detail.html">{{$jb->name}}</a></h3>
+                  <h3><a href="jobsingle/{{$jb->id}}">{{$jb->name}}</a></h3>
                 </div>
                
 
@@ -66,7 +66,7 @@
    
 
                 <div class="product_price">
-                  <h4>Gía đưa ra:{{$jb->suggestion_price}}</h4>
+                  <h4>Gía đưa ra:  {{$jb->suggestion_price}}VNĐ</h4>
                 </div>
               </div>
               <div class="blog_feature_cont">

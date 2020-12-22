@@ -10,10 +10,10 @@
         <div class="full">
           <div class="title-holder">
             <div class="title-holder-cell text-left">
-              <h1 class="page-title">Job List</h1>
+              <h1 class="page-title">Danh Sách Công Việc</h1></h1>
               <ol class="breadcrumb">
-                <li><a href="index.html">Category</a></li>
-                <li class="active">Job</li>
+                <li><a href="index.html">Trang chủ</a></li>
+                <li class="active">Công Việc</li>
               </ol>
             </div>
           </div>

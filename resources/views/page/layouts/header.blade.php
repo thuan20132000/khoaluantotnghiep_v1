@@ -30,10 +30,10 @@
                     
                   </ul>
                 </li>
-                <li> <a href="it_shop.html">Việc Làm</a>
+                <li> <a href="">Việc Làm</a>
                   <ul>
                     <li><a href="{{asset('listJob')}}">Danh Sách Việc Làm</a></li>
-                    <li><a href="{{asset('jobdetail')}}">Shop Detail</a></li>
+                    
 
                   </ul>
                 </li>
@@ -48,11 +48,11 @@
                             <a href="/profile">{{Auth::user()->email}}</a>
                             @endif
                         </li>
-                        <li><a href="{{ route('getAuhorJobByStatus', ['author_id'=>Auth::user()->id,'status'=>2]) }}">Đang tuỷen</a></li>
-                        <li><a href="{{ route('getAuhorJobByStatus', ['author_id'=>Auth::user()->id,'status'=>3]) }}">Cho chap nhan</a></li>
+                        <li><a href="{{ route('getAuhorJobByStatus', ['author_id'=>Auth::user()->id,'status'=>2]) }}">Đang Tuyển</a></li>
+                        <li><a href="{{ route('getAuhorJobByStatus', ['author_id'=>Auth::user()->id,'status'=>3]) }}">Cho Chấp Nhận</a></li>
                         <li><a href="{{ route('getAuhorJobByStatus', ['author_id'=>Auth::user()->id,'status'=>4]) }}">Đã xác nhận</a></li>
                         <li>    
-                                                    <a href="/logout">Log out</a>
+                                                    <a href="/logout">Đăng Xuất</a>
 
                         </li>
                       </ul>
