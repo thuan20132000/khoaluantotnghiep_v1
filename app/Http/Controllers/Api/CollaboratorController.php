@@ -31,13 +31,15 @@ class CollaboratorController extends Controller
 
         try {
             //code...
-            $limit = 15;
-            if ($request->input('limit')) {
-                $limit = $request->input('limit');
-            }
-            if ($request->input('orderby')) {
-                $orderby = $request->input('orderby');
-            }
+
+            $perpage = 10;
+            $postnumber = 0;
+
+            $message_response = '';
+
+            $sortByTopRating = false;
+
+
             if ($request->input('postnumber')) {
                 $postnumber = (int) $request->input('postnumber');
             }
@@ -47,9 +49,7 @@ class CollaboratorController extends Controller
             if ($request->input('sortbytoprating')) {
                 $sortByTopRating = (bool) $request->input('sortbytoprating');
             }
-            if ($request->input('sortbynearbydistrict')) {
-                $sortByNearByDistrict = (int) $request->input('sortbynearbydistrict');
-            }
+
 
             $category = $request->input('category');
             $district = $request->input('district');
