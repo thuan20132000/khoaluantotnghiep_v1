@@ -66,9 +66,6 @@ class User extends Authenticatable
             // ->join('occupation_user','occupation_user.user_id','=','users.id')
             // ->join('occupations','occupations.id','=','occupation_user.occupation_id')
             ->where('roles.name', '=', 'isCollaborator')
-<<<<<<< HEAD
-            ->where('status', '=', 0)
-=======
             ->where('status', '=', User::PUBLISH)
             ->select(
                 'users.id',
@@ -128,7 +125,6 @@ class User extends Authenticatable
             ->distinct()
             ->skip($skip)
             ->take($perpage)
->>>>>>> e5459fc423dc517714076a36a949f0dc8aa66096
             ->select(
                 'users.id',
                 'users.name',
