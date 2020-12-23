@@ -49,7 +49,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-scendary elevation-4">
     <!-- Brand Logo -->
-    <a href="/" class="brand-link">
+    <a href="/admin" class="brand-link">
         <img src="https://vieclam24h.vn/static/img/vieclam24h_logo_meta_tag.jpg" alt="AdminLTE Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">Việc Làm 24H</span>
