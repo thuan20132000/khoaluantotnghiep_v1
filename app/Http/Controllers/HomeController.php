@@ -169,7 +169,7 @@ class HomeController extends Controller
     function getLogoutClient()
     {
         Auth::logout();
-        return redirect('http://127.0.0.1:8000/');
+        return redirect('/');
     }   
     public function getSearch(Request $req){
         
