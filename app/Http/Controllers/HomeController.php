@@ -185,7 +185,7 @@ class HomeController extends Controller
         return view('page.pages.postJob',['occupation'=>$occupation]);
     }
     public function postPostJob(request $request){
-        
+        // dd($request->author);
         $this->validate(
             $request,
             [
@@ -227,9 +227,9 @@ class HomeController extends Controller
             $job->description = $request->description;
             $job->location_id = $location->id;
             $job->suggestion_price = $request->suggestion_price;
-            $job->user_id = $request->author || 12;
+            $job->user_id = $request->author;
             
-            // dd($job);
+            
             $job->save();
         
             $images_thumbnail_array = Str::of($request->filepaths)->explode(',');
