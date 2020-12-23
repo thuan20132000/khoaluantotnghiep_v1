@@ -121,7 +121,7 @@
                         <label for="quantity"><h3>Giá đưa ra</h3></label>
                         <input type="number" name="suggestion_price" min="1" value="1" class="form-control">
                     </div>
-                    <input type="text" name="author" hidden value="{{Auth::user()->id}} ";
+                    <input type="text" name="author" hidden value="{{Auth::user()->id}}">
               <div class="row form-group">
                 <div class="col-md-12">
                   <input type="submit" value="Đăng Việc" class="btn btn-primary  py-2 px-5">
