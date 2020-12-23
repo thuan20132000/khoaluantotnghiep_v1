@@ -4,6 +4,15 @@
 
 <div class="m-2">
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     @if(session()->has('success'))
             <div class="alert alert-success" >
                 {{ session()->get('success') }}
@@ -104,7 +113,7 @@
                 </div>
                 <!-- /.card -->
             </div>
-            <button type="submit" class="btn btn-success">Sửa</button>
+            <button type="submit" class="btn btn-success">Cập Nhật</button></button>
                     <button type="reset" class="btn btn-primary">Làm Mới</button>
 
          

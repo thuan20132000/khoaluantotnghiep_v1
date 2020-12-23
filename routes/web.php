@@ -89,3 +89,4 @@ Route::get('collaborator/{collaborator_id}/job/status/{status}','HomeController@
 Route::get('author/{author_id}/job/status/{status}','HomeController@getAuthorJobByStatus')->name('getAuhorJobByStatus');
 
 Route::get('chitietcongviec/{job_id}','HomeController@chitietcongviec')->name('chitietcongviec');
+Route::post('postxacnhan','HomeController@postxacnhan')->name('post.xacnhan');
