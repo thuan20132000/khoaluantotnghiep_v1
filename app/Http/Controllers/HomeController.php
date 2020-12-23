@@ -352,55 +352,45 @@ public function getJobCollaborator($user_id,$status,Request $request)
 public function posteditProfile(Request $request)
 {
     //
-    try {
-        //code...
-        $this->validate(
-            $request,
-             [
+    
+        // code...
+        $validated = $request->validate([
+            
             'name' => 'required',
             'phonenumber' => 'required',
-            'email' =>'required',
             'address' => 'required',
-
+                
 
         ], [
             'name.required' => 'Mời bạn nhập tên',
             'phonenumber.required' => 'Mời bạn nhập số điện thoại',
-            
             'address' => 'Mời bạn nhập địa chỉ'
         ]);
+       try{
+
         DB::beginTransaction();
         // dd($user);
+        $images_thumbnail_array = Str::of($request->filepaths)->explode(',');
 
         $user = Auth::user();
         $user->name = $request->name;
         $user->phonenumber = $request->phonenumber;
-        $user->email = $request->email;
         $user->address = $request->address;
         $user->province = $request->province ?  $request->province : $user->province;
         $user->district = $request->district ? $request->district : $user->district;
         $user->subdistrict = $request->subdistrict ? $request->subdistrict : $user->subdistrict;
         // dd($user);
+        $user->profile_image = $images_thumbnail_array[0];
         $user->update();
         $user_id = $user->id;
-        $images_thumbnail_array = Str::of($request->filepaths)->explode(',');
-            if($images_thumbnail_array && count($images_thumbnail_array) > 0){
-                foreach ($images_thumbnail_array as $key => $value) {
-                    # code...
-                    if($value){
-                        DB::table('images')->insert(
-                            ['image_url'=>$value,'user_id'=>$user_id]
-                        );
-                    }
-                }
-            }
-
+        // dd($images_thumbnail_array[0]);
+     
             DB::commit();
 
-        return redirect()->back()->with('Thành công','Sửa thành công');
+        return redirect()->back()->with('success','Sửa thành công');
     } catch (\Throwable $th) {
         throw $th;
-        return redirect()->back()->with('thất bại','Sửa thất bại!');
+        return redirect()->back()->with('failed','Sửa thất bại!');
 
 
 }
@@ -451,5 +441,42 @@ public function posteditProfile(Request $request)
 
         ]);
             
+    }
+    public function postxacnhan(Request $request){
+    //  dd($request->all());
+        try {
+
+
+            DB::beginTransaction();
+            $job_collaborators_cancel = JobCollaborator::where('job_id', $request->job_id)
+                ->where('id', '!=', $request->job_collaborator_id)
+                ->get();
+
+
+            foreach ($job_collaborators_cancel as $job_collaborator) {
+                # code...
+
+                $job_collaborator->status = JobCollaborator::CANCEL;
+                $job_collaborator->update();
+            }
+
+
+            $job_collaborator_approve = JobCollaborator::where('id', $request->job_collaborator_id)
+                ->first();
+            $job_collaborator_approve->status = JobCollaborator::APPROVED;
+            $job_collaborator_approve->update();
+
+            $job = Job::where('id', $request->job_id)->first();
+            $job->status = Job::APPROVED;
+            $job->update();
+
+            DB::commit();
+            return redirect()->back()->with('success','Sửa thành công');
+        } catch (\Throwable $th) {
+            throw $th;
+            return redirect()->back()->with('failed','Sửa thất bại!');
+    
+    
+}
     }
 }

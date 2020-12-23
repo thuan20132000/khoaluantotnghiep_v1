@@ -99,18 +99,35 @@
                                                 @endif
         
                                                 @if ($candidate->job_collaborator_status == 2)
-                                                    <button type="button"
-                                                        class="btn btn-block bg-gradient-danger btn-xs">Pending</button>
+                                                <button type="button"
+                                                        class="btn btn-block bg-gradient-warning btn-xs">Pending</button>
+                                                
+    
+                                                
                                                 @endif
         
                                                 @if ($candidate->job_collaborator_status == 3)
-                                                    <button type="button"
-                                                        class="btn btn-block bg-gradient-success btn-xs">Approved</button>
+                                                <button type="button"
+                                                        class="btn btn-block bg-gradient-warning btn-xs">Approved</button>
+                                                
                                                 @endif
-        
+                                                
                                             </td>
-        
-                                        </tr>
+                                            
+                                          <td>  
+                                            <form action="{{ route('post.xacnhan')}}" method="post">
+                                                @csrf
+
+                                                <input type="text" hidden value="{{$job->job_id}}">
+                                                <input type="text" hidden value="{{$job->job_collabrator_id}}">
+                                            <button type="submit" class="btn btn-primary">
+                                                Xác nhận
+                                              </button>
+                                            </form></td>
+                                        
+                                              
+                          
+                                        
                                     @endforeach
                                 </tbody>
                             </table>
